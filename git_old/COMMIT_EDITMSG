@@ -1,0 +1,112 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch main
+# Your branch is ahead of 'origin/main' by 1 commit.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	deleted:    tsconfig.json
+#
+# Changes not staged for commit:
+#	modified:   data/content.json
+#	modified:   data/content.json.backup
+#	modified:   public/assets/css/main.css
+#	modified:   public/assets/img/footer-bottom.png
+#	modified:   public/assets/img/header-top-shape-2.png
+#	modified:   public/assets/img/header-top-shape.png
+#	modified:   public/assets/img/hero/book.png
+#	modified:   public/assets/img/section-top-shape-2.png
+#	modified:   public/assets/js/main.js
+#	modified:   public/assets/scss/_team.scss
+#	modified:   src/app/globals.css
+#	modified:   src/app/login/page.tsx
+#	modified:   src/components/admin/AdminDashboard.tsx
+#	modified:   src/components/home/ThemeBinder.tsx
+#	modified:   src/lib/preview.ts
+#	modified:   src/templates/home.html
+#	modified:   src/types/content.ts
+#
+# Untracked files:
+#	public/assets/css/index.html_MA.html
+#	public/assets/css/index.html_MD.html
+#	public/assets/css/index.html_NA.html
+#	public/assets/css/index.html_ND.html
+#	public/assets/css/index.html_SA.html
+#	public/assets/css/index.html_SD.html
+#	public/assets/img/about/index.html_MA.html
+#	public/assets/img/about/index.html_ND.html
+#	public/assets/img/about/index.html_SA.html
+#	public/assets/img/breadcrumb-shape/index.html_MA.html
+#	public/assets/img/breadcrumb-shape/index.html_ND.html
+#	public/assets/img/breadcrumb-shape/index.html_SA.html
+#	public/assets/img/classes/index.html_MA.html
+#	public/assets/img/classes/index.html_ND.html
+#	public/assets/img/classes/index.html_SA.html
+#	public/assets/img/client/index.html_MA.html
+#	public/assets/img/client/index.html_ND.html
+#	public/assets/img/client/index.html_SA.html
+#	public/assets/img/counter/index.html_MA.html
+#	public/assets/img/counter/index.html_ND.html
+#	public/assets/img/counter/index.html_SA.html
+#	public/assets/img/cta/index.html_MA.html
+#	public/assets/img/cta/index.html_ND.html
+#	public/assets/img/cta/index.html_SA.html
+#	public/assets/img/event/index.html_MA.html
+#	public/assets/img/event/index.html_ND.html
+#	public/assets/img/event/index.html_SA.html
+#	public/assets/img/feature/index.html_MA.html
+#	public/assets/img/feature/index.html_ND.html
+#	public/assets/img/feature/index.html_SA.html
+#	public/assets/img/footer/index.html_MA.html
+#	public/assets/img/footer/index.html_ND.html
+#	public/assets/img/footer/index.html_SA.html
+#	public/assets/img/header/index.html_MA.html
+#	public/assets/img/header/index.html_ND.html
+#	public/assets/img/header/index.html_SA.html
+#	public/assets/img/hero/index.html_MA.html
+#	public/assets/img/hero/index.html_ND.html
+#	public/assets/img/hero/index.html_SA.html
+#	public/assets/img/index.html_MA.html
+#	public/assets/img/index.html_MD.html
+#	public/assets/img/index.html_NA.html
+#	public/assets/img/index.html_ND.html
+#	public/assets/img/index.html_SA.html
+#	public/assets/img/index.html_SD.html
+#	public/assets/img/instagram/index.html_MA.html
+#	public/assets/img/instagram/index.html_ND.html
+#	public/assets/img/instagram/index.html_SA.html
+#	public/assets/img/logo/index.html_MA.html
+#	public/assets/img/logo/index.html_ND.html
+#	public/assets/img/logo/index.html_SA.html
+#	public/assets/img/news/index.html_MA.html
+#	public/assets/img/news/index.html_ND.html
+#	public/assets/img/news/index.html_SA.html
+#	public/assets/img/pricing/index.html_MA.html
+#	public/assets/img/pricing/index.html_ND.html
+#	public/assets/img/pricing/index.html_SA.html
+#	public/assets/img/process/index.html_MA.html
+#	public/assets/img/process/index.html_ND.html
+#	public/assets/img/process/index.html_SA.html
+#	public/assets/img/program/index.html_MA.html
+#	public/assets/img/program/index.html_ND.html
+#	public/assets/img/program/index.html_SA.html
+#	public/assets/img/team/index.html_MA.html
+#	public/assets/img/team/index.html_ND.html
+#	public/assets/img/team/index.html_SA.html
+#	public/assets/js/index.html_MA.html
+#	public/assets/js/index.html_ND.html
+#	public/assets/js/index.html_SA.html
+#	public/assets/scss/index.html_MA.html
+#	public/assets/scss/index.html_ND.html
+#	public/assets/scss/index.html_SA.html
+#	public/assets/webfonts/icomoon.eot_qv88eo
+#	public/assets/webfonts/icomoon.svg_qv88eo.svg
+#	public/assets/webfonts/icomoon.ttf_qv88eo
+#	public/assets/webfonts/icomoon.woff_qv88eo
+#	public/assets/webfonts/index.html_MA.html
+#	public/assets/webfonts/index.html_ND.html
+#	public/assets/webfonts/index.html_SA.html
+#	src/app/api/upload/
+#
