@@ -127,6 +127,7 @@ type ActiveSection =
 export default function AdminDashboard({ initialContent, templateMarkup }: Props) {
   const router = useRouter();
   const [content, setContent] = useState<SiteContent>({
+    ...initialContent,
     programsSection: initialContent.programsSection ?? {
       tagline: "Our Programs",
       title: "We Meet Kids At Their Level<br>Regardless Of Their Age",
@@ -139,17 +140,14 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
       tagline: "Testimonials",
       title: "Parents' Words Are The Key<br>To Happy Kids",
     },
-    partners:
-      initialContent.partners ??
-      [
-        { id: "pencilbox", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='60' viewBox='0 0 180 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' text-anchor='middle' dominant-baseline='middle'>PencilBox</text></svg>" },
-        { id: "udemy", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='22' font-family='Arial, sans-serif' font-weight='600' text-anchor='middle' dominant-baseline='middle'>udemy</text></svg>" },
-        { id: "amd", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='60' viewBox='0 0 140 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='22' font-family='Arial, sans-serif' font-weight='700' text-anchor='middle' dominant-baseline='middle'>AMD</text></svg>" },
-        { id: "coursera", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='60' viewBox='0 0 180 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' font-weight='700' text-anchor='middle' dominant-baseline='middle'>coursera</text></svg>" },
-        { id: "amazon", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='170' height='60' viewBox='0 0 170 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' font-weight='700' text-anchor='middle' dominant-baseline='middle'>amazon</text></svg>" },
-        { id: "adobe", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' font-weight='700' text-anchor='middle' dominant-baseline='middle'>Adobe</text></svg>" },
-      ],
-    ...initialContent,
+    partners: initialContent.partners ?? [
+      { id: "pencilbox", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='60' viewBox='0 0 180 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' text-anchor='middle' dominant-baseline='middle'>PencilBox</text></svg>" },
+      { id: "udemy", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='22' font-family='Arial, sans-serif' font-weight='600' text-anchor='middle' dominant-baseline='middle'>udemy</text></svg>" },
+      { id: "amd", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='60' viewBox='0 0 140 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='22' font-family='Arial, sans-serif' font-weight='700' text-anchor='middle' dominant-baseline='middle'>AMD</text></svg>" },
+      { id: "coursera", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='60' viewBox='0 0 180 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' font-weight='700' text-anchor='middle' dominant-baseline='middle'>coursera</text></svg>" },
+      { id: "amazon", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='170' height='60' viewBox='0 0 170 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' font-weight='700' text-anchor='middle' dominant-baseline='middle'>amazon</text></svg>" },
+      { id: "adobe", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' font-weight='700' text-anchor='middle' dominant-baseline='middle'>Adobe</text></svg>" },
+    ],
   });
   const [status, setStatus] = useState<Status>("idle");
   const [activeSection, setActiveSection] = useState<ActiveSection>("overview");
@@ -655,7 +653,11 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
         ...prev.benefits,
         items: [
           ...prev.benefits.items,
-          { title: "Langkah baru", description: "Deskripsi singkat proses." },
+          {
+            title: "Langkah baru",
+            description: "Deskripsi singkat proses.",
+            icon: "/assets/img/icon/new.svg"
+          },
         ],
       },
     }));
