@@ -66,6 +66,21 @@ export interface InstructorsDecorations {
   frameShape: string;
 }
 
+export interface ProgramDecorations {
+  topShape: string;
+  bottomShape: string;
+  mask: string;
+  mask2: string;
+  pencil: string;
+  compass: string;
+}
+
+export interface ActivitiesDecorations {
+  pencil: string;
+  giraffe: string;
+  radius: string;
+}
+
 export interface Partner {
   id: string;
   logo: string;
@@ -106,7 +121,11 @@ export interface ActivitiesSection {
   tagline: string;
   title: string;
   image: string;
-  items: FeatureItem[];
+  items: ActivityItem[];
+}
+
+export interface ActivityItem extends FeatureItem {
+  icon?: string;
 }
 
 export interface GalleryItem {
@@ -196,12 +215,14 @@ export interface SiteContent {
   programsSection: ProgramSectionContent;
   hero: HeroContent;
   programs: Program[];
+  programDecorations: ProgramDecorations;
   instructorsDecorations: InstructorsDecorations;
   testimonialsSection: TestimonialsSectionContent;
   partners: Partner[];
   about: AboutSection;
   benefits: BenefitsSection;
   activities: ActivitiesSection;
+  activitiesDecorations: ActivitiesDecorations;
   gallery: GallerySection;
   stats: Stat[];
   testimonials: Testimonial[];

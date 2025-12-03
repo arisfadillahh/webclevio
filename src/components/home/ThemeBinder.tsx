@@ -41,7 +41,7 @@ export default function ThemeBinder({ content, rootId = DEFAULT_ROOT_ID }: Props
     bindAbout(root, content);
     bindPrograms(root, content);
     bindWorkProcess(root, content.benefits.items);
-    bindActivities(root, content.activities);
+    bindActivities(root, content.activities, content.activitiesDecorations);
     bindTestimonials(root, content.testimonials, content);
     bindPartners(root, content.partners);
     bindCta(root, content.callToAction);
@@ -258,6 +258,20 @@ function bindAbout(root: HTMLElement, content: SiteContent) {
 }
 
 function bindPrograms(root: HTMLElement, content: SiteContent) {
+  const decorations = content.programDecorations;
+  const topShape = root.querySelector(".program-section .top-shape img") as HTMLImageElement | null;
+  if (topShape && decorations?.topShape) topShape.src = decorations.topShape;
+  const bottomShape = root.querySelector(".program-section .bottom-shape img") as HTMLImageElement | null;
+  if (bottomShape && decorations?.bottomShape) bottomShape.src = decorations.bottomShape;
+  const maskShape = root.querySelector(".program-section .mask-shape img") as HTMLImageElement | null;
+  if (maskShape && decorations?.mask) maskShape.src = decorations.mask;
+  const maskShape2 = root.querySelector(".program-section .mask-shape-2 img") as HTMLImageElement | null;
+  if (maskShape2 && decorations?.mask2) maskShape2.src = decorations.mask2;
+  const pencilShape = root.querySelector(".program-section .pencil-shape img") as HTMLImageElement | null;
+  if (pencilShape && decorations?.pencil) pencilShape.src = decorations.pencil;
+  const compassShape = root.querySelector(".program-section .compass-shape img") as HTMLImageElement | null;
+  if (compassShape && decorations?.compass) compassShape.src = decorations.compass;
+
   const section = root.querySelector(".program-section .section-title");
   if (section) {
     const tagline = section.querySelector("span");
@@ -347,7 +361,24 @@ function bindWorkProcess(root: HTMLElement, items: Props["content"]["benefits"][
     .join("");
 }
 
-function bindActivities(root: HTMLElement, activities: Props["content"]["activities"]) {
+function bindActivities(
+  root: HTMLElement,
+  activities: Props["content"]["activities"],
+  decorations: SiteContent["activitiesDecorations"],
+) {
+  const pencilShape = root.querySelector(".about-activities-section .pencil-shape img") as HTMLImageElement | null;
+  if (pencilShape && decorations?.pencil) {
+    pencilShape.src = decorations.pencil;
+  }
+  const giraffeShape = root.querySelector(".about-activities-section .zebra-shape img") as HTMLImageElement | null;
+  if (giraffeShape && decorations?.giraffe) {
+    giraffeShape.src = decorations.giraffe;
+  }
+  const radiusShape = root.querySelector(".about-activities-section .radius-shape img") as HTMLImageElement | null;
+  if (radiusShape && decorations?.radius) {
+    radiusShape.src = decorations.radius;
+  }
+
   const section = root.querySelector(".about-activities-section");
   if (section) {
     const eyebrow = section.querySelector(".section-title span");
@@ -363,11 +394,13 @@ function bindActivities(root: HTMLElement, activities: Props["content"]["activit
   if (!wrapper) return;
   wrapper.innerHTML = activities.items
     .map(
-      (item, index) => `
+      (item, index) => {
+        const iconClass = item.icon || `icon-icon-${(index % 8) + 1}`;
+        return `
       <div class="col-xl-6 col-lg-8 col-md-6 wow fadeInUp" data-wow-delay="${0.3 + index * 0.2}s">
         <div class="icon-items">
           <div class="icon box-color-${(index % 4) + 1}">
-            <i class="icon-icon-1"></i>
+            <i class="${iconClass}"></i>
           </div>
           <div class="content">
             <h5>${item.title}</h5>
@@ -375,7 +408,8 @@ function bindActivities(root: HTMLElement, activities: Props["content"]["activit
           </div>
         </div>
       </div>
-    `,
+    `;
+      },
     )
     .join("");
 }

@@ -134,6 +134,19 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
       ctaLink: initialContent.about?.ctaLink ?? initialContent.branding.ctaLink,
       phone: initialContent.about?.phone ?? initialContent.contact.whatsapp,
     },
+    programDecorations: initialContent.programDecorations ?? {
+      topShape: "/assets/img/section-top-shape.png",
+      bottomShape: "/assets/img/section-bottom-shape.png",
+      mask: "/assets/img/program/mask.png",
+      mask2: "/assets/img/program/mask-2.png",
+      pencil: "/assets/img/program/pencil.png",
+      compass: "/assets/img/program/compass.png",
+    },
+    activitiesDecorations: initialContent.activitiesDecorations ?? {
+      pencil: "/assets/img/about/pencil.png",
+      giraffe: "/assets/img/about/zebra.png",
+      radius: "/assets/img/about/radius-shape-1.png",
+    },
     programsSection: initialContent.programsSection ?? {
       tagline: "Our Programs",
       title: "We Meet Kids At Their Level<br>Regardless Of Their Age",
@@ -417,6 +430,26 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
     });
   };
 
+  const handleProgramDecorationChange = (
+    field: keyof SiteContent["programDecorations"],
+    value: string,
+  ) => {
+    setContent((prev) => ({
+      ...prev,
+      programDecorations: { ...prev.programDecorations, [field]: value },
+    }));
+  };
+
+  const handleActivitiesDecorationChange = (
+    field: keyof SiteContent["activitiesDecorations"],
+    value: string,
+  ) => {
+    setContent((prev) => ({
+      ...prev,
+      activitiesDecorations: { ...prev.activitiesDecorations, [field]: value },
+    }));
+  };
+
   const addAboutBullet = () => {
     setContent((prev) => ({
       ...prev,
@@ -466,7 +499,7 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
         ...prev.activities,
         items: [
           ...prev.activities.items,
-          { title: "Aktivitas baru", description: "Deskripsi singkat" },
+          { title: "Aktivitas baru", description: "Deskripsi singkat", icon: "icon-icon-1" },
         ],
       },
     }));
@@ -1216,6 +1249,50 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
             />
 
             <AdminCard
+              title="Dekorasi Program"
+              description="Atur ikon/shape yang tampil di sekitar section program"
+            >
+              <div className="form-grid">
+                <ImageInput
+                  label="Shape Atas"
+                  value={content.programDecorations.topShape}
+                  onChange={(value) => handleProgramDecorationChange("topShape", value)}
+                  helperText="Default: /assets/img/section-top-shape.png"
+                />
+                <ImageInput
+                  label="Shape Bawah"
+                  value={content.programDecorations.bottomShape}
+                  onChange={(value) => handleProgramDecorationChange("bottomShape", value)}
+                  helperText="Default: /assets/img/section-bottom-shape.png"
+                />
+                <ImageInput
+                  label="Icon Awan / Mask"
+                  value={content.programDecorations.mask}
+                  onChange={(value) => handleProgramDecorationChange("mask", value)}
+                  helperText="Default: /assets/img/program/mask.png"
+                />
+                <ImageInput
+                  label="Icon Plus / Mask 2"
+                  value={content.programDecorations.mask2}
+                  onChange={(value) => handleProgramDecorationChange("mask2", value)}
+                  helperText="Default: /assets/img/program/mask-2.png"
+                />
+                <ImageInput
+                  label="Ikon Pensil"
+                  value={content.programDecorations.pencil}
+                  onChange={(value) => handleProgramDecorationChange("pencil", value)}
+                  helperText="Default: /assets/img/program/pencil.png"
+                />
+                <ImageInput
+                  label="Ikon Penggaris / Compass"
+                  value={content.programDecorations.compass}
+                  onChange={(value) => handleProgramDecorationChange("compass", value)}
+                  helperText="Default: /assets/img/program/compass.png"
+                />
+              </div>
+            </AdminCard>
+
+            <AdminCard
               title="Judul & Tagline Section Program"
               description="Atur teks di bagian atas section program pada halaman utama."
             >
@@ -1349,6 +1426,32 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
               />
             </div>
 
+            <AdminCard
+              title="Dekorasi Aktivitas"
+              description="Atur ikon pendukung di sekitar section aktivitas"
+            >
+              <div className="form-grid">
+                <ImageInput
+                  label="Ikon Pensil"
+                  value={content.activitiesDecorations.pencil}
+                  onChange={(value) => handleActivitiesDecorationChange("pencil", value)}
+                  helperText="Default: /assets/img/about/pencil.png"
+                />
+                <ImageInput
+                  label="Ikon Jerapah"
+                  value={content.activitiesDecorations.giraffe}
+                  onChange={(value) => handleActivitiesDecorationChange("giraffe", value)}
+                  helperText="Default: /assets/img/about/zebra.png"
+                />
+                <ImageInput
+                  label="Shape Radius"
+                  value={content.activitiesDecorations.radius}
+                  onChange={(value) => handleActivitiesDecorationChange("radius", value)}
+                  helperText="Default: /assets/img/about/radius-shape-1.png"
+                />
+              </div>
+            </AdminCard>
+
             <div className="list-header" style={{ marginTop: "1.5rem" }}>
               <p>{content.activities.items.length} Aktivitas</p>
               <button className="ghost-btn small" onClick={addActivityItem}>
@@ -1382,11 +1485,19 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
                         style={{ minHeight: "80px" }}
                       />
                     </label>
+                    <label>
+                      Ikon Aktivitas (class/icon)
+                      <input
+                        value={item.icon ?? ""}
+                        onChange={(e) => updateActivityItem(index, "icon", e.target.value)}
+                        placeholder="contoh: icon-icon-1"
+                      />
+                    </label>
                   </div>
                 </div>
               ))}
             </div>
-          </AdminCard>
+            </AdminCard>
         </>
         );
 

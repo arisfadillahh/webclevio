@@ -1,566 +1,583 @@
 {
-  "programsSection": {
-    "tagline": "Program Kami",
-    "title": "Kami Bertemu Anak-Anak di Level <br> Mereka Tanpa Melihat Usia"
-  },
-  "instructorsDecorations": {
-    "loveShape": "data:image/png;base64,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",
-    "frameShape": "data:image/png;base64,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"
-  },
-  "testimonialsSection": {
-    "tagline": "Testimonials",
-    "title": "Parents' Words Are The Key<br>To Happy Kids"
-  },
-  "partners": [
-    {
-      "id": "pencilbox",
-      "logo": "/uploads/1764749204206-7a4ae9fdd02bf.png"
-    },
-    {
-      "id": "udemy",
-      "logo": "/uploads/1764749237558-3981ffafa02e.png"
-    },
-    {
-      "id": "amd",
-      "logo": "/uploads/1764749250466-2bd164d034a6d.png"
-    },
-    {
-      "id": "coursera",
-      "logo": "/uploads/1764749260895-e31c2de2997f7.png"
-    },
-    {
-      "id": "amazon",
-      "logo": "/uploads/1764749513100-0b9d8d7920486.png"
-    },
-    {
-      "id": "adobe",
-      "logo": "/uploads/1764749624825-f0753b5ff28db.png"
-    },
-    {
-      "id": "93723fa3-85cc-45cf-bbdd-1bc43dc2c0e7",
-      "logo": "/uploads/1764749636431-193c35c5a9fc5.png"
-    }
-  ],
-  "branding": {
-    "name": "Clevio Innovator Camp",
-    "tagline": "Lets Innovate!",
-    "logo": "/uploads/1764668501717-ccdf73648720b.png",
-    "phone": "+62 851-1714-3238",
-    "email": "Camp@clevio.co",
-    "address": "Bukit Golf Riverside Blok A7 no. 25",
-    "ctaLabel": "LMS Clevio",
-    "ctaLink": "#contact",
-    "socials": [
-      {
-        "icon": "facebook-f",
-        "label": "Facebook",
-        "href": "https://facebook.com/cleviocamp"
-      },
-      {
-        "icon": "instagram",
-        "label": "Instagram",
-        "href": "https://instagram.com/cleviocamp"
-      },
-      {
-        "icon": "linkedin-in",
-        "label": "LinkedIn",
-        "href": "https://id.linkedin.com/company/clevio"
-      }
-    ]
-  },
-  "navigation": {
-    "menu": [
-      {
-        "label": "Home",
-        "href": "#hero"
-      },
-      {
-        "label": "Classes",
-        "href": "#programs"
-      },
-      {
-        "label": "Teachers",
-        "href": "#teachers"
-      },
-      {
-        "label": "About",
-        "href": "#about"
-      },
-      {
-        "label": "Gallery",
-        "href": "#gallery"
-      },
-      {
-        "label": "Contact",
-        "href": "#contact"
-      }
-    ]
-  },
-  "hero": {
-    "eyebrow": "Sekolah Coding Pertama di Indonesia",
-    "title": "Arahkan Liburan Si Kecil Ke <span>Holiday Class</span>",
-    "description": "Di Holiday Class Clevio, anak-anak akan belajar coding dan teknologi sesuai dengan jenjang usianya. Mari buat liburan si kecil menyenangkan!",
-    "highlight": "Our Highlight!",
-    "badges": [
-      "Montessori",
-      "STEAM",
-      "Character"
-    ],
-    "stats": [
-      {
-        "label": "Siswa Aktif",
-        "value": "480+"
-      },
-      {
-        "label": "Guru Profesional",
-        "value": "38"
-      }
-    ],
-    "media": {
-      "image": "/uploads/1764669460846-82722be5bc77f.png",
-      "shape": "/uploads/1764669448070-4ec4677e95bc.png",
-      "videoUrl": "https://www.youtube.com/watch?v=Cn4G2lZ_g2I"
-    },
-    "decorations": [
-      {
-        "id": "bottom",
-        "label": "Bottom Shape",
-        "image": "/assets/img/hero/bottom.png"
-      },
-      {
-        "id": "parasuit",
-        "label": "Parasuit",
-        "image": "/assets/img/hero/parasuit.png"
-      },
-      {
-        "id": "left",
-        "label": "Left Shape",
-        "image": "/assets/img/hero/left.png"
-      },
-      {
-        "id": "book",
-        "label": "Book",
-        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAMAAABG8BK2AAAAOVBMVEUAAABYZepYaOhYZulYZutZZexSZOdYZetZZOtYZuxXZutYZupXZutWZedXZ+pXZehWZulZZuxYZusKaNvtAAAAEnRSTlMAYCBAwO8QgHDg0KCwMJCQUFCsKd87AAAB+klEQVRYw+3Xy7ajIBAFUIqC4u2D///YLhNYpGVdtWHWN2diEsx2wZEBYixklCMxGVx1zhkmEZVfgWlEG2JmElHAy8LMHIL8qTBTyAxDCyOekSnGcMW6/vGekQjWrOHIarZUfk3u1Y64ZyjBGl0+RUeQPBhyjny9Y3BVOtc4p1QMQamChiRS4EXpGRmjwQ/l/WQfDKTPhxJalTl0mnhlIHOaw18DpB8Wy+YsT/sJCkM28uWTuVj0yrT9VBnOAEPWvfYTigmGzNGC2gSnZxCeMUbXrdAzduMrPmF2RkrrHbNnfVyfMKQW2RXeen/C9IXfMIR2jd5ljvPRpAeF94xU+RR5X3jP7O8dsVjgWBOduij8YlIAcqDwygwX3phv4WOF+2/h/3fh6Vv4t/BfU/g4cw7GqcJFW+ycRgo/vTrKkBgovAYORC+vxR4pvM3GW6pjI0tM7dUZZxoyw4AryAzTDnYzjC/IHFNOh9OMtnz9V0ZKxA1gw1SOmYbKwPEzIiZ5xVCCuqFqfNjeRLLhrwGtotlSz9Tb+ijAVedTKmZOTDkmxsUCSknvOeyLb/9YygGSZMLdLqoONQZft+1S9JHAt7sFqR8itNHVA5DLgTd/unmLf0zC43jthSln1wGmnZutIJdzgItYvutqPPCkJT/N5cmwwpHWTyHH2/kH2KNgtG+FZgsAAAAASUVORK5CYII="
-      },
-      {
-        "id": "pencil",
-        "label": "Pencil",
-        "image": "/assets/img/hero/pencil.png"
-      },
-      {
-        "id": "bee",
-        "label": "Bee",
-        "image": "/assets/img/hero/bee.png"
-      },
-      {
-        "id": "right",
-        "label": "Right Shape",
-        "image": "/assets/img/hero/right.png"
-      },
-      {
-        "id": "star",
-        "label": "Star",
-        "image": "/uploads/1764669782579-4a5e3864f916a.png"
-      }
-    ],
-    "primaryCta": {
-      "label": "Daftar Holiday Class !",
-      "href": "#contact"
-    },
-    "secondaryCta": {
-      "label": "Lihat Kurikulum",
-      "href": "#programs"
-    }
-  },
-  "programs": [
-    {
-      "id": "art",
-      "title": "Explorer",
-      "description": "Di Level Explorer, anak-anak akan belajar mengeksplorasi serunya berkreasi dengan membuat game, animasi, dan poster digital.",
-      "ageRange": "1-3 SD",
-      "image": "/uploads/1764751864801-dce69f795d46e.png"
-    },
-    {
-      "id": "science",
-      "title": "Creator",
-      "description": "Di Level Creator, anak-anak akan belajar berbagai project membuat karya kreatif seperti video, game, aplikasi, komik, dan lain sebagainya.",
-      "ageRange": "4-6 SD",
-      "image": "/uploads/1764751874988-29d8cb908629d.png"
-    },
-    {
-      "id": "19f1d310-160b-4347-b72e-88efefd0ff9e",
-      "title": "Innovator",
-      "description": "Level Innovator, anak-anak akan menggunakan berbagai tools untuk menciptakan kreasi digital yang berupa game, aplikasi, website, video, dan lainnya.",
-      "ageRange": "7 SMP-12 SMA",
-      "image": "/uploads/1764751879261-2a211fbe3e638.png"
-    }
-  ],
-  "about": {
-    "tagline": "4 Manfaat",
-    "title": "4 Pilar Clevio Innovator Camp",
-    "text": "Kami percaya setiap anak unik. Clevio memadukan kurikulum nasional, Montessori, dan project-based learning agar anak bebas bereksplorasi namun tetap terarah.",
-    "bullets": [
-      "Pelajar Pancasila",
-      "21st Century Skill",
-      "Entrepreneurship & Technology",
-      "Positive Character & Strength"
-    ],
-    "stats": [
-      {
-        "label": "Tahun Pengalaman",
-        "value": "12"
-      },
-      {
-        "label": "Cabang Aktif",
-        "value": "6"
-      }
-    ],
-    "images": {
-      "primary": "/uploads/1764750171176-a9d147fe8c701.png",
-      "secondary": "/uploads/1764755665035-bfd33b77987e1.png"
-    },
-    "ctaLabel": "Daftar Sekarang",
-    "ctaLink": "#contact",
-    "phone": "+62 851-1714-3238"
-  },
-  "benefits": {
-    "tagline": "Kenapa Clevio?",
-    "title": "Fasilitas unggulan siap bantu anak berani tampil",
-    "items": [
-      {
-        "title": "Explore",
-        "description": "Tahap mencari ide dan memahami masalah yang ingin diselesaikan",
-        "icon": "classroom"
-      },
-      {
-        "title": "Project",
-        "description": "Tahap pengerjaan terstruktur untuk mengembangkan solusi sesuai tujuan yang telah ditetapkan",
-        "icon": "wellness"
-      },
-      {
-        "title": "Big Project",
-        "description": "Tahap pembuatan karya besar yang lebih kompleks dan menyeluruh sebagai hasil akhir dari proses belajar",
-        "icon": "studio"
-      },
-      {
-        "title": "Product Launching",
-        "description": "Tahap mempresentasikan dan merilis hasil pembelajaran agar dapat digunakan atau dinilai oleh orang lain.",
-        "icon": "outdoor"
-      }
-    ]
-  },
-  "activities": {
-    "tagline": "Aktivitas Kami",
-    "title": "Mari eksplor kegiatan seru di Clevio",
-    "image": "/uploads/1764754390561-09671912a963d.png",
-    "items": [
-      {
-        "title": "Festival Technopreneur",
-        "description": "Acara puncak technopreneur cilik mempresentasikan big project mereka."
-      },
-      {
-        "title": "Lomba Cipta Game",
-        "description": "Kompetisi anak menunjukkan kreativitas & skill coding."
-      },
-      {
-        "title": "Holiday Class",
-        "description": "Kelas singkat untuk belajar coding dan membuat proyek seru saat liburan."
-      },
-      {
-        "title": "Pitching Day",
-        "description": "Sesi presentasi siswa menjelaskan hasil belajar mereka kepada orang tua."
-      }
-    ]
-  },
-  "gallery": {
-    "tagline": "Gallery",
-    "title": "Momen favorit di Clevio Center",
-    "items": [
-      {
-        "id": "gal-1",
-        "image": "/assets/img/gallery/01.jpg",
-        "title": "Art Jam"
-      },
-      {
-        "id": "gal-2",
-        "image": "/assets/img/gallery/02.jpg",
-        "title": "Outdoor Play"
-      },
-      {
-        "id": "gal-3",
-        "image": "/assets/img/gallery/03.jpg",
-        "title": "STEM Lab"
-      },
-      {
-        "id": "gal-4",
-        "image": "/assets/img/gallery/04.jpg",
-        "title": "Cooking Time"
-      }
-    ]
-  },
-  "stats": [
-    {
-      "label": "Parent Satisfaction",
-      "value": "98%"
-    },
-    {
-      "label": "Clubs & Activities",
-      "value": "24"
-    },
-    {
-      "label": "Graduates",
-      "value": "1.8k"
-    }
-  ],
-  "testimonials": [
-    {
-      "id": "testi-1",
-      "name": "Dewi Amanda",
-      "role": "Orang Tua Arka",
-      "message": "Guru-gurunya bukan hanya mengajar, tapi jadi partner diskusi orang tua. Report harian di aplikasi sangat detail.",
-      "avatar": "/assets/img/testimonial/01.png",
-      "rating": 5
-    },
-    {
-      "id": "testi-2",
-      "name": "Rio Putra",
-      "role": "Ayah Kayla",
-      "message": "Kayla yang awalnya pemalu jadi berani tampil di panggung dan suka eksperimen sains. Kurikulumnya balance banget.",
-      "avatar": "/assets/img/testimonial/02.png",
-      "rating": 5
-    },
-    {
-      "id": "testi-3",
-      "name": "Maria Lintang",
-      "role": "Orang Tua Dira",
-      "message": "Fasilitas lengkap, makanan sehat, dan komunikasi sekolah-orang tua selalu jelas. Highly recommended!",
-      "avatar": "/assets/img/testimonial/03.png",
-      "rating": 4
-    }
-  ],
-  "events": [
-    {
-      "id": "ev-1",
-      "date": "03 Apr 2025",
-      "time": "09.00 - 12.00",
-      "title": "STEAM Discovery Day",
-      "location": "Clevio Hall, Jakarta",
-      "description": "Tahap mencari ide dan memahami masalah yang ingin diselesaikan."
-    },
-    {
-      "id": "ev-2",
-      "date": "17 Apr 2025",
-      "time": "13.00 - 15.00",
-      "title": "Parenting Class: Digital Detox",
-      "location": "Studio Senja, BSD",
-      "description": "Bahas strategi membangun kebiasaan sehat di rumah bersama psikolog Clevio."
-    }
-  ],
-  "blog": {
-    "tagline": "Berita & Artikel",
-    "title": "Cerita terbaru dari komunitas Clevio",
-    "posts": [
-      {
-        "id": "blog-1",
-        "title": "Riset: Bermain Air Tingkatkan Sensorik Anak",
-        "excerpt": "Kenapa water play penting dan bagaimana Clevio mengemasnya jadi sesi belajar yang aman.",
-        "image": "/assets/img/news/01.jpg",
-        "date": "20 Feb 2025",
-        "author": "Team Kurikulum"
-      },
-      {
-        "id": "blog-2",
-        "title": "Checklist Memilih Sekolah PAUD",
-        "excerpt": "Hal penting yang wajib ditanyakan sebelum daftar ke sekolah anak usia dini.",
-        "image": "/assets/img/news/02.jpg",
-        "date": "11 Mar 2025",
-        "author": "Parent Support"
-      },
-      {
-        "id": "blog-3",
-        "title": "Cara Membangun Growth Mindset",
-        "excerpt": "Rutinitas sederhana yang bisa dilakukan di rumah agar anak percaya diri.",
-        "image": "/assets/img/news/03.jpg",
-        "date": "25 Mar 2025",
-        "author": "Clevio Mentor"
-      }
-    ]
-  },
-  "callToAction": {
-    "eyebrow": "Upgrade skill anak!",
-    "title": "Ayo booking tempat si kecil di kelas clevio!",
-    "text": "Isi formulir untuk jadwalkan trial/daftar langsung dan dapatkan modu hingga voucher biaya pendaftaran.",
-    "button": {
-      "label": "Daftar sekarang",
-      "href": "#contact"
-    },
-    "stats": [
-      {
-        "label": "Kuota Tur Minggu Ini",
-        "value": "12 Slot"
-      },
-      {
-        "label": "Cabang Aktif",
-        "value": "6 Kota"
-      }
-    ],
-    "image": "/uploads/1764754752075-a529de6abf7b.png"
-  },
-  "newsletter": {
-    "eyebrow": "Newsletter",
-    "title": "Subscribe untuk mendapatkan update kegiatan terbaru & Diskon Spesial!",
-    "buttonLabel": "Subscribe Now"
-  },
-  "instagram": [
-    {
-      "id": "insta-1",
-      "image": "/assets/img/instagram/01.jpg",
-      "link": "https://instagram.com/clevio"
-    },
-    {
-      "id": "insta-2",
-      "image": "/assets/img/instagram/02.jpg",
-      "link": "https://instagram.com/clevio"
-    },
-    {
-      "id": "insta-3",
-      "image": "/assets/img/instagram/03.jpg",
-      "link": "https://instagram.com/clevio"
-    },
-    {
-      "id": "insta-4",
-      "image": "/assets/img/instagram/04.jpg",
-      "link": "https://instagram.com/clevio"
-    },
-    {
-      "id": "insta-5",
-      "image": "/assets/img/instagram/05.jpg",
-      "link": "https://instagram.com/clevio"
-    },
-    {
-      "id": "insta-6",
-      "image": "/assets/img/instagram/06.jpg",
-      "link": "https://instagram.com/clevio"
-    }
-  ],
-  "instructors": [
-    {
-      "id": "inst-1",
-      "name": "Brooklyn Simmons",
-      "role": "Mentor Seni",
-      "avatar": "/assets/img/team/01.jpg",
-      "socials": [
-        {
-          "icon": "facebook-f",
-          "href": "https://facebook.com"
-        },
-        {
-          "icon": "instagram",
-          "href": "https://instagram.com"
-        },
-        {
-          "icon": "linkedin-in",
-          "href": "https://linkedin.com"
-        }
-      ]
-    },
-    {
-      "id": "inst-2",
-      "name": "Leslie Alexander",
-      "role": "Coach STEAM",
-      "avatar": "/assets/img/team/02.jpg",
-      "socials": [
-        {
-          "icon": "facebook-f",
-          "href": "https://facebook.com"
-        },
-        {
-          "icon": "instagram",
-          "href": "https://instagram.com"
-        }
-      ]
-    },
-    {
-      "id": "inst-3",
-      "name": "Ronald Richards",
-      "role": "Guru Musik",
-      "avatar": "/assets/img/team/03.jpg",
-      "socials": [
-        {
-          "icon": "instagram",
-          "href": "https://instagram.com"
-        },
-        {
-          "icon": "linkedin-in",
-          "href": "https://linkedin.com"
-        }
-      ]
-    },
-    {
-      "id": "inst-4",
-      "name": "Kristin Watson",
-      "role": "Mentor Karakter",
-      "avatar": "/assets/img/team/04.jpg",
-      "socials": [
-        {
-          "icon": "facebook-f",
-          "href": "https://facebook.com"
-        },
-        {
-          "icon": "instagram",
-          "href": "https://instagram.com"
-        },
-        {
-          "icon": "linkedin-in",
-          "href": "https://linkedin.com"
-        }
-      ]
-    }
-  ],
-  "contact": {
-    "whatsapp": "+62 851-1714-3238",
-    "email": "camp@clevio.co",
-    "address": "Bukit Golf Riverside Blok A7 no. 25",
-    "hours": [
-      {
-        "days": "Senin - Jumat",
-        "time": "07.00 - 17.00"
-      },
-      {
-        "days": "Sabtu",
-        "time": "08.00 - 13.00"
-      }
-    ]
-  },
-  "footer": {
-    "text": "© Clevio Kindergarten 2025. All rights reserved.",
-    "quickLinks": [
-      {
-        "label": "Tentang Kami",
-        "href": "#about"
-      },
-      {
-        "label": "Program",
-        "href": "#programs"
-      },
-      {
-        "label": "Testimonial",
-        "href": "#testimonial"
-      }
-    ],
-    "policies": [
-      {
-        "label": "Kebijakan Privasi",
-        "href": "#privacy"
-      },
-      {
-        "label": "Syarat & Ketentuan",
-        "href": "#terms"
-      }
-    ],
-    "newsletter": {
-      "title": "Newsletter",
-      "text": "Dapatkan tips parenting, promo event, dan modul belajar setiap minggu."
-    }
-  }
+    "programsSection":  {
+                            "tagline":  "Program Kami",
+                            "title":  "Kami Bertemu Anak-Anak di Level \u003cbr\u003e Mereka Tanpa Melihat Usia"
+                        },
+    "instructorsDecorations":  {
+                                   "loveShape":  "data:image/png;base64,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",
+                                   "frameShape":  "data:image/png;base64,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"
+                               },
+    "testimonialsSection":  {
+                                "tagline":  "Testimonials",
+                                "title":  "Parents\u0027 Words Are The Key\u003cbr\u003eTo Happy Kids"
+                            },
+    "partners":  [
+                     {
+                         "id":  "pencilbox",
+                         "logo":  "/uploads/1764749204206-7a4ae9fdd02bf.png"
+                     },
+                     {
+                         "id":  "udemy",
+                         "logo":  "/uploads/1764749237558-3981ffafa02e.png"
+                     },
+                     {
+                         "id":  "amd",
+                         "logo":  "/uploads/1764749250466-2bd164d034a6d.png"
+                     },
+                     {
+                         "id":  "coursera",
+                         "logo":  "/uploads/1764749260895-e31c2de2997f7.png"
+                     },
+                     {
+                         "id":  "amazon",
+                         "logo":  "/uploads/1764749513100-0b9d8d7920486.png"
+                     },
+                     {
+                         "id":  "adobe",
+                         "logo":  "/uploads/1764749624825-f0753b5ff28db.png"
+                     },
+                     {
+                         "id":  "93723fa3-85cc-45cf-bbdd-1bc43dc2c0e7",
+                         "logo":  "/uploads/1764749636431-193c35c5a9fc5.png"
+                     }
+                 ],
+    "branding":  {
+                     "name":  "Clevio Innovator Camp",
+                     "tagline":  "Lets Innovate!",
+                     "logo":  "/uploads/1764668501717-ccdf73648720b.png",
+                     "phone":  "+62 851-1714-3238",
+                     "email":  "Camp@clevio.co",
+                     "address":  "Bukit Golf Riverside Blok A7 no. 25",
+                     "ctaLabel":  "LMS Clevio",
+                     "ctaLink":  "#contact",
+                     "socials":  [
+                                     {
+                                         "icon":  "facebook-f",
+                                         "label":  "Facebook",
+                                         "href":  "https://facebook.com/cleviocamp"
+                                     },
+                                     {
+                                         "icon":  "instagram",
+                                         "label":  "Instagram",
+                                         "href":  "https://instagram.com/cleviocamp"
+                                     },
+                                     {
+                                         "icon":  "linkedin-in",
+                                         "label":  "LinkedIn",
+                                         "href":  "https://id.linkedin.com/company/clevio"
+                                     }
+                                 ]
+                 },
+    "navigation":  {
+                       "menu":  [
+                                    {
+                                        "label":  "Home",
+                                        "href":  "#hero"
+                                    },
+                                    {
+                                        "label":  "Classes",
+                                        "href":  "#programs"
+                                    },
+                                    {
+                                        "label":  "Teachers",
+                                        "href":  "#teachers"
+                                    },
+                                    {
+                                        "label":  "About",
+                                        "href":  "#about"
+                                    },
+                                    {
+                                        "label":  "Gallery",
+                                        "href":  "#gallery"
+                                    },
+                                    {
+                                        "label":  "Contact",
+                                        "href":  "#contact"
+                                    }
+                                ]
+                   },
+    "hero":  {
+                 "eyebrow":  "Sekolah Coding Pertama di Indonesia",
+                 "title":  "Arahkan Liburan Si Kecil Ke \u003cspan\u003eHoliday Class\u003c/span\u003e",
+                 "description":  "Di Holiday Class Clevio, anak-anak akan belajar coding dan teknologi sesuai dengan jenjang usianya. Mari buat liburan si kecil menyenangkan!",
+                 "highlight":  "Our Highlight!",
+                 "badges":  [
+                                "Montessori",
+                                "STEAM",
+                                "Character"
+                            ],
+                 "stats":  [
+                               {
+                                   "label":  "Siswa Aktif",
+                                   "value":  "480+"
+                               },
+                               {
+                                   "label":  "Guru Profesional",
+                                   "value":  "38"
+                               }
+                           ],
+                 "media":  {
+                               "image":  "/uploads/1764669460846-82722be5bc77f.png",
+                               "shape":  "/uploads/1764669448070-4ec4677e95bc.png",
+                               "videoUrl":  "https://www.youtube.com/watch?v=Cn4G2lZ_g2I"
+                           },
+                 "decorations":  [
+                                     {
+                                         "id":  "bottom",
+                                         "label":  "Bottom Shape",
+                                         "image":  "/assets/img/hero/bottom.png"
+                                     },
+                                     {
+                                         "id":  "parasuit",
+                                         "label":  "Parasuit",
+                                         "image":  "/assets/img/hero/parasuit.png"
+                                     },
+                                     {
+                                         "id":  "left",
+                                         "label":  "Left Shape",
+                                         "image":  "/assets/img/hero/left.png"
+                                     },
+                                     {
+                                         "id":  "book",
+                                         "label":  "Book",
+                                         "image":  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAMAAABG8BK2AAAAOVBMVEUAAABYZepYaOhYZulYZutZZexSZOdYZetZZOtYZuxXZutYZupXZutWZedXZ+pXZehWZulZZuxYZusKaNvtAAAAEnRSTlMAYCBAwO8QgHDg0KCwMJCQUFCsKd87AAAB+klEQVRYw+3Xy7ajIBAFUIqC4u2D///YLhNYpGVdtWHWN2diEsx2wZEBYixklCMxGVx1zhkmEZVfgWlEG2JmElHAy8LMHIL8qTBTyAxDCyOekSnGcMW6/vGekQjWrOHIarZUfk3u1Y64ZyjBGl0+RUeQPBhyjny9Y3BVOtc4p1QMQamChiRS4EXpGRmjwQ/l/WQfDKTPhxJalTl0mnhlIHOaw18DpB8Wy+YsT/sJCkM28uWTuVj0yrT9VBnOAEPWvfYTigmGzNGC2gSnZxCeMUbXrdAzduMrPmF2RkrrHbNnfVyfMKQW2RXeen/C9IXfMIR2jd5ljvPRpAeF94xU+RR5X3jP7O8dsVjgWBOduij8YlIAcqDwygwX3phv4WOF+2/h/3fh6Vv4t/BfU/g4cw7GqcJFW+ycRgo/vTrKkBgovAYORC+vxR4pvM3GW6pjI0tM7dUZZxoyw4AryAzTDnYzjC/IHFNOh9OMtnz9V0ZKxA1gw1SOmYbKwPEzIiZ5xVCCuqFqfNjeRLLhrwGtotlSz9Tb+ijAVedTKmZOTDkmxsUCSknvOeyLb/9YygGSZMLdLqoONQZft+1S9JHAt7sFqR8itNHVA5DLgTd/unmLf0zC43jthSln1wGmnZutIJdzgItYvutqPPCkJT/N5cmwwpHWTyHH2/kH2KNgtG+FZgsAAAAASUVORK5CYII="
+                                     },
+                                     {
+                                         "id":  "pencil",
+                                         "label":  "Pencil",
+                                         "image":  "/assets/img/hero/pencil.png"
+                                     },
+                                     {
+                                         "id":  "bee",
+                                         "label":  "Bee",
+                                         "image":  "/assets/img/hero/bee.png"
+                                     },
+                                     {
+                                         "id":  "right",
+                                         "label":  "Right Shape",
+                                         "image":  "/assets/img/hero/right.png"
+                                     },
+                                     {
+                                         "id":  "star",
+                                         "label":  "Star",
+                                         "image":  "/uploads/1764669782579-4a5e3864f916a.png"
+                                     }
+                                 ],
+                 "primaryCta":  {
+                                    "label":  "Daftar Holiday Class !",
+                                    "href":  "#contact"
+                                },
+                 "secondaryCta":  {
+                                      "label":  "Lihat Kurikulum",
+                                      "href":  "#programs"
+                                  }
+             },
+    "programs":  [
+                     {
+                         "id":  "art",
+                         "title":  "Explorer",
+                         "description":  "Di Level Explorer, anak-anak akan belajar mengeksplorasi serunya berkreasi dengan membuat game, animasi, dan poster digital.",
+                         "ageRange":  "1-3 SD",
+                         "image":  "/uploads/1764751864801-dce69f795d46e.png"
+                     },
+                     {
+                         "id":  "science",
+                         "title":  "Creator",
+                         "description":  "Di Level Creator, anak-anak akan belajar berbagai project membuat karya kreatif seperti video, game, aplikasi, komik, dan lain sebagainya.",
+                         "ageRange":  "4-6 SD",
+                         "image":  "/uploads/1764751874988-29d8cb908629d.png"
+                     },
+                     {
+                         "id":  "19f1d310-160b-4347-b72e-88efefd0ff9e",
+                         "title":  "Innovator",
+                         "description":  "Level Innovator, anak-anak akan menggunakan berbagai tools untuk menciptakan kreasi digital yang berupa game, aplikasi, website, video, dan lainnya.",
+                         "ageRange":  "7 SMP-12 SMA",
+                         "image":  "/uploads/1764751879261-2a211fbe3e638.png"
+                     }
+                 ],
+    "about":  {
+                  "tagline":  "4 Manfaat",
+                  "title":  "4 Pilar Clevio Innovator Camp",
+                  "text":  "Kami percaya setiap anak unik. Clevio memadukan kurikulum nasional, Montessori, dan project-based learning agar anak bebas bereksplorasi namun tetap terarah.",
+                  "bullets":  [
+                                  "Pelajar Pancasila",
+                                  "21st Century Skill",
+                                  "Entrepreneurship \u0026 Technology",
+                                  "Positive Character \u0026 Strength"
+                              ],
+                  "stats":  [
+                                {
+                                    "label":  "Tahun Pengalaman",
+                                    "value":  "12"
+                                },
+                                {
+                                    "label":  "Cabang Aktif",
+                                    "value":  "6"
+                                }
+                            ],
+                  "images":  {
+                                 "primary":  "/uploads/1764750171176-a9d147fe8c701.png",
+                                 "secondary":  "/uploads/1764755665035-bfd33b77987e1.png"
+                             },
+                  "ctaLabel":  "Daftar Sekarang",
+                  "ctaLink":  "#contact",
+                  "phone":  "+62 851-1714-3238"
+              },
+    "benefits":  {
+                     "tagline":  "Kenapa Clevio?",
+                     "title":  "Fasilitas unggulan siap bantu anak berani tampil",
+                     "items":  [
+                                   {
+                                       "title":  "Explore",
+                                       "description":  "Tahap mencari ide dan memahami masalah yang ingin diselesaikan",
+                                       "icon":  "classroom"
+                                   },
+                                   {
+                                       "title":  "Project",
+                                       "description":  "Tahap pengerjaan terstruktur untuk mengembangkan solusi sesuai tujuan yang telah ditetapkan",
+                                       "icon":  "wellness"
+                                   },
+                                   {
+                                       "title":  "Big Project",
+                                       "description":  "Tahap pembuatan karya besar yang lebih kompleks dan menyeluruh sebagai hasil akhir dari proses belajar",
+                                       "icon":  "studio"
+                                   },
+                                   {
+                                       "title":  "Product Launching",
+                                       "description":  "Tahap mempresentasikan dan merilis hasil pembelajaran agar dapat digunakan atau dinilai oleh orang lain.",
+                                       "icon":  "outdoor"
+                                   }
+                               ]
+                 },
+    "activities":  {
+                       "tagline":  "Aktivitas Kami",
+                       "title":  "Mari eksplor kegiatan seru di Clevio",
+                       "image":  "/uploads/1764754390561-09671912a963d.png",
+                       "items":  [
+                                     {
+                                         "title":  "Festival Technopreneur",
+                                         "description":  "Acara puncak technopreneur cilik mempresentasikan big project mereka.",
+                                         "icon":  "icon-icon-1"
+                                     },
+                                     {
+                                         "title":  "Lomba Cipta Game",
+                                         "description":  "Kompetisi anak menunjukkan kreativitas \u0026 skill coding.",
+                                         "icon":  "icon-icon-16"
+                                     },
+                                     {
+                                         "title":  "Holiday Class",
+                                         "description":  "Kelas singkat untuk belajar coding dan membuat proyek seru saat liburan.",
+                                         "icon":  "icon-icon-7"
+                                     },
+                                     {
+                                         "title":  "Pitching Day",
+                                         "description":  "Sesi presentasi siswa menjelaskan hasil belajar mereka kepada orang tua.",
+                                         "icon":  "icon-icon-8"
+                                     }
+                                 ]
+                   },
+    "gallery":  {
+                    "tagline":  "Gallery",
+                    "title":  "Momen favorit di Clevio Center",
+                    "items":  [
+                                  {
+                                      "id":  "gal-1",
+                                      "image":  "/assets/img/gallery/01.jpg",
+                                      "title":  "Art Jam"
+                                  },
+                                  {
+                                      "id":  "gal-2",
+                                      "image":  "/assets/img/gallery/02.jpg",
+                                      "title":  "Outdoor Play"
+                                  },
+                                  {
+                                      "id":  "gal-3",
+                                      "image":  "/assets/img/gallery/03.jpg",
+                                      "title":  "STEM Lab"
+                                  },
+                                  {
+                                      "id":  "gal-4",
+                                      "image":  "/assets/img/gallery/04.jpg",
+                                      "title":  "Cooking Time"
+                                  }
+                              ]
+                },
+    "stats":  [
+                  {
+                      "label":  "Parent Satisfaction",
+                      "value":  "98%"
+                  },
+                  {
+                      "label":  "Clubs \u0026 Activities",
+                      "value":  "24"
+                  },
+                  {
+                      "label":  "Graduates",
+                      "value":  "1.8k"
+                  }
+              ],
+    "testimonials":  [
+                         {
+                             "id":  "testi-1",
+                             "name":  "Dewi Amanda",
+                             "role":  "Orang Tua Arka",
+                             "message":  "Guru-gurunya bukan hanya mengajar, tapi jadi partner diskusi orang tua. Report harian di aplikasi sangat detail.",
+                             "avatar":  "/assets/img/testimonial/01.png",
+                             "rating":  5
+                         },
+                         {
+                             "id":  "testi-2",
+                             "name":  "Rio Putra",
+                             "role":  "Ayah Kayla",
+                             "message":  "Kayla yang awalnya pemalu jadi berani tampil di panggung dan suka eksperimen sains. Kurikulumnya balance banget.",
+                             "avatar":  "/assets/img/testimonial/02.png",
+                             "rating":  5
+                         },
+                         {
+                             "id":  "testi-3",
+                             "name":  "Maria Lintang",
+                             "role":  "Orang Tua Dira",
+                             "message":  "Fasilitas lengkap, makanan sehat, dan komunikasi sekolah-orang tua selalu jelas. Highly recommended!",
+                             "avatar":  "/assets/img/testimonial/03.png",
+                             "rating":  4
+                         }
+                     ],
+    "events":  [
+                   {
+                       "id":  "ev-1",
+                       "date":  "03 Apr 2025",
+                       "time":  "09.00 - 12.00",
+                       "title":  "STEAM Discovery Day",
+                       "location":  "Clevio Hall, Jakarta",
+                       "description":  "Tahap mencari ide dan memahami masalah yang ingin diselesaikan."
+                   },
+                   {
+                       "id":  "ev-2",
+                       "date":  "17 Apr 2025",
+                       "time":  "13.00 - 15.00",
+                       "title":  "Parenting Class: Digital Detox",
+                       "location":  "Studio Senja, BSD",
+                       "description":  "Bahas strategi membangun kebiasaan sehat di rumah bersama psikolog Clevio."
+                   }
+               ],
+    "blog":  {
+                 "tagline":  "Berita \u0026 Artikel",
+                 "title":  "Cerita terbaru dari komunitas Clevio",
+                 "posts":  [
+                               {
+                                   "id":  "blog-1",
+                                   "title":  "Riset: Bermain Air Tingkatkan Sensorik Anak",
+                                   "excerpt":  "Kenapa water play penting dan bagaimana Clevio mengemasnya jadi sesi belajar yang aman.",
+                                   "image":  "/assets/img/news/01.jpg",
+                                   "date":  "20 Feb 2025",
+                                   "author":  "Team Kurikulum"
+                               },
+                               {
+                                   "id":  "blog-2",
+                                   "title":  "Checklist Memilih Sekolah PAUD",
+                                   "excerpt":  "Hal penting yang wajib ditanyakan sebelum daftar ke sekolah anak usia dini.",
+                                   "image":  "/assets/img/news/02.jpg",
+                                   "date":  "11 Mar 2025",
+                                   "author":  "Parent Support"
+                               },
+                               {
+                                   "id":  "blog-3",
+                                   "title":  "Cara Membangun Growth Mindset",
+                                   "excerpt":  "Rutinitas sederhana yang bisa dilakukan di rumah agar anak percaya diri.",
+                                   "image":  "/assets/img/news/03.jpg",
+                                   "date":  "25 Mar 2025",
+                                   "author":  "Clevio Mentor"
+                               }
+                           ]
+             },
+    "callToAction":  {
+                         "eyebrow":  "Upgrade skill anak!",
+                         "title":  "Ayo booking tempat si kecil di kelas clevio!",
+                         "text":  "Isi formulir untuk jadwalkan trial/daftar langsung dan dapatkan modu hingga voucher biaya pendaftaran.",
+                         "button":  {
+                                        "label":  "Daftar sekarang",
+                                        "href":  "#contact"
+                                    },
+                         "stats":  [
+                                       {
+                                           "label":  "Kuota Tur Minggu Ini",
+                                           "value":  "12 Slot"
+                                       },
+                                       {
+                                           "label":  "Cabang Aktif",
+                                           "value":  "6 Kota"
+                                       }
+                                   ],
+                         "image":  "/uploads/1764754752075-a529de6abf7b.png"
+                     },
+    "newsletter":  {
+                       "eyebrow":  "Newsletter",
+                       "title":  "Subscribe untuk mendapatkan update kegiatan terbaru \u0026 Diskon Spesial!",
+                       "buttonLabel":  "Subscribe Now"
+                   },
+    "instagram":  [
+                      {
+                          "id":  "insta-1",
+                          "image":  "/assets/img/instagram/01.jpg",
+                          "link":  "https://instagram.com/clevio"
+                      },
+                      {
+                          "id":  "insta-2",
+                          "image":  "/assets/img/instagram/02.jpg",
+                          "link":  "https://instagram.com/clevio"
+                      },
+                      {
+                          "id":  "insta-3",
+                          "image":  "/assets/img/instagram/03.jpg",
+                          "link":  "https://instagram.com/clevio"
+                      },
+                      {
+                          "id":  "insta-4",
+                          "image":  "/assets/img/instagram/04.jpg",
+                          "link":  "https://instagram.com/clevio"
+                      },
+                      {
+                          "id":  "insta-5",
+                          "image":  "/assets/img/instagram/05.jpg",
+                          "link":  "https://instagram.com/clevio"
+                      },
+                      {
+                          "id":  "insta-6",
+                          "image":  "/assets/img/instagram/06.jpg",
+                          "link":  "https://instagram.com/clevio"
+                      }
+                  ],
+    "instructors":  [
+                        {
+                            "id":  "inst-1",
+                            "name":  "Brooklyn Simmons",
+                            "role":  "Mentor Seni",
+                            "avatar":  "/assets/img/team/01.jpg",
+                            "socials":  [
+                                            {
+                                                "icon":  "facebook-f",
+                                                "href":  "https://facebook.com"
+                                            },
+                                            {
+                                                "icon":  "instagram",
+                                                "href":  "https://instagram.com"
+                                            },
+                                            {
+                                                "icon":  "linkedin-in",
+                                                "href":  "https://linkedin.com"
+                                            }
+                                        ]
+                        },
+                        {
+                            "id":  "inst-2",
+                            "name":  "Leslie Alexander",
+                            "role":  "Coach STEAM",
+                            "avatar":  "/assets/img/team/02.jpg",
+                            "socials":  [
+                                            {
+                                                "icon":  "facebook-f",
+                                                "href":  "https://facebook.com"
+                                            },
+                                            {
+                                                "icon":  "instagram",
+                                                "href":  "https://instagram.com"
+                                            }
+                                        ]
+                        },
+                        {
+                            "id":  "inst-3",
+                            "name":  "Ronald Richards",
+                            "role":  "Guru Musik",
+                            "avatar":  "/assets/img/team/03.jpg",
+                            "socials":  [
+                                            {
+                                                "icon":  "instagram",
+                                                "href":  "https://instagram.com"
+                                            },
+                                            {
+                                                "icon":  "linkedin-in",
+                                                "href":  "https://linkedin.com"
+                                            }
+                                        ]
+                        },
+                        {
+                            "id":  "inst-4",
+                            "name":  "Kristin Watson",
+                            "role":  "Mentor Karakter",
+                            "avatar":  "/assets/img/team/04.jpg",
+                            "socials":  [
+                                            {
+                                                "icon":  "facebook-f",
+                                                "href":  "https://facebook.com"
+                                            },
+                                            {
+                                                "icon":  "instagram",
+                                                "href":  "https://instagram.com"
+                                            },
+                                            {
+                                                "icon":  "linkedin-in",
+                                                "href":  "https://linkedin.com"
+                                            }
+                                        ]
+                        }
+                    ],
+    "contact":  {
+                    "whatsapp":  "+62 851-1714-3238",
+                    "email":  "camp@clevio.co",
+                    "address":  "Bukit Golf Riverside Blok A7 no. 25",
+                    "hours":  [
+                                  {
+                                      "days":  "Senin - Jumat",
+                                      "time":  "07.00 - 17.00"
+                                  },
+                                  {
+                                      "days":  "Sabtu",
+                                      "time":  "08.00 - 13.00"
+                                  }
+                              ]
+                },
+    "footer":  {
+                   "text":  "© Clevio Kindergarten 2025. All rights reserved.",
+                   "quickLinks":  [
+                                      {
+                                          "label":  "Tentang Kami",
+                                          "href":  "#about"
+                                      },
+                                      {
+                                          "label":  "Program",
+                                          "href":  "#programs"
+                                      },
+                                      {
+                                          "label":  "Testimonial",
+                                          "href":  "#testimonial"
+                                      }
+                                  ],
+                   "policies":  [
+                                    {
+                                        "label":  "Kebijakan Privasi",
+                                        "href":  "#privacy"
+                                    },
+                                    {
+                                        "label":  "Syarat \u0026 Ketentuan",
+                                        "href":  "#terms"
+                                    }
+                                ],
+                   "newsletter":  {
+                                      "title":  "Newsletter",
+                                      "text":  "Dapatkan tips parenting, promo event, dan modul belajar setiap minggu."
+                                  }
+               },
+    "programDecorations":  {
+                               "topShape":  "/assets/img/section-top-shape.png",
+                               "bottomShape":  "/assets/img/section-bottom-shape.png",
+                               "mask":  "/assets/img/program/mask.png",
+                               "mask2":  "/assets/img/program/mask-2.png",
+                               "pencil":  "/assets/img/program/pencil.png",
+                               "compass":  "/assets/img/program/compass.png"
+                           },
+    "activitiesDecorations":  {
+                                  "pencil":  "/assets/img/about/pencil.png",
+                                  "giraffe":  "/assets/img/about/zebra.png",
+                                  "radius":  "/assets/img/about/radius-shape-1.png"
+                              }
 }
