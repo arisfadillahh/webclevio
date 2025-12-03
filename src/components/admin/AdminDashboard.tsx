@@ -128,6 +128,12 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
   const router = useRouter();
   const [content, setContent] = useState<SiteContent>({
     ...initialContent,
+    about: {
+      ...initialContent.about,
+      ctaLabel: initialContent.about?.ctaLabel ?? initialContent.branding.ctaLabel,
+      ctaLink: initialContent.about?.ctaLink ?? initialContent.branding.ctaLink,
+      phone: initialContent.about?.phone ?? initialContent.contact.whatsapp,
+    },
     programsSection: initialContent.programsSection ?? {
       tagline: "Our Programs",
       title: "We Meet Kids At Their Level<br>Regardless Of Their Age",
@@ -381,7 +387,7 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
   };
 
   const handleAboutFieldChange = (
-    field: "tagline" | "title" | "text",
+    field: "tagline" | "title" | "text" | "ctaLabel" | "ctaLink" | "phone",
     value: string,
   ) => {
     setContent((prev) => ({
@@ -1115,6 +1121,30 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
                     onChange={(e) => handleAboutFieldChange("text", e.target.value)}
                     placeholder="Clevio adalah lembaga pendidikan anak usia dini..."
                     style={{ minHeight: "150px" }}
+                  />
+                </label>
+                <label>
+                  Teks Tombol
+                  <input
+                    value={content.about.ctaLabel ?? ""}
+                    onChange={(e) => handleAboutFieldChange("ctaLabel", e.target.value)}
+                    placeholder="Lihat Program"
+                  />
+                </label>
+                <label>
+                  Link Tombol
+                  <input
+                    value={content.about.ctaLink ?? ""}
+                    onChange={(e) => handleAboutFieldChange("ctaLink", e.target.value)}
+                    placeholder="#about"
+                  />
+                </label>
+                <label>
+                  No. Telepon (di samping tombol)
+                  <input
+                    value={content.about.phone ?? ""}
+                    onChange={(e) => handleAboutFieldChange("phone", e.target.value)}
+                    placeholder="+62 812-3456-7890"
                   />
                 </label>
               </div>

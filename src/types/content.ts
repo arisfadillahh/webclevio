@@ -82,6 +82,9 @@ export interface AboutSection {
   text: string;
   bullets: string[];
   stats: Stat[];
+  ctaLabel?: string;
+  ctaLink?: string;
+  phone?: string;
   images: {
     primary: string;
     secondary: string;

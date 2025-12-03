@@ -243,12 +243,14 @@ function bindAbout(root: HTMLElement, content: SiteContent) {
 
   const aboutButton = section.querySelector(".about-button .theme-btn") as HTMLAnchorElement | null;
   if (aboutButton) {
-    aboutButton.href = content.branding.ctaLink;
-    aboutButton.innerHTML = `${content.branding.ctaLabel} <i class="fa-solid fa-arrow-right-long"></i>`;
+    const href = content.about.ctaLink || content.branding.ctaLink;
+    const label = content.about.ctaLabel || content.branding.ctaLabel;
+    aboutButton.href = href;
+    aboutButton.innerHTML = `${label} <i class="fa-solid fa-arrow-right-long"></i>`;
   }
   const phoneLink = section.querySelector(".author-icon h5 a") as HTMLAnchorElement | null;
   if (phoneLink) {
-    const phone = content.contact.whatsapp;
+    const phone = content.about.phone || content.contact.whatsapp;
     const telValue = phone.replace(/[^+\d]/g, "") || phone;
     phoneLink.textContent = phone;
     phoneLink.href = `tel:${telValue}`;
