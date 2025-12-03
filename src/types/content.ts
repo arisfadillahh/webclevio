@@ -192,11 +192,20 @@ export interface ContactInfo {
 export interface FooterContent {
   text: string;
   quickLinks: NavItem[];
+  categories: NavItem[];
   policies: NavItem[];
+  blurb?: string;
+  contacts?: FooterContact[];
   newsletter: {
     title: string;
     text: string;
   };
+}
+
+export interface FooterContact {
+  label: string;
+  value: string;
+  href?: string;
 }
 
 export interface Stat {

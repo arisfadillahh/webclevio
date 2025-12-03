@@ -439,6 +439,11 @@ body {
   width: auto;
   object-fit: contain;
 }
+.footer-widgets-wrapper .widget-head img {
+  max-height: 120px;
+  width: auto;
+  object-fit: contain;
+}
 
 .hero-1 .hero-content {
   position: relative;

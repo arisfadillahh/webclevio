@@ -3,7 +3,7 @@
 import { useMemo, useState, ChangeEvent, useId, useEffect } from "react";
 import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import type { SiteContent } from "@/types/content";
+import type { NavItem, SiteContent } from "@/types/content";
 import ThemeBinder from "@/components/home/ThemeBinder";
 import PreviewAssets, { fixAssetPaths } from "@/components/admin/PreviewAssets";
 import { getPreviewKeys } from "@/lib/preview";
@@ -146,6 +146,39 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
       pencil: "/assets/img/about/pencil.png",
       giraffe: "/assets/img/about/zebra.png",
       radius: "/assets/img/about/radius-shape-1.png",
+    },
+    footer: {
+      text: initialContent.footer?.text ?? "© Clevio Kindergarten 2025. All rights reserved.",
+      quickLinks: initialContent.footer?.quickLinks ?? [],
+      categories: initialContent.footer?.categories ?? [],
+      policies: initialContent.footer?.policies ?? [],
+      blurb:
+        initialContent.footer?.blurb ??
+        initialContent.about?.text ??
+        "Phasellus ultricies aliquam volutpat ullamcorper laoreet neque.",
+      contacts:
+        initialContent.footer?.contacts ??
+        [
+          {
+            label: "Call Us 7/24",
+            value: initialContent.contact?.whatsapp ?? "+62 812-3456-7890",
+            href: `tel:${(initialContent.contact?.whatsapp ?? "").replace(/[^+\\d]/g, "")}`,
+          },
+          {
+            label: "Make a Quote",
+            value: initialContent.contact?.email ?? "info@clevio.id",
+            href: `mailto:${initialContent.contact?.email ?? "info@clevio.id"}`,
+          },
+          {
+            label: "Location",
+            value: initialContent.contact?.address ?? "Alamat sekolah",
+            href: undefined,
+          },
+        ],
+      newsletter: initialContent.footer?.newsletter ?? {
+        title: "Newsletter",
+        text: "Dapatkan tips parenting, promo event, dan modul belajar setiap minggu.",
+      },
     },
     programsSection: initialContent.programsSection ?? {
       tagline: "Our Programs",
@@ -335,25 +368,77 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
     }));
   };
 
-  const removeBlogPost = (index: number) => {
-    setContent((prev) => ({
-      ...prev,
-      blog: {
-        ...prev.blog,
-        posts: prev.blog.posts.filter((_, idx) => idx !== index),
-      },
-    }));
-  };
+const removeBlogPost = (index: number) => {
+  setContent((prev) => ({
+    ...prev,
+    blog: {
+      ...prev.blog,
+      posts: prev.blog.posts.filter((_, idx) => idx !== index),
+    },
+  }));
+};
 
-  const handleContactChange = (
-    field: keyof typeof content.contact,
-    value: string,
-  ) => {
-    setContent((prev) => ({
-      ...prev,
-      contact: { ...prev.contact, [field]: value },
-    }));
-  };
+const handleContactChange = (
+  field: keyof typeof content.contact,
+  value: string,
+) => {
+  setContent((prev) => ({
+    ...prev,
+    contact: { ...prev.contact, [field]: value },
+  }));
+};
+
+const handleFooterFieldChange = (field: keyof SiteContent["footer"], value: string) => {
+  setContent((prev) => ({
+    ...prev,
+    footer: { ...prev.footer, [field]: value },
+  }));
+};
+
+const updateFooterNavItem = (
+  key: "quickLinks" | "categories" | "policies",
+  index: number,
+  field: keyof NavItem,
+  value: string,
+) => {
+  setContent((prev) => {
+    const list = [...(prev.footer[key] || [])];
+    list[index] = { ...list[index], [field]: value };
+    return { ...prev, footer: { ...prev.footer, [key]: list } };
+  });
+};
+
+const addFooterNavItem = (key: "quickLinks" | "categories" | "policies") => {
+  setContent((prev) => ({
+    ...prev,
+    footer: {
+      ...prev.footer,
+      [key]: [...(prev.footer[key] || []), { label: "Menu baru", href: "#" }],
+    },
+  }));
+};
+
+const removeFooterNavItem = (key: "quickLinks" | "categories" | "policies", index: number) => {
+  setContent((prev) => ({
+    ...prev,
+    footer: {
+      ...prev.footer,
+      [key]: (prev.footer[key] || []).filter((_, idx) => idx !== index),
+    },
+  }));
+};
+
+const updateFooterContact = (
+  index: number,
+  field: keyof NonNullable<SiteContent["footer"]["contacts"]>[number],
+  value: string,
+) => {
+  setContent((prev) => {
+    const contacts = [...(prev.footer.contacts || [])];
+    contacts[index] = { ...contacts[index], [field]: value };
+    return { ...prev, footer: { ...prev.footer, contacts } };
+  });
+};
 
   const handleBrandingChange = (
     field: keyof typeof content.branding,
@@ -2116,35 +2201,167 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
               title="Data Kontak Utama"
               description="WhatsApp, email, dan alamat yang ditampilkan di footer"
             >
-            <div className="form-grid">
-              <label>
-                Nomor WhatsApp
-                <input
-                  value={content.contact.whatsapp}
-                  onChange={(e) => handleContactChange("whatsapp", e.target.value)}
-                  placeholder="+62 812-3456-7890"
-                />
-              </label>
-              <label>
-                Email Kontak
-                <input
-                  value={content.contact.email}
-                  onChange={(e) => handleContactChange("email", e.target.value)}
-                  placeholder="info@clevio.id"
-                />
-              </label>
-              <label>
-                Alamat Lengkap
-                <textarea
-                  value={content.contact.address}
-                  onChange={(e) => handleContactChange("address", e.target.value)}
-                  placeholder="Jl. Contoh No. 123, Jakarta 12345"
-                  style={{ minHeight: "100px" }}
-                />
-              </label>
-            </div>
-          </AdminCard>
-        </>
+              <div className="form-grid">
+                <label>
+                  Nomor WhatsApp
+                  <input
+                    value={content.contact.whatsapp}
+                    onChange={(e) => handleContactChange("whatsapp", e.target.value)}
+                    placeholder="+62 812-3456-7890"
+                  />
+                </label>
+                <label>
+                  Email Kontak
+                  <input
+                    value={content.contact.email}
+                    onChange={(e) => handleContactChange("email", e.target.value)}
+                    placeholder="info@clevio.id"
+                  />
+                </label>
+                <label>
+                  Alamat Lengkap
+                  <textarea
+                    value={content.contact.address}
+                    onChange={(e) => handleContactChange("address", e.target.value)}
+                    placeholder="Jl. Contoh No. 123, Jakarta 12345"
+                    style={{ minHeight: "100px" }}
+                  />
+                </label>
+              </div>
+            </AdminCard>
+
+            <AdminCard
+              title="Kontak Footer"
+              description="Tiga kolom kontak di footer (telepon, email, lokasi)"
+            >
+              <div className="admin-list">
+                {(content.footer.contacts || []).map((item, index) => (
+                  <div key={`footer-contact-${index}`} className="list-card">
+                    <div className="list-card-header">
+                      <strong>Kontak {index + 1}</strong>
+                    </div>
+                    <div className="form-grid">
+                      <label>
+                        Label
+                        <input
+                          value={item.label}
+                          onChange={(e) => updateFooterContact(index, "label", e.target.value)}
+                          placeholder="Call Us 7/24"
+                        />
+                      </label>
+                      <label>
+                        Nilai
+                        <input
+                          value={item.value}
+                          onChange={(e) => updateFooterContact(index, "value", e.target.value)}
+                          placeholder="+208-555-0112"
+                        />
+                      </label>
+                      <label>
+                        Link (opsional)
+                        <input
+                          value={item.href ?? ""}
+                          onChange={(e) => updateFooterContact(index, "href", e.target.value)}
+                          placeholder="tel:+2085550112 atau mailto:care@clevio.id"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </AdminCard>
+
+            <AdminCard
+              title="Konten Footer"
+              description="Deskripsi singkat dan tautan navigasi di footer"
+            >
+              <div className="form-grid">
+                <label style={{ gridColumn: "1 / -1" }}>
+                  Deskripsi Brand Footer
+                  <textarea
+                    value={content.footer.blurb ?? ""}
+                    onChange={(e) => handleFooterFieldChange("blurb", e.target.value)}
+                    placeholder="Phasellus ultricies aliquam volutpat ullamcorper..."
+                    style={{ minHeight: "100px" }}
+                  />
+                </label>
+              </div>
+
+              <div className="list-header">
+                <p>{content.footer.quickLinks.length} Quick Links</p>
+                <button className="ghost-btn small" onClick={() => addFooterNavItem("quickLinks")}>
+                  <PiPlusBold /> Tambah
+                </button>
+              </div>
+              <div className="admin-list">
+                {content.footer.quickLinks.map((item, index) => (
+                  <div key={`footer-ql-${index}`} className="list-card">
+                    <div className="list-card-header">
+                      <strong>Link {index + 1}</strong>
+                      <button onClick={() => removeFooterNavItem("quickLinks", index)}>
+                        <PiTrashBold />
+                      </button>
+                    </div>
+                    <div className="form-grid">
+                      <label>
+                        Label
+                        <input
+                          value={item.label}
+                          onChange={(e) => updateFooterNavItem("quickLinks", index, "label", e.target.value)}
+                          placeholder="Our Services"
+                        />
+                      </label>
+                      <label>
+                        URL
+                        <input
+                          value={item.href}
+                          onChange={(e) => updateFooterNavItem("quickLinks", index, "href", e.target.value)}
+                          placeholder="#services"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="list-header" style={{ marginTop: "1rem" }}>
+                <p>{(content.footer.categories || []).length} Kategori</p>
+                <button className="ghost-btn small" onClick={() => addFooterNavItem("categories")}>
+                  <PiPlusBold /> Tambah
+                </button>
+              </div>
+              <div className="admin-list">
+                {(content.footer.categories || []).map((item, index) => (
+                  <div key={`footer-cat-${index}`} className="list-card">
+                    <div className="list-card-header">
+                      <strong>Kategori {index + 1}</strong>
+                      <button onClick={() => removeFooterNavItem("categories", index)}>
+                        <PiTrashBold />
+                      </button>
+                    </div>
+                    <div className="form-grid">
+                      <label>
+                        Label
+                        <input
+                          value={item.label}
+                          onChange={(e) => updateFooterNavItem("categories", index, "label", e.target.value)}
+                          placeholder="Music Learning"
+                        />
+                      </label>
+                      <label>
+                        URL
+                        <input
+                          value={item.href}
+                          onChange={(e) => updateFooterNavItem("categories", index, "href", e.target.value)}
+                          placeholder="#category"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </AdminCard>
+          </>
         );
 
       default:

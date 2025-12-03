@@ -613,14 +613,107 @@ function bindInstagram(root: HTMLElement, items: Props["content"]["instagram"]) 
 }
 
 function bindFooter(root: HTMLElement, content: SiteContent) {
-  const contact = root.querySelector(".footer-widget .footer-contact");
-  if (contact) {
-    contact.innerHTML = `
-      <li><i class="fa-solid fa-phone"></i>${content.contact.whatsapp}</li>
-      <li><i class="fa-solid fa-envelope"></i>${content.contact.email}</li>
-      <li><i class="fa-solid fa-location-dot"></i>${content.contact.address}</li>
-    `;
+  const footerContacts = content.footer.contacts?.length
+    ? content.footer.contacts
+    : [
+        {
+          label: "Call Us 7/24",
+          value: content.contact.whatsapp,
+          href: `tel:${content.contact.whatsapp.replace(/[^+\\d]/g, "")}`,
+        },
+        { label: "Make a Quote", value: content.contact.email, href: `mailto:${content.contact.email}` },
+        { label: "Location", value: content.contact.address },
+      ];
+
+  const contactItems = root.querySelectorAll(".contact-info-area .contact-info-items");
+  contactItems.forEach((item, index) => {
+    const data = footerContacts[index];
+    if (!data) return;
+    const cleanedTel = (data.value || "").replace(/[^+\\d]/g, "");
+    const fallbackHref =
+      data.href ||
+      (data.value.includes("@")
+        ? `mailto:${data.value}`
+        : cleanedTel
+          ? `tel:${cleanedTel}`
+          : undefined);
+    const labelEl = item.querySelector(".content p");
+    const valueEl = item.querySelector(".content h3 a, .content h3");
+    if (labelEl) labelEl.textContent = data.label;
+    if (valueEl) {
+      if ((valueEl as HTMLAnchorElement).tagName === "A") {
+        const anchor = valueEl as HTMLAnchorElement;
+        anchor.textContent = data.value;
+        if (fallbackHref) anchor.href = fallbackHref;
+      } else {
+        valueEl.textContent = data.value;
+      }
+    }
+  });
+
+  const footerWidgets = Array.from(root.querySelectorAll<HTMLElement>(".footer-widgets-wrapper .single-footer-widget"));
+  const brandWidget = footerWidgets[0];
+  if (brandWidget) {
+    const brandLogo = brandWidget.querySelector("a img");
+    if (brandLogo) {
+      (brandLogo as HTMLImageElement).src = content.branding.logo;
+      (brandLogo as HTMLImageElement).alt = content.branding.name;
+    }
+    const brandDesc = brandWidget.querySelector(".footer-content p");
+    if (brandDesc) {
+      brandDesc.textContent =
+        content.footer.blurb || "Phasellus ultricies aliquam volutpat ullamcorper laoreet neque.";
+    }
+    const brandSocial = brandWidget.querySelector(".social-icon");
+    if (brandSocial) {
+      brandSocial.innerHTML = content.branding.socials
+        .map(
+          (social) =>
+            `<a href="${social.href}" target="_blank" rel="noreferrer" aria-label="${social.label}"><i class="fab fa-${social.icon}"></i></a>`,
+        )
+        .join("");
+    }
   }
+
+  footerWidgets.forEach((widget) => {
+    const heading = widget.querySelector(".widget-head h3");
+    const title = heading?.textContent?.trim().toLowerCase();
+    if (!title) return;
+
+    if (title.includes("quick")) {
+      const list = widget.querySelector(".list-area");
+      if (list) {
+        list.innerHTML = content.footer.quickLinks
+          .map(
+            (link) => `
+            <li>
+              <a href="${link.href}">
+                <i class="fa-solid fa-chevron-right"></i>
+                ${link.label}
+              </a>
+            </li>`,
+          )
+          .join("");
+      }
+    }
+
+    if (title.includes("categori")) {
+      const list = widget.querySelector(".list-area");
+      if (list) {
+        list.innerHTML = (content.footer.categories ?? [])
+          .map(
+            (cat) => `
+            <li>
+              <a href="${cat.href}">
+                <i class="fa-solid fa-chevron-right"></i>
+                ${cat.label}
+              </a>
+            </li>`,
+          )
+          .join("");
+      }
+    }
+  });
 
   const footerText = root.querySelector(".footer-bottom p");
   if (footerText) footerText.textContent = content.footer.text;
