@@ -4,9 +4,9 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Clevio Kindergarten | Next.js Experience",
+  title: "Clevio Innovator Camp",
   description:
-    "Website Clevio Kindergarten versi Next.js lengkap dengan admin dashboard dan kontrol konten dinamis.",
+    "Website Clevio Innovator Camp versi Next.js lengkap dengan admin dashboard dan kontrol konten dinamis.",
 };
 
 export default function RootLayout({
