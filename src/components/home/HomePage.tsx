@@ -1,8 +1,7 @@
 import type { SiteContent } from "@/types/content";
 import ThemeBinder from "@/components/home/ThemeBinder";
-import { getTemplateMarkup } from "@/lib/template";
-
-const DEFAULT_ROOT_ID = "clevio-template-root";
+import { getBoundTemplateMarkup } from "@/lib/template";
+import { DEFAULT_ROOT_ID } from "@/lib/themeBinding";
 
 interface Props {
   content: SiteContent;
@@ -10,7 +9,7 @@ interface Props {
 }
 
 export default async function HomePage({ content, rootId = DEFAULT_ROOT_ID }: Props) {
-  const markup = await getTemplateMarkup();
+  const markup = await getBoundTemplateMarkup(content, rootId);
 
   return (
     <>

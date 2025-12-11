@@ -88,7 +88,7 @@
       },
       {
         "label": "Gallery",
-        "href": "#gallery"
+        "href": "#instagram"
       },
       {
         "label": "Contact",
@@ -620,4 +620,3 @@
     "radius": "/assets/img/about/radius-shape-1.png"
   }
 }
-

@@ -2326,3 +2326,60 @@ body {
     transform: translateX(-50%);
   }
 }
+
+/* Float header over hero */
+.header-1,
+.sticky.header-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+  z-index: 200;
+}
+
+.header-1 .header-main .main-menu ul li a {
+  color: #1f316e !important;
+}
+
+.header-1 .header-main .main-menu ul li a:hover {
+  color: #1f316e !important;
+}
+
+.header-1 .header-top-section .contact-list li,
+.header-1 .header-top-section .contact-list li a,
+.header-1 .header-top-section .social-icon a {
+  color: #1f316e !important;
+}
+
+.header-1 .header-main .header-button .theme-btn {
+  background: #22367b !important;
+  color: #fff !important;
+}
+
+.header-1 .header-main .header-button .theme-btn::before,
+.header-1 .header-main .header-button .theme-btn::after {
+  background-color: #1a285d !important;
+}
+
+.sticky.header-1 {
+  position: fixed !important;
+  background: linear-gradient(180deg, #e8f1ff 0%, #f5f8ff 100%) !important;
+  border-bottom: 1px solid rgba(41, 74, 131, 0.08) !important;
+}
+
+/* Give hero room for the floating nav */
+.hero-section.hero-1 {
+  margin-top: 0;
+  padding-top: 160px;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  background: linear-gradient(180deg, #e8f1ff 0%, #f5f8ff 100%) !important;
+}
+
+/* Adjust hero floating book icon position */
+.hero-1 .book-shape {
+  top: 14% !important;
+}
