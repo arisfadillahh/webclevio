@@ -8,10 +8,11 @@ import { ADMIN_SESSION_COOKIE, isValidToken } from "@/lib/auth";
 import { getPreviewKeys } from "@/lib/preview";
 
 interface Props {
-  params: { section: string };
+  params: Promise<{ section: string }>;
 }
 
 export default async function PreviewSectionPage({ params }: Props) {
+  const { section } = await params;
   const cookieStore = await cookies();
   let token = typeof cookieStore.get === "function"
     ? cookieStore.get(ADMIN_SESSION_COOKIE)?.value
@@ -31,7 +32,7 @@ export default async function PreviewSectionPage({ params }: Props) {
   }
 
   const content = await getSiteContent();
-  const allowed = getPreviewKeys(params.section);
+  const allowed = getPreviewKeys(section);
 
   return (
     <div className="preview-scoped">

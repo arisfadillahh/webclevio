@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title">
+  <title id="title">Circuit plus</title>
+  <rect x="38" y="38" width="84" height="84" rx="25" fill="#FFFFFF" stroke="#22367B" stroke-width="8"/>
+  <path d="M80 59v42M59 80h42M38 58H22M38 102H22M122 58h16M122 102h16M58 38V22M102 38V22M58 122v16M102 122v16" fill="none" stroke="#9DC83B" stroke-width="8" stroke-linecap="round"/>
+</svg>

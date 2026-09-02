@@ -1,0 +1,25 @@
+name: clevio-cms
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: clevio-cms-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: clevio_cms
+      POSTGRES_USER: clevio
+      POSTGRES_PASSWORD: clevio_local_db_2026
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - clevio_cms_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clevio -d clevio_cms"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+volumes:
+  clevio_cms_postgres_data:
+    name: clevio_cms_postgres_data

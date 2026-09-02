@@ -5,17 +5,17 @@
     --black: #000;
     --white: #ffffff;
     --theme: #22367b;
-    --theme2: #00b0d7;
+    --theme2: #9dc83b;
     --header: #22367b;
     --text: #333333;
     --text-2: #ffffffcc;
     --border: #E5E5E5;
     --border2: #22367b;
-    --border3: #00b0d7;
+    --border3: #9dc83b;
     --bg: #ffffff;
-    --bg2: #f0f8ff;
-    --bg3: #e8f5e8;
-    --accent: #c9147b;
+    --bg2: #f2f9fb;
+    --bg3: #eef7df;
+    --accent: #9dc83b;
     --box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.06);
 }
 
@@ -38,8 +38,8 @@ $shadow: var(--box-shadow);
 
 // Additional Color Variables for Accent Theme
 $primary-green: #9dc83b;
-$accent-purple: #632a7b;
-$accent-pink: #c9147b;
-$accent-red: #d82731;
-$accent-orange: #ff9400;
-$accent-yellow: #ffe60d;
+$accent-purple: #22367b;
+$accent-pink: #9dc83b;
+$accent-red: #22367b;
+$accent-orange: #9dc83b;
+$accent-yellow: #9dc83b;

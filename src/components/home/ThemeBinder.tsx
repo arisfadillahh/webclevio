@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import type {
   SiteContent,
-  Program,
   Testimonial,
   BlogPost,
   HeroDecoration,
@@ -36,18 +35,20 @@ export default function ThemeBinder({ content, rootId = DEFAULT_ROOT_ID }: Props
     const preloaderCleanup = bindPreloader(root, rootId === DEFAULT_ROOT_ID);
     if (preloaderCleanup) cleanups.push(preloaderCleanup);
 
-    bindHeader(root, content);
+    const headerCleanup = bindHeader(root, content);
+    if (headerCleanup) cleanups.push(headerCleanup);
     bindHero(root, content);
     bindAbout(root, content);
-    bindPrograms(root, content);
-    bindWorkProcess(root, content.benefits.items);
+    const programsCleanup = bindPrograms(root, content);
+    if (programsCleanup) cleanups.push(programsCleanup);
+    bindFreeTrial(root, content.freeTrial);
+    bindWorkProcess(root, content.benefits);
     bindActivities(root, content.activities, content.activitiesDecorations);
     bindTestimonials(root, content.testimonials, content);
     bindPartners(root, content.partners);
-    bindCta(root, content.callToAction);
+    bindEvents(root, content.eventsSection, content.events);
     bindNews(root, content.blog);
     bindNewsletter(root, content.newsletter);
-    bindInstructors(root, content.instructors, content);
     bindInstagram(root, content.instagram);
     bindFooter(root, content);
     const smoothScrollCleanup = enableSmoothScroll(root);
@@ -87,19 +88,29 @@ function bindPreloader(root: HTMLElement, attachWindowEvents: boolean) {
 }
 
 function bindHeader(root: HTMLElement, content: SiteContent) {
+  const logoLoadCleanups: Array<() => void> = [];
   const logos = root.querySelectorAll(".header-left .logo img, .header-logo img, .offcanvas__logo img");
   logos.forEach((logo) => {
-    (logo as HTMLImageElement).src = content.branding.logo;
-    (logo as HTMLImageElement).alt = content.branding.name;
+    const image = logo as HTMLImageElement;
+    image.src = content.branding.logo;
+    image.alt = content.branding.name;
+    const syncLogoCanvas = () => {
+      const holder = image.closest(".header-logo");
+      if (!holder || !image.naturalWidth || !image.naturalHeight) return;
+      holder.classList.toggle("has-padded-logo", image.naturalWidth / image.naturalHeight < 2.4);
+    };
+    image.addEventListener("load", syncLogoCanvas);
+    logoLoadCleanups.push(() => image.removeEventListener("load", syncLogoCanvas));
+    if (image.complete) syncLogoCanvas();
   });
 
   const navList = root.querySelector(".main-menu nav ul");
   if (navList) {
     navList.innerHTML = content.navigation.menu
       .map(
-        (item) => `
-        <li>
-          <a href="${item.href}">${item.label}</a>
+        (item, index) => `
+        <li${index === 0 ? ' class="active"' : ""}>
+          <a href="${escapeMarkup(item.href)}">${escapeMarkup(item.label)}</a>
         </li>
       `,
       )
@@ -108,7 +119,7 @@ function bindHeader(root: HTMLElement, content: SiteContent) {
 
   const headerBtnSpans = root.querySelectorAll(".header-main .header-button .theme-btn span");
   headerBtnSpans.forEach((btn) => {
-    btn.innerHTML = `${content.branding.ctaLabel}<i class="fa-solid fa-arrow-right-long"></i>`;
+    btn.innerHTML = `<i class="fa-solid fa-graduation-cap" aria-hidden="true"></i><b>${escapeMarkup(content.branding.ctaLabel)}</b><i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>`;
   });
   const headerLinks = root.querySelectorAll(".header-main .header-button .theme-btn");
   headerLinks.forEach((link) => {
@@ -157,6 +168,66 @@ function bindHeader(root: HTMLElement, content: SiteContent) {
   if (drawerSocial) {
     drawerSocial.innerHTML = socialLinks;
   }
+
+  const navLinks = Array.from(
+    root.querySelectorAll<HTMLAnchorElement>(".main-menu nav > ul > li > a"),
+  );
+  const setActiveLink = (activeLink: HTMLAnchorElement) => {
+    navLinks.forEach((link) => link.parentElement?.classList.toggle("active", link === activeLink));
+  };
+    const clickHandlers = navLinks.map((link) => {
+      const handler = () => setActiveLink(link);
+      link.addEventListener("click", handler);
+      return { link, handler };
+    });
+
+    const mobileMenuClickHandler = (event: Event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const link = target.closest<HTMLAnchorElement>(".offcanvas__info .mobile-menu a");
+      if (!link || !root.contains(link)) return;
+
+      root.querySelector(".offcanvas__info")?.classList.remove("info-open");
+      root.querySelector(".offcanvas__overlay")?.classList.remove("overlay-open");
+
+      const matchingDesktopLink = navLinks.find(
+        (navLink) => navLink.getAttribute("href") === link.getAttribute("href"),
+      );
+      if (matchingDesktopLink) setActiveLink(matchingDesktopLink);
+    };
+    root.addEventListener("click", mobileMenuClickHandler);
+
+  const observedLinks = navLinks
+    .map((link) => {
+      const href = link.getAttribute("href") ?? "";
+      if (!href.startsWith("#") || href.length < 2) return null;
+      const section = root.querySelector<HTMLElement>(href);
+      return section ? { link, section } : null;
+    })
+    .filter((item): item is { link: HTMLAnchorElement; section: HTMLElement } => Boolean(item));
+
+  const observer =
+    typeof IntersectionObserver !== "undefined"
+      ? new IntersectionObserver(
+          (entries) => {
+            const visibleEntry = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            const match = observedLinks.find((item) => item.section === visibleEntry?.target);
+            if (match) setActiveLink(match.link);
+          },
+          { rootMargin: "-28% 0px -62%", threshold: [0, 0.1, 0.3] },
+        )
+      : null;
+  observedLinks.forEach(({ section }) => observer?.observe(section));
+
+  return () => {
+      logoLoadCleanups.forEach((cleanup) => cleanup());
+      clickHandlers.forEach(({ link, handler }) => link.removeEventListener("click", handler));
+      root.removeEventListener("click", mobileMenuClickHandler);
+      observer?.disconnect();
+    };
 }
 
 function bindHero(root: HTMLElement, content: SiteContent) {
@@ -165,7 +236,11 @@ function bindHero(root: HTMLElement, content: SiteContent) {
   const eyebrow = section.querySelector("h5");
   const title = section.querySelector("h1");
   const desc = section.querySelector("p");
-  if (eyebrow) eyebrow.textContent = content.hero.eyebrow;
+  if (eyebrow) {
+    const eyebrowLabel = eyebrow.querySelector("[data-hero-eyebrow]");
+    if (eyebrowLabel) eyebrowLabel.textContent = content.hero.eyebrow;
+    else eyebrow.textContent = content.hero.eyebrow;
+  }
   if (title) title.innerHTML = content.hero.title;
   if (desc) desc.textContent = content.hero.description;
 
@@ -174,11 +249,24 @@ function bindHero(root: HTMLElement, content: SiteContent) {
     primaryCta.href = content.hero.primaryCta.href;
     primaryCta.innerHTML = `${content.hero.primaryCta.label} <i class="fa-solid fa-arrow-right-long"></i>`;
   }
-  const videoLink = section.querySelector(".video-btn") as HTMLAnchorElement | null;
-  if (videoLink) videoLink.href = content.hero.media.videoUrl;
+  const secondaryLink = section.querySelector(".hero-secondary-link") as HTMLAnchorElement | null;
+  if (secondaryLink) {
+    const videoUrl = content.hero.media.videoUrl?.trim();
+    secondaryLink.href = videoUrl || content.hero.secondaryCta.href;
+    secondaryLink.classList.toggle("video-popup", Boolean(videoUrl));
+    secondaryLink.setAttribute(
+      "aria-label",
+      videoUrl ? `Putar video ${content.hero.secondaryCta.label}` : content.hero.secondaryCta.label,
+    );
+  }
+  const secondaryLabel = section.querySelector(".hero-secondary-label");
+  if (secondaryLabel) secondaryLabel.textContent = content.hero.secondaryCta.label;
 
   const heroImg = root.querySelector(".hero-image img") as HTMLImageElement | null;
-  if (heroImg) heroImg.src = content.hero.media.image;
+  if (heroImg) {
+    heroImg.src = content.hero.media.image;
+    heroImg.alt = "Anak berkreasi dengan teknologi bersama Clevio";
+  }
   const heroShape = root.querySelector(".hero-image .hero-shape img") as HTMLImageElement | null;
   if (heroShape) heroShape.src = content.hero.media.shape;
 
@@ -229,7 +317,7 @@ function bindAbout(root: HTMLElement, content: SiteContent) {
             .map(
               (item) => `
             <li>
-              <i class="fa-regular fa-circle-check"></i>
+              <i class="fa-solid fa-code-branch"></i>
               ${item}
             </li>
           `,
@@ -290,71 +378,335 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
         <div class="program-box-items">
           <div class="program-bg ${index === 1 ? "bg-2" : index === 2 ? "bg-3" : ""}"></div>
           <div class="program-image">
-            <img src="${program.image}" alt="${program.title}">
+            <img src="${escapeMarkup(program.image)}" alt="Level ${escapeMarkup(program.title)}">
           </div>
           <div class="program-content text-center ${index === 2 ? "style-2" : ""}">
-            <h4><a href="#programs">${program.title}</a></h4>
-            <span>${program.ageRange}</span>
-            <p>${program.description}</p>
-            <a href="#programs" class="arrow-icon ${index === 1 ? "color-2" : ""}">
+            <h4>${escapeMarkup(program.title)}</h4>
+            <span>${escapeMarkup(program.ageRange)}</span>
+            <p>${escapeMarkup(program.description)}</p>
+            <button type="button" class="program-detail-trigger" data-program-open="${index}" aria-label="Lihat detail level ${escapeMarkup(program.title)}" aria-haspopup="dialog">
+              <span>Lihat detail level</span>
               <i class="fa-solid fa-arrow-right-long"></i>
-            </a>
+            </button>
           </div>
         </div>
       </div>
     `,
     )
     .join("");
+
+  const dialog = root.querySelector<HTMLElement>("[data-program-dialog]");
+  const panel = dialog?.querySelector<HTMLElement>(".program-detail-panel");
+  if (!dialog || !panel) return;
+
+  const detailImage = dialog.querySelector<HTMLImageElement>("[data-program-detail-image]");
+  const detailAge = dialog.querySelector<HTMLElement>("[data-program-detail-age]");
+  const detailTitle = dialog.querySelector<HTMLElement>("[data-program-detail-title]");
+  const detailTagline = dialog.querySelector<HTMLElement>("[data-program-detail-tagline]");
+  const detailDescription = dialog.querySelector<HTMLElement>("[data-program-detail-description]");
+  const benefitsList = dialog.querySelector<HTMLElement>("[data-program-learning]");
+  const projectsList = dialog.querySelector<HTMLElement>("[data-program-projects]");
+  const toolsList = dialog.querySelector<HTMLElement>("[data-program-tools]");
+  const trialLink = dialog.querySelector<HTMLAnchorElement>("[data-program-trial-link]");
+  const classLink = dialog.querySelector<HTMLAnchorElement>("[data-program-class-link]");
+  const openButtons = Array.from(wrapper.querySelectorAll<HTMLButtonElement>("[data-program-open]"));
+  const closeButtons = Array.from(dialog.querySelectorAll<HTMLButtonElement>("[data-program-close]"));
+  let previousFocus: HTMLElement | null = null;
+
+  const programTaglines: Record<string, string> = {
+    explorer: "Belajar sambil bermain, eksplorasi tanpa batas!",
+    creator: "Ubah ide menjadi game, aplikasi, dan karya digital.",
+    innovator: "Bangun produk digital, website, dan solusi AI nyata.",
+  };
+
+  const suitabilityMeta: Record<string, string[]> = {
+    explorer: ["Pemula", "Suka bermain & bereksplorasi", "Belajar kreatif"],
+    creator: ["Sudah mengenal coding dasar", "Suka membuat game & aplikasi", "Siap mengerjakan project"],
+    innovator: ["Siap membangun portfolio", "Tertarik software & AI", "Belajar mandiri & kolaboratif"],
+  };
+
+  const toolMeta = [
+    {
+      match: ["scratch"],
+      icon: "/assets/img/program/detail/software-scratch.svg",
+      description: "Membuat game dan animasi dengan blok interaktif.",
+    },
+    {
+      match: ["code.org", "game lab"],
+      icon: "/assets/img/program/detail/software-codeorg.svg",
+      description: "Belajar logika game lewat blok dan JavaScript.",
+    },
+    {
+      match: ["minecraft"],
+      icon: "/assets/img/program/detail/software-minecraft.svg",
+      description: "Membangun dunia 3D sambil belajar coding.",
+    },
+    {
+      match: ["construct"],
+      icon: "/assets/img/program/detail/software-construct3.svg",
+      description: "Memahami game mechanics lewat project 2D.",
+    },
+    {
+      match: ["canva"],
+      icon: "/assets/img/program/detail/software-canva.svg",
+      description: "Mendesain visual, poster, dan presentasi digital.",
+    },
+    {
+      match: ["roblox"],
+      icon: "/assets/img/program/detail/software-roblox-studio.svg",
+      description: "Membangun dunia dan game 3D dengan Luau.",
+    },
+    {
+      match: ["html", "javascript", "css"],
+      icon: "/assets/img/program/detail/software-web.svg",
+      description: "Membuat website interaktif yang bisa dipublikasikan.",
+    },
+    {
+      match: ["python"],
+      icon: "/assets/img/program/detail/software-python.svg",
+      description: "Membangun otomasi, data, dan project AI dasar.",
+    },
+  ];
+
+  const renderProjects = (items: string[]) => {
+    if (!projectsList) return;
+    projectsList.innerHTML = items
+      .filter((item) => item.trim())
+      .slice(0, 3)
+      .map(
+        (item, index) =>
+          `<span class="program-detail-project-dot${index === 0 ? " is-active" : ""}" title="${escapeMarkup(item.trim())}" aria-label="${escapeMarkup(item.trim())}"></span>`,
+      )
+      .join("");
+  };
+
+  const renderBenefits = (programTitle: string, items: string[]) => {
+    if (!benefitsList) return;
+    const fallback = items.filter((item) => item.trim()).slice(0, 3);
+    const suitability = suitabilityMeta[programTitle.toLowerCase()] ?? fallback;
+    benefitsList.innerHTML = `
+      <h4>Cocok untuk <i class="fa-solid fa-sparkles" aria-hidden="true"></i></h4>
+      <ul>
+        ${suitability
+          .map((item) => `<li><i class="fa-solid fa-circle-check"></i><span>${escapeMarkup(item)}</span></li>`)
+          .join("")}
+      </ul>
+    `;
+  };
+
+  const renderTools = (items: string[]) => {
+    if (!toolsList) return;
+    toolsList.innerHTML = items
+      .filter((item) => item.trim())
+      .slice(0, 3)
+      .map((item) => {
+        const cleanItem = item.trim();
+        const normalized = cleanItem.toLowerCase();
+        const meta = toolMeta.find((entry) => entry.match.some((term) => normalized.includes(term)));
+        const icon = meta?.icon ?? "/assets/img/program/detail/software-codeorg.svg";
+        const description = meta?.description ?? "Membantu anak mengubah ide menjadi karya digital.";
+        return `
+          <article class="program-detail-tool">
+            <span class="program-detail-tool-icon"><img src="${icon}" alt="" aria-hidden="true"></span>
+            <span>
+              <strong>${escapeMarkup(cleanItem)}</strong>
+              <small>${escapeMarkup(description)}</small>
+            </span>
+          </article>
+        `;
+      })
+      .join("");
+  };
+
+  const closeDialog = (restoreFocus = true) => {
+    if (dialog.hidden) return;
+    dialog.hidden = true;
+    dialog.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("program-dialog-open");
+    if (restoreFocus) previousFocus?.focus();
+    previousFocus = null;
+  };
+
+  const openDialog = (index: number, trigger: HTMLElement) => {
+    const program = programs[index];
+    if (!program) return;
+
+    previousFocus = trigger;
+    if (detailImage) {
+      detailImage.src = program.projectImage || program.image;
+      detailImage.alt = `Contoh project level ${program.title}`;
+    }
+    if (detailAge) detailAge.textContent = program.ageRange;
+    if (detailTitle) detailTitle.textContent = program.title;
+    if (detailTagline) {
+      detailTagline.textContent =
+        programTaglines[program.title.toLowerCase()] ?? "Belajar coding lewat project yang seru dan relevan.";
+    }
+    if (detailDescription) detailDescription.textContent = program.description;
+    renderProjects(program.projectExamples ?? []);
+    renderBenefits(program.title, program.learningPoints ?? []);
+    renderTools(program.tools ?? []);
+    if (trialLink) trialLink.href = content.freeTrial.ctaLink;
+    if (classLink) classLink.href = content.about.ctaLink || "#contact";
+
+    dialog.hidden = false;
+    dialog.setAttribute("aria-hidden", "false");
+    document.body.classList.add("program-dialog-open");
+    window.requestAnimationFrame(() => panel.focus());
+  };
+
+  const openHandlers = openButtons.map((button) => {
+    const handler = () => openDialog(Number(button.dataset.programOpen), button);
+    button.addEventListener("click", handler);
+    return { button, handler };
+  });
+  const closeHandlers = closeButtons.map((button) => {
+    const handler = () => closeDialog();
+    button.addEventListener("click", handler);
+    return { button, handler };
+  });
+  const classLinkHandler = () => closeDialog(false);
+  classLink?.addEventListener("click", classLinkHandler);
+  const keyHandler = (event: KeyboardEvent) => {
+    if (dialog.hidden) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeDialog();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = Array.from(
+      panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+  document.addEventListener("keydown", keyHandler);
+
+  return () => {
+    openHandlers.forEach(({ button, handler }) => button.removeEventListener("click", handler));
+    closeHandlers.forEach(({ button, handler }) => button.removeEventListener("click", handler));
+    classLink?.removeEventListener("click", classLinkHandler);
+    document.removeEventListener("keydown", keyHandler);
+    closeDialog(false);
+  };
 }
 
-function bindWorkProcess(root: HTMLElement, items: Props["content"]["benefits"]["items"]) {
-  const wrapper = root.querySelector(".work-process-section .row");
+function bindFreeTrial(root: HTMLElement, freeTrial: Props["content"]["freeTrial"]) {
+  const section = root.querySelector<HTMLElement>(".free-trial-section");
+  if (!section) return;
+
+  const eyebrow = section.querySelector<HTMLElement>("[data-free-trial-eyebrow]");
+  const title = section.querySelector<HTMLElement>("[data-free-trial-title]");
+  const highlight = section.querySelector<HTMLElement>("[data-free-trial-highlight]");
+  const subtitle = section.querySelector<HTMLElement>("[data-free-trial-subtitle]");
+  const description = section.querySelector<HTMLElement>("[data-free-trial-description]");
+  const benefits = section.querySelector<HTMLElement>("[data-free-trial-benefits]");
+  const link = section.querySelector<HTMLAnchorElement>("[data-free-trial-link]");
+  const label = section.querySelector<HTMLElement>("[data-free-trial-label]");
+  const note = section.querySelector<HTMLElement>("[data-free-trial-note]");
+  const visualImage = section.querySelector<HTMLImageElement>("[data-free-trial-image]");
+  const availabilityTitle = section.querySelector<HTMLElement>("[data-free-trial-availability-title]");
+  const availabilityText = section.querySelector<HTMLElement>("[data-free-trial-availability-text]");
+  const availabilityBadge = section.querySelector<HTMLElement>("[data-free-trial-availability-badge]");
+  const trustTitle = section.querySelector<HTMLElement>("[data-free-trial-trust-title]");
+  const trustText = section.querySelector<HTMLElement>("[data-free-trial-trust-text]");
+
+  if (eyebrow) eyebrow.textContent = freeTrial.eyebrow;
+  if (title) title.textContent = freeTrial.title;
+  if (highlight) highlight.textContent = freeTrial.highlight;
+  if (subtitle) subtitle.textContent = freeTrial.subtitle;
+  if (description) description.textContent = freeTrial.description;
+  if (benefits) {
+    benefits.innerHTML = freeTrial.benefits
+      .filter((item) => item.trim())
+      .map((item) => `<li><i class="fa-solid fa-circle-check"></i><span>${escapeMarkup(item.trim())}</span></li>`)
+      .join("");
+  }
+  if (link) link.href = freeTrial.ctaLink;
+  if (label) label.textContent = freeTrial.ctaLabel;
+  if (note) note.textContent = freeTrial.note;
+  if (visualImage) visualImage.src = freeTrial.visualImage;
+  if (availabilityTitle) availabilityTitle.textContent = freeTrial.availabilityTitle;
+  if (availabilityText) availabilityText.textContent = freeTrial.availabilityText;
+  if (availabilityBadge) availabilityBadge.textContent = freeTrial.availabilityBadge;
+  if (trustTitle) trustTitle.textContent = freeTrial.trustTitle;
+  if (trustText) trustText.textContent = freeTrial.trustText;
+}
+
+function bindWorkProcess(root: HTMLElement, sectionContent: Props["content"]["benefits"]) {
+  const section = root.querySelector(".work-process-section");
+  if (!section) return;
+
+  const tagline = section.querySelector("[data-work-process-tagline]");
+  const title = section.querySelector("[data-work-process-title]");
+  const description = section.querySelector("[data-work-process-description]");
+  if (tagline) tagline.textContent = sectionContent.tagline;
+  if (title) title.textContent = sectionContent.title;
+  if (description) description.textContent = sectionContent.description;
+
+  const wrapper = section.querySelector(".work-process-grid");
   if (!wrapper) return;
-  wrapper.innerHTML = items
+  wrapper.innerHTML = sectionContent.items
     .map(
       (item, index) => {
-        const isLast = index === items.length - 1;
-        const isZigzag = index % 2 === 1;
-        const lineClass = isZigzag ? "line-shape-2" : "line-shape";
-        const lineImg = isZigzag ? "line-2.png" : "line.png";
-        const itemStyle = isZigzag || isLast ? "style-2" : "";
-        const iconClass = item.icon || `icon-icon-${(index % 4) + 1}`;
+        const isLast = index === sectionContent.items.length - 1;
+        const fallbackIcons = [
+          "fa-solid fa-code",
+          "fa-solid fa-laptop-code",
+          "fa-solid fa-microchip",
+          "fa-solid fa-robot",
+        ];
+        const iconClass = item.icon || fallbackIcons[index % fallbackIcons.length];
         const isImageIcon =
           !!item.icon &&
           (item.icon.startsWith("http") ||
             item.icon.startsWith("/") ||
             /\.(png|jpe?g|gif|svg|webp)$/i.test(item.icon));
 
-        const lineMarkup = isLast
+        const connectorMarkup = isLast
           ? ""
           : `
-            <div class="${lineClass}">
-              <img src="/assets/img/process/${lineImg}" alt="shape">
+            <div class="work-process-connector" aria-hidden="true">
+              <svg viewBox="0 0 60 18" focusable="false">
+                <path d="M2 9 H54"></path>
+                <path d="M47 3 L54 9 L47 15"></path>
+              </svg>
             </div>`;
 
         const contentMarkup = `
           <div class="content">
-            <h4>${item.title}</h4>
-            <p>${item.description}</p>
+            <h4>${escapeMarkup(item.title)}</h4>
+            <span class="work-process-divider" aria-hidden="true"></span>
+            <p>${escapeMarkup(item.description)}</p>
           </div>`;
 
         const iconMarkup = isImageIcon
           ? `
           <div class="icon icon-uploaded">
-            <img src="${item.icon}" alt="${item.title} icon" />
+            <img src="${escapeMarkup(item.icon)}" alt="Ikon ${escapeMarkup(item.title)}" />
           </div>`
           : `
-          <div class="icon bg-cover" style="background-image: url('/assets/img/process/icon-bg.png');">
-            <i class="${iconClass}"></i>
+          <div class="icon">
+            <i class="${escapeMarkup(iconClass)}" aria-hidden="true"></i>
           </div>`;
 
-        const body = `${lineMarkup}${iconMarkup}${contentMarkup}`;
-
         return `
-        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="${0.3 + index * 0.2}s">
-          <div class="work-process-items text-center ${itemStyle}">
-            ${body}
-          </div>
+        <div class="work-process-step work-process-tone-${index % 2 === 0 ? "primary" : "accent"} wow fadeInUp" data-wow-delay="${0.2 + index * 0.12}s">
+          <article class="work-process-items text-center">
+            <span class="work-process-number">${String(index + 1).padStart(2, "0")}</span>
+            ${iconMarkup}
+            ${contentMarkup}
+          </article>
+          ${connectorMarkup}
         </div>`;
       },
     )
@@ -383,8 +735,10 @@ function bindActivities(
   if (section) {
     const eyebrow = section.querySelector(".section-title span");
     const title = section.querySelector(".section-title h2");
+    const description = section.querySelector(".activities-content > p");
     if (eyebrow) eyebrow.textContent = activities.tagline;
     if (title) title.textContent = activities.title;
+    if (description) description.textContent = activities.description;
   }
 
   const activitiesImage = root.querySelector(".activities-image img") as HTMLImageElement | null;
@@ -395,7 +749,13 @@ function bindActivities(
   wrapper.innerHTML = activities.items
     .map(
       (item, index) => {
-        const iconClass = item.icon || `icon-icon-${(index % 8) + 1}`;
+        const fallbackIcons = [
+          "fa-solid fa-code",
+          "fa-solid fa-microchip",
+          "fa-solid fa-robot",
+          "fa-solid fa-brain",
+        ];
+        const iconClass = item.icon || fallbackIcons[index % fallbackIcons.length];
         return `
       <div class="col-xl-6 col-lg-8 col-md-6 wow fadeInUp" data-wow-delay="${0.3 + index * 0.2}s">
         <div class="icon-items">
@@ -415,69 +775,114 @@ function bindActivities(
 }
 
 function bindTestimonials(root: HTMLElement, testimonials: Testimonial[], content: SiteContent) {
-  const sectionContent = content.testimonialsSection ?? { tagline: "", title: "" };
-  const sectionTitle = root.querySelector(".testimonial-section .section-title");
-  if (sectionTitle) {
-    const eyebrow = sectionTitle.querySelector("span");
-    const title = sectionTitle.querySelector("h2");
-    if (eyebrow) eyebrow.textContent = sectionContent.tagline;
-    if (title) title.innerHTML = sectionContent.title.replace(/\n/g, "<br>");
-  }
+  const sectionContent = content.testimonialsSection ?? {
+    tagline: "Testimoni Orang Tua",
+    title: "Apa Kata Orang Tua Tentang Clevio",
+    description: "Cerita nyata tentang anak yang belajar, bertumbuh, dan makin percaya diri bersama Clevio.",
+  };
+  const eyebrow = root.querySelector(".testimonial-clevio-eyebrow span");
+  const title = root.querySelector(".testimonial-clevio-header h2");
+  const description = root.querySelector(".testimonial-clevio-description");
+  if (eyebrow) eyebrow.textContent = sectionContent.tagline;
+  if (title) title.innerHTML = sectionContent.title.replace(/\n/g, "<br>");
+  if (description) description.textContent = sectionContent.description;
 
   const slider = root.querySelector(".testimonial-section .swiper-wrapper");
   if (!slider) return;
+  const authorIcons = [
+    "fa-regular fa-lightbulb",
+    "fa-regular fa-comment-dots",
+    "fa-regular fa-file-lines",
+  ];
   slider.innerHTML = testimonials
     .map(
       (testi, index) => `
       <div class="swiper-slide">
-        <div class="testimonial-items ${index === 1 ? "style-2" : index === 2 ? "style-3" : ""}">
-          <div class="icon">
-            <img src="/assets/img/quote${index === 1 ? "-2" : index === 2 ? "-3" : ""}.png" alt="quote">
-          </div>
-          <div class="testimonial-bg ${index === 1 ? "bg-2" : index === 2 ? "bg-3" : ""}"></div>
+        <article class="testimonial-items testimonial-clevio-card">
+          <span class="testimonial-quote-watermark" aria-hidden="true">“</span>
+          <span class="testimonial-quote-badge" aria-hidden="true">“</span>
           <div class="testimonial-content">
-            <p>${testi.message}</p>
-            <h6>${testi.name}</h6>
-            <span>${testi.role}</span>
+            <p>${escapeMarkup(testi.message)}</p>
+            <div class="testimonial-author">
+              <span class="testimonial-author-icon" aria-hidden="true"><i class="${authorIcons[index % authorIcons.length]}"></i></span>
+              <span class="testimonial-author-copy">
+                <h6>${escapeMarkup(testi.name)}</h6>
+                <span>${escapeMarkup(testi.role)}</span>
+              </span>
+            </div>
           </div>
-        </div>
+        </article>
       </div>
     `,
     )
     .join("");
 }
 
-function bindCta(root: HTMLElement, cta: Props["content"]["callToAction"]) {
-  const ctaSection = root.querySelector(".cta-section .section-title");
-  if (ctaSection) {
-    const eyebrow = ctaSection.querySelector("span");
-    const title = ctaSection.querySelector("h2");
-    if (eyebrow) eyebrow.textContent = cta.eyebrow;
-    if (title) title.innerHTML = cta.title;
-    let desc = ctaSection.querySelector(".cta-text");
-    if (!desc) {
-      desc = document.createElement("p");
-      desc.className = "text-white wow fadeInUp cta-text";
-      desc.setAttribute("data-wow-delay", ".35s");
-      ctaSection.appendChild(desc);
-    }
-    desc.textContent = cta.text;
-  }
-  const button = root.querySelector(".cta-section .theme-btn") as HTMLAnchorElement | null;
-  if (button) {
-    button.href = cta.button.href;
-    button.innerHTML = `${cta.button.label} <i class="fa-solid fa-arrow-right-long"></i>`;
-  }
-  const ctaImage = root.querySelector(".cta-section .cta-image img") as HTMLImageElement | null;
-  if (ctaImage) ctaImage.src = cta.image;
+function bindEvents(
+  root: HTMLElement,
+  sectionContent: SiteContent["eventsSection"],
+  events: SiteContent["events"],
+) {
+  const section = root.querySelector(".home-events-section");
+  if (!section) return;
 
-  const mainCta = root.querySelector(".main-cta-section .section-title");
-  if (mainCta) {
-    const mainEyebrow = mainCta.querySelector("span");
-    const mainTitle = mainCta.querySelector("h2");
-    if (mainEyebrow) mainEyebrow.textContent = cta.eyebrow;
-    if (mainTitle) mainTitle.textContent = cta.title;
-  }
+  const tagline = section.querySelector(".home-events-tagline");
+  const title = section.querySelector(".home-events-title");
+  const description = section.querySelector(".home-events-description");
+  if (tagline) tagline.textContent = sectionContent.tagline;
+  if (title) title.textContent = sectionContent.title;
+  if (description) description.textContent = sectionContent.description;
+
+  const grid = section.querySelector(".home-events-grid");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  events
+    .filter((event) => event.status === "published")
+    .slice(0, 3)
+    .forEach((event) => {
+      const article = document.createElement("article");
+      article.className = "home-event-card wow fadeInUp";
+
+      const mediaLink = document.createElement("a");
+      mediaLink.className = "home-event-media";
+      mediaLink.href = event.landingPageUrl;
+      const image = document.createElement("img");
+      image.src = event.image;
+      image.alt = event.title;
+      mediaLink.appendChild(image);
+      const date = document.createElement("span");
+      date.className = "home-event-card-date";
+      date.textContent = event.date;
+      mediaLink.appendChild(date);
+
+      const cardContent = document.createElement("div");
+      cardContent.className = "home-event-content";
+      const audience = document.createElement("span");
+      audience.className = "home-event-audience";
+      audience.textContent = event.audience;
+      const heading = document.createElement("h3");
+      const titleLink = document.createElement("a");
+      titleLink.href = event.landingPageUrl;
+      titleLink.textContent = event.title;
+      heading.appendChild(titleLink);
+      const summary = document.createElement("p");
+      summary.textContent = event.description;
+      const meta = document.createElement("div");
+      meta.className = "home-event-meta";
+      const time = document.createElement("span");
+      time.innerHTML = `<i class="fa-regular fa-clock"></i> ${escapeMarkup(event.time)}`;
+      const location = document.createElement("span");
+      location.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${escapeMarkup(event.location)}`;
+      meta.append(time, location);
+      const action = document.createElement("a");
+      action.className = "home-event-link";
+      action.href = event.landingPageUrl;
+      action.innerHTML = `Buka Landing Page <i class="fa-solid fa-arrow-right-long"></i>`;
+      cardContent.append(audience, heading, summary, meta, action);
+      article.append(mediaLink, cardContent);
+      grid.appendChild(article);
+    });
 }
 
 function bindNews(root: HTMLElement, blog: Props["content"]["blog"]) {
@@ -489,8 +894,10 @@ function bindNews(root: HTMLElement, blog: Props["content"]["blog"]) {
     if (title) title.innerHTML = blog.title;
   }
 
-  const posts: BlogPost[] = blog.posts;
+  const posts: BlogPost[] = blog.posts.filter((post) => post.status === "published");
   if (posts.length === 0) return;
+  const allArticlesLink = root.querySelector(".news-section .section-title-area > a") as HTMLAnchorElement | null;
+  if (allArticlesLink) allArticlesLink.href = "/articles";
   const featured = root.querySelector(".news-single-items");
   if (featured) {
     const primary = posts[0];
@@ -504,11 +911,13 @@ function bindNews(root: HTMLElement, blog: Props["content"]["blog"]) {
       `;
     }
     const title = featured.querySelector(".news-content h3");
-    if (title) title.textContent = primary.title;
+    if (title) title.innerHTML = `<a href="/articles/${encodeURIComponent(primary.slug)}">${escapeMarkup(primary.title)}</a>`;
     const excerpt = featured.querySelector(".news-content p");
     if (excerpt) excerpt.textContent = primary.excerpt;
     const authorName = featured.querySelector(".post-author-items h6");
     if (authorName) authorName.textContent = primary.author;
+    const readMore = featured.querySelector(".post-author-items > a") as HTMLAnchorElement | null;
+    if (readMore) readMore.href = `/articles/${encodeURIComponent(primary.slug)}`;
   }
 
   const rightWrapper = root.querySelector(".news-section .col-xl-6.mt-5");
@@ -526,7 +935,7 @@ function bindNews(root: HTMLElement, blog: Props["content"]["blog"]) {
               <li><i class="fas fa-tag"></i>${post.author}</li>
               <li><i class="fa-solid fa-calendar-days"></i>${post.date}</li>
             </ul>
-            <h3>${post.title}</h3>
+            <h3><a href="/articles/${encodeURIComponent(post.slug)}">${escapeMarkup(post.title)}</a></h3>
             <div class="post-items">
               <div class="thumb">
                 <img src="/assets/img/news/author.png" alt="author">
@@ -544,6 +953,16 @@ function bindNews(root: HTMLElement, blog: Props["content"]["blog"]) {
   }
 }
 
+function escapeMarkup(value: string) {
+  return value.replace(/[&<>'"]/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&#39;",
+    '"': "&quot;",
+  })[character] ?? character);
+}
+
 function bindNewsletter(root: HTMLElement, newsletter: Props["content"]["newsletter"]) {
   const section = root.querySelector(".main-cta-section .section-title");
   if (section) {
@@ -552,45 +971,13 @@ function bindNewsletter(root: HTMLElement, newsletter: Props["content"]["newslet
     if (eyebrow) eyebrow.textContent = newsletter.eyebrow;
     if (title) title.textContent = newsletter.title;
   }
+  const description = root.querySelector(".main-cta-section .newsletter-support-text");
+  if (description) {
+    description.textContent =
+      newsletter.description || "Info event, kelas baru, dan promo pilihan yang relevan untuk keluarga Clevio.";
+  }
   const button = root.querySelector(".main-cta-section .theme-btn span");
   if (button) button.textContent = newsletter.buttonLabel;
-}
-
-function bindInstructors(root: HTMLElement, instructors: Props["content"]["instructors"], content: SiteContent) {
-  const wrapper = root.querySelector(".team-grid[data-team-grid]");
-  if (!wrapper) return;
-
-  const loveShape = root.querySelector(".team-section .love-shape img") as HTMLImageElement | null;
-  if (loveShape) loveShape.src = content.instructorsDecorations.loveShape;
-  const frameShape = root.querySelector(".team-section .frame-shape img") as HTMLImageElement | null;
-  if (frameShape) frameShape.src = content.instructorsDecorations.frameShape;
-
-  wrapper.innerHTML = instructors
-    .map(
-      (instructor) => `
-      <div class="team-items">
-        <div class="team-image">
-          <img src="${instructor.avatar}" alt="${instructor.name}">
-          <div class="social-profile">
-            <span class="plus-btn"><i class="fas fa-share-alt"></i></span>
-            <ul>
-              ${instructor.socials
-                .map(
-                  (social) =>
-                    `<li><a href="${social.href}" target="_blank" rel="noreferrer"><i class="fab fa-${social.icon}"></i></a></li>`,
-                )
-                .join("")}
-            </ul>
-          </div>
-        </div>
-        <div class="team-content">
-          <h3><a href="#instructors">${instructor.name}</a></h3>
-          <p>${instructor.role}</p>
-        </div>
-      </div>
-    `,
-    )
-    .join("");
 }
 
 function bindInstagram(root: HTMLElement, items: Props["content"]["instagram"]) {
@@ -598,11 +985,11 @@ function bindInstagram(root: HTMLElement, items: Props["content"]["instagram"]) 
   if (!wrapper) return;
   wrapper.innerHTML = items
     .map(
-      (item) => `
+      (item, index) => `
       <div class="instagram-banner-items">
         <div class="banner-image">
-          <img src="${item.image}" alt="instagram">
-          <a href="${item.link}" target="_blank" rel="noreferrer" class="icon">
+          <img src="${item.image}" alt="Kegiatan Clevio di Instagram ${index + 1}">
+          <a href="${item.link}" target="_blank" rel="noreferrer" class="icon" aria-label="Buka foto Instagram ${index + 1}">
             <i class="fa-brands fa-instagram"></i>
           </a>
         </div>
@@ -680,7 +1067,7 @@ function bindFooter(root: HTMLElement, content: SiteContent) {
     const title = heading?.textContent?.trim().toLowerCase();
     if (!title) return;
 
-    if (title.includes("quick")) {
+    if (widget.classList.contains("footer-quick-links")) {
       const list = widget.querySelector(".list-area");
       if (list) {
         list.innerHTML = content.footer.quickLinks
@@ -697,7 +1084,7 @@ function bindFooter(root: HTMLElement, content: SiteContent) {
       }
     }
 
-    if (title.includes("categori")) {
+    if (widget.classList.contains("footer-program-links")) {
       const list = widget.querySelector(".list-area");
       if (list) {
         list.innerHTML = (content.footer.categories ?? [])
@@ -712,6 +1099,28 @@ function bindFooter(root: HTMLElement, content: SiteContent) {
           )
           .join("");
       }
+    }
+  });
+
+  const recentPosts = root.querySelectorAll(".recent-post-area .recent-post-items");
+  const publishedPosts = content.blog.posts.filter((post) => post.status === "published");
+  recentPosts.forEach((item, index) => {
+    const post = publishedPosts[index];
+    if (!post) {
+      (item as HTMLElement).style.display = "none";
+      return;
+    }
+    const image = item.querySelector("img") as HTMLImageElement | null;
+    const date = item.querySelector(".post-date li");
+    const link = item.querySelector("h6 a") as HTMLAnchorElement | null;
+    if (image) {
+      image.src = post.image;
+      image.alt = post.title;
+    }
+    if (date) date.innerHTML = `<i class="fa-solid fa-calendar-days me-2"></i>${escapeMarkup(post.date)}`;
+    if (link) {
+      link.href = `/articles/${encodeURIComponent(post.slug)}`;
+      link.textContent = post.title;
     }
   });
 

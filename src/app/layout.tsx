@@ -4,9 +4,9 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Clevio Kindergarten | Next.js Experience",
+  title: "Clevio Innovator Camp",
   description:
-    "Website Clevio Kindergarten versi Next.js lengkap dengan admin dashboard dan kontrol konten dinamis.",
+    "Clevio Innovator Camp, program belajar coding, teknologi, dan AI untuk anak dan remaja.",
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="id" data-scroll-behavior="smooth">
       <head>
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/assets/css/all.min.css" />

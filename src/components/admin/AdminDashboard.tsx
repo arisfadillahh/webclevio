@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useState, ChangeEvent, useId, useEffect } from "react";
+import { useMemo, useState, ChangeEvent, useId, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { NavItem, SiteContent } from "@/types/content";
 import ThemeBinder from "@/components/home/ThemeBinder";
 import PreviewAssets, { fixAssetPaths } from "@/components/admin/PreviewAssets";
 import { getPreviewKeys } from "@/lib/preview";
+import { getContentTextLimit } from "@/lib/content-limits";
 import {
   PiCheckCircleBold,
   PiCircleNotchBold,
@@ -24,11 +26,20 @@ import {
   PiChalkboardTeacherBold,
   PiInfoBold,
   PiListBold,
+  PiCodeBold,
+  PiMagnifyingGlassBold,
+  PiArrowSquareOutBold,
+  PiLinkBold,
+  PiNewspaperBold,
+  PiRocketLaunchBold,
+  PiArrowRightBold,
+  PiLockKeyBold,
 } from "react-icons/pi";
 
 interface Props {
   initialContent: SiteContent;
   templateMarkup: string;
+  embedded?: boolean;
 }
 
 interface ImageInputProps {
@@ -36,11 +47,21 @@ interface ImageInputProps {
   value: string;
   onChange: (value: string) => void;
   helperText?: string;
+  previewMode?: "asset" | "logo";
 }
 
-function ImageInput({ label, value, onChange, helperText }: ImageInputProps) {
+function ImageInput({
+  label,
+  value,
+  onChange,
+  helperText,
+  previewMode = "asset",
+}: ImageInputProps) {
+  const inputId = useId();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [failedPreviewUrl, setFailedPreviewUrl] = useState<string | null>(null);
+  const previewFailed = failedPreviewUrl === value;
 
   const handleFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -82,24 +103,120 @@ function ImageInput({ label, value, onChange, helperText }: ImageInputProps) {
   };
 
   return (
-    <div className="image-input">
-      <label>
-        {label}
+    <div className={`image-input ${previewMode === "logo" ? "is-logo" : ""}`}>
+      <div className="image-input-preview">
+        {value && !previewFailed ? (
+          <Image
+            src={value}
+            alt={`Preview ${label}`}
+            width={360}
+            height={160}
+            sizes="(max-width: 768px) 100vw, 360px"
+            unoptimized
+            onError={() => setFailedPreviewUrl(value)}
+          />
+        ) : (
+          <div className="image-input-empty">
+            <PiImageBold aria-hidden="true" />
+            <span>{value ? "Gambar tidak dapat dimuat" : "Belum ada gambar"}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="image-input-controls">
+        <label className="image-input-url">
+          <span>{label}</span>
+          <input
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            placeholder="URL atau /uploads/..."
+          />
+        </label>
+        <label
+          className={`image-upload-trigger ${uploading ? "is-uploading" : ""}`}
+          htmlFor={inputId}
+          aria-disabled={uploading}
+        >
+          <PiImageBold aria-hidden="true" />
+          {uploading ? "Mengunggah..." : "Pilih file"}
+        </label>
         <input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="URL atau /uploads/..."
+          id={inputId}
+          className="image-file-input"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+          onChange={handleFile}
+          disabled={uploading}
         />
-      </label>
-      <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} />
-      {uploading && <small style={{ color: "#555" }}>Mengunggah...</small>}
-      {error && <small style={{ color: "#d33" }}>{error}</small>}
-      {helperText && <small style={{ color: "#666" }}>{helperText}</small>}
+      </div>
+
+      <div className="image-input-meta">
+        {helperText && <small>{helperText}</small>}
+        {error && <small className="image-input-error">{error}</small>}
+      </div>
     </div>
   );
 }
 
+function getPartnerDisplayName(id: string, index: number) {
+  if (/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(id)) return `Partner ${index + 1}`;
+  return id
+    .split(/[-_]/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ") || `Partner ${index + 1}`;
+}
+
+const TECH_ICON_OPTIONS = [
+  { value: "fa-solid fa-code", label: "Kode" },
+  { value: "fa-solid fa-laptop-code", label: "Laptop Coding" },
+  { value: "fa-solid fa-microchip", label: "Microchip" },
+  { value: "fa-solid fa-robot", label: "AI Robot" },
+  { value: "fa-solid fa-brain", label: "AI Brain" },
+  { value: "fa-solid fa-database", label: "Database" },
+  { value: "fa-solid fa-cloud", label: "Cloud" },
+  { value: "fa-solid fa-network-wired", label: "Network" },
+  { value: "fa-solid fa-terminal", label: "Terminal" },
+  { value: "fa-solid fa-code-branch", label: "Code Branch" },
+  { value: "fa-solid fa-gears", label: "Automation" },
+  { value: "fa-solid fa-cubes", label: "Technology Blocks" },
+];
+
+interface TechIconSelectProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}
+
+function TechIconSelect({ label, value, onChange }: TechIconSelectProps) {
+  const selectedValue = TECH_ICON_OPTIONS.some((option) => option.value === value)
+    ? value
+    : TECH_ICON_OPTIONS[0].value;
+
+  return (
+    <label className="tech-icon-field">
+      {label}
+      <span className="tech-icon-control">
+        <span className="tech-icon-preview" aria-hidden="true">
+          <i className={selectedValue} />
+        </span>
+        <select value={selectedValue} onChange={(event) => onChange(event.target.value)}>
+          {TECH_ICON_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </span>
+    </label>
+  );
+}
+
 type Status = "idle" | "saving" | "saved" | "error";
+
+function publicContentHref(href: string) {
+  return href.startsWith("#") ? `/${href}` : href;
+}
 
 const SOCIAL_FIELDS = [
   { icon: "facebook-f", label: "Facebook" },
@@ -109,22 +226,40 @@ const SOCIAL_FIELDS = [
 
 type ActiveSection =
   | "overview"
+  | "navigation"
   | "branding"
   | "hero"
   | "partners"
   | "about"
   | "programs"
+  | "freeTrial"
   | "activities"
-  | "instructors"
-  | "events"
+  | "workProcess"
+  | "eventLinks"
   | "blog"
-  | "cta"
   | "newsletter"
   | "instagram"
   | "testimonials"
-  | "contact";
+  | "contact"
+  | "advanced";
 
-export default function AdminDashboard({ initialContent, templateMarkup }: Props) {
+const SAFE_CONTENT_SECTIONS = new Set<ActiveSection>([
+  "navigation",
+  "branding",
+  "hero",
+  "partners",
+  "about",
+  "programs",
+  "freeTrial",
+  "activities",
+  "workProcess",
+  "testimonials",
+  "newsletter",
+  "instagram",
+  "contact",
+]);
+
+export default function AdminDashboard({ initialContent, templateMarkup, embedded = false }: Props) {
   const router = useRouter();
   const [content, setContent] = useState<SiteContent>({
     ...initialContent,
@@ -137,18 +272,18 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
     programDecorations: initialContent.programDecorations ?? {
       topShape: "/assets/img/section-top-shape.png",
       bottomShape: "/assets/img/section-bottom-shape.png",
-      mask: "/assets/img/program/mask.png",
-      mask2: "/assets/img/program/mask-2.png",
-      pencil: "/assets/img/program/pencil.png",
-      compass: "/assets/img/program/compass.png",
+      mask: "/assets/img/tech/code-cloud.svg",
+      mask2: "/assets/img/tech/circuit-plus.svg",
+      pencil: "/assets/img/tech/code-pencil.svg",
+      compass: "/assets/img/tech/chip-ruler.svg",
     },
     activitiesDecorations: initialContent.activitiesDecorations ?? {
-      pencil: "/assets/img/about/pencil.png",
-      giraffe: "/assets/img/about/zebra.png",
-      radius: "/assets/img/about/radius-shape-1.png",
+      pencil: "/assets/img/tech/code-pencil.svg",
+      giraffe: "/assets/img/tech/ai-bot.svg",
+      radius: "/assets/img/tech/neural-network.svg",
     },
     footer: {
-      text: initialContent.footer?.text ?? "© Clevio Kindergarten 2025. All rights reserved.",
+      text: initialContent.footer?.text ?? "© Clevio Innovator Camp 2025. All rights reserved.",
       quickLinks: initialContent.footer?.quickLinks ?? [],
       categories: initialContent.footer?.categories ?? [],
       policies: initialContent.footer?.policies ?? [],
@@ -184,13 +319,36 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
       tagline: "Our Programs",
       title: "We Meet Kids At Their Level<br>Regardless Of Their Age",
     },
+    freeTrial: initialContent.freeTrial ?? {
+      eyebrow: "Free Trial Terbatas",
+      title: "Yuk Coba Free Trial Coding",
+      highlight: "Gratis!",
+      subtitle: "Lihat Anak Mulai Belajar & Berkarya",
+      description:
+        "Ajak anak ikut sesi trial gratis bersama mentor Clevio. Kuota terbatas untuk kesempatan terbaik ini.",
+      benefits: [
+        "Gratis, tanpa komitmen",
+        "Didampingi mentor langsung",
+        "Dapat rekomendasi level yang tepat",
+      ],
+      ctaLabel: "Daftar Free Trial Gratis",
+      ctaLink: "https://lms.clev.io/free-trial",
+      note: "Kuota free trial terbatas! Daftar sekarang sebelum penuh.",
+      visualImage: "/assets/img/free-trial-coding.png",
+      availabilityTitle: "Slot Free Trial Masih Tersedia!",
+      availabilityText: "Isi form singkat dan tim Clevio akan menghubungi Anda.",
+      availabilityBadge: "Kuota Terbatas",
+      trustTitle: "Aman & Terpercaya",
+      trustText: "Kelas trial bersama mentor berpengalaman Clevio.",
+    },
     instructorsDecorations: initialContent.instructorsDecorations ?? {
-      loveShape: "/assets/img/team/love.png",
-      frameShape: "/assets/img/team/frame.png",
+      loveShape: "/assets/img/tech/neural-network.svg",
+      frameShape: "/assets/img/tech/code-frame.svg",
     },
     testimonialsSection: initialContent.testimonialsSection ?? {
-      tagline: "Testimonials",
-      title: "Parents' Words Are The Key<br>To Happy Kids",
+      tagline: "Testimoni Orang Tua",
+      title: "Apa Kata Orang Tua Tentang Clevio",
+      description: "Cerita nyata tentang anak yang belajar, bertumbuh, dan makin percaya diri bersama Clevio.",
     },
     partners: initialContent.partners ?? [
       { id: "pencilbox", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='60' viewBox='0 0 180 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' text-anchor='middle' dominant-baseline='middle'>PencilBox</text></svg>" },
@@ -202,36 +360,170 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
     ],
   });
   const [status, setStatus] = useState<Status>("idle");
-  const [activeSection, setActiveSection] = useState<ActiveSection>("overview");
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<ActiveSection>(embedded ? "hero" : "overview");
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [navigationSearch, setNavigationSearch] = useState("");
+  const [advancedJson, setAdvancedJson] = useState(() => JSON.stringify(initialContent, null, 2));
+  const [advancedError, setAdvancedError] = useState<string | null>(null);
+  const adminShellRef = useRef<HTMLDivElement>(null);
+  const lastSavedSnapshotRef = useRef(JSON.stringify(content));
+  const isDirty = useMemo(
+    () => JSON.stringify(content) !== lastSavedSnapshotRef.current,
+    [content],
+  );
+
+  useEffect(() => {
+    if (activeSection === "advanced") {
+      setAdvancedJson(JSON.stringify(content, null, 2));
+      setAdvancedError(null);
+    }
+  }, [activeSection, content]);
+
+  useEffect(() => {
+    const root = adminShellRef.current;
+    if (!root) return;
+
+    const fieldSelector =
+      'input:not([type="file"]):not([type="number"]):not([type="range"]):not([data-no-limit]), textarea:not([data-no-limit])';
+    const configureField = (field: HTMLInputElement | HTMLTextAreaElement) => {
+      const label = field.closest("label");
+      const labelText = label?.childNodes[0]?.textContent?.trim() || field.placeholder || "konten";
+      const limit = getContentTextLimit(labelText, field instanceof HTMLTextAreaElement);
+      field.maxLength = limit;
+      if (label) label.dataset.characterCounter = `${field.value.length}/${limit} karakter`;
+    };
+    const configureFields = (scope: ParentNode) => {
+      scope.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(fieldSelector).forEach(configureField);
+    };
+    const handleInput = (event: Event) => {
+      const field = event.target;
+      if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
+        if (field.matches(fieldSelector)) configureField(field);
+      }
+    };
+
+    configureFields(root);
+    root.addEventListener("input", handleInput);
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof Element) {
+            if (node.matches(fieldSelector)) configureField(node as HTMLInputElement | HTMLTextAreaElement);
+            configureFields(node);
+          }
+        });
+      });
+    });
+    observer.observe(root, { childList: true, subtree: true });
+
+    return () => {
+      root.removeEventListener("input", handleInput);
+      observer.disconnect();
+    };
+  }, [activeSection]);
 
   const statCards = useMemo(
     () => [
-      { label: "Program Aktif", value: content.programs.length },
-      { label: "Event Terjadwal", value: content.events.length },
-      { label: "Artikel", value: content.blog.posts.length },
+      { label: "Program Aktif", value: content.programs.length, icon: PiChalkboardTeacherBold },
+      { label: "Event Tayang", value: content.events.filter((event) => event.status === "published").length, icon: PiCalendarBold },
+      { label: "Artikel Tayang", value: content.blog.posts.filter((post) => post.status === "published").length, icon: PiNewspaperBold },
     ],
     [content],
   );
 
+  const recentContent = useMemo(
+    () => [
+      ...content.events.map((event) => ({ id: event.id, title: event.title, type: "Event", status: event.status, section: "eventLinks" as ActiveSection })),
+      ...content.blog.posts.map((post) => ({ id: post.id, title: post.title, type: "Artikel", status: post.status, section: "blog" as ActiveSection })),
+    ].slice(0, 6),
+    [content.events, content.blog.posts],
+  );
+
   const navigationItems = useMemo(() => [
-    { id: "overview" as ActiveSection, label: "Dashboard", icon: PiHouseBold, description: "Ringkasan konten" },
-    { id: "branding" as ActiveSection, label: "Branding", icon: PiPaletteBold, description: "Logo & identitas" },
-    { id: "hero" as ActiveSection, label: "Hero Section", icon: PiImageBold, description: "Halaman depan" },
-    { id: "partners" as ActiveSection, label: "Partner", icon: PiImageBold, description: "Logo partner" },
-    { id: "about" as ActiveSection, label: "Tentang Kami", icon: PiInfoBold, description: "Informasi sekolah" },
-    { id: "programs" as ActiveSection, label: "Program", icon: PiChalkboardTeacherBold, description: "Program pembelajaran" },
-    { id: "activities" as ActiveSection, label: "Aktivitas", icon: PiArticleBold, description: "Kegiatan mingguan" },
-    { id: "instructors" as ActiveSection, label: "Pengajar", icon: PiUserBold, description: "Tim pengajar" },
-    { id: "events" as ActiveSection, label: "Work Process", icon: PiListBold, description: "Langkah proses" },
-    { id: "blog" as ActiveSection, label: "Artikel", icon: PiArticleBold, description: "Berita & artikel" },
-    { id: "cta" as ActiveSection, label: "Call to Action", icon: PiBellBold, description: "Ajakan interaksi" },
-    { id: "newsletter" as ActiveSection, label: "Newsletter", icon: PiBellBold, description: "Berlangganan" },
-    { id: "instagram" as ActiveSection, label: "Instagram", icon: PiInstagramLogoBold, description: "Feed Instagram" },
-    { id: "testimonials" as ActiveSection, label: "Testimonial", icon: PiArticleBold, description: "Kata orang tua" },
-    { id: "contact" as ActiveSection, label: "Kontak", icon: PiPhoneBold, description: "Informasi kontak" },
+    { id: "overview" as ActiveSection, group: "Ringkasan", label: "Dashboard", icon: PiHouseBold, description: "Status dan akses cepat" },
+    { id: "navigation" as ActiveSection, group: "Tampilan Utama", label: "Menu Utama", icon: PiListBold, description: "Navigasi header" },
+    { id: "branding" as ActiveSection, group: "Tampilan Utama", label: "Branding", icon: PiPaletteBold, description: "Logo dan identitas" },
+    { id: "hero" as ActiveSection, group: "Tampilan Utama", label: "Hero", icon: PiImageBold, description: "Bagian pembuka" },
+    { id: "partners" as ActiveSection, group: "Tampilan Utama", label: "Partner", icon: PiImageBold, description: "Logo partner" },
+    { id: "about" as ActiveSection, group: "Tampilan Utama", label: "Tentang Kami", icon: PiInfoBold, description: "Profil Clevio" },
+    { id: "programs" as ActiveSection, group: "Konten Website", label: "Program", icon: PiChalkboardTeacherBold, description: "Program pembelajaran" },
+    { id: "freeTrial" as ActiveSection, group: "Konten Website", label: "Free Trial", icon: PiRocketLaunchBold, description: "Ajakan daftar kelas percobaan" },
+    { id: "activities" as ActiveSection, group: "Konten Website", label: "Aktivitas", icon: PiArticleBold, description: "Kegiatan mingguan" },
+    { id: "workProcess" as ActiveSection, group: "Konten Website", label: "Alur Belajar", icon: PiListBold, description: "Langkah proses" },
+    { id: "testimonials" as ActiveSection, group: "Konten Website", label: "Testimonial", icon: PiArticleBold, description: "Kata orang tua" },
+    { id: "eventLinks" as ActiveSection, group: "Publikasi", label: "Event & Link", icon: PiRocketLaunchBold, description: "Kartu menuju landing page" },
+    { id: "blog" as ActiveSection, group: "Publikasi", label: "Artikel", icon: PiNewspaperBold, description: "Artikel dan berita" },
+    { id: "newsletter" as ActiveSection, group: "Publikasi", label: "Newsletter", icon: PiBellBold, description: "Berlangganan" },
+    { id: "instagram" as ActiveSection, group: "Publikasi", label: "Instagram", icon: PiInstagramLogoBold, description: "Feed Instagram" },
+    { id: "contact" as ActiveSection, group: "Pengaturan", label: "Kontak & Footer", icon: PiPhoneBold, description: "Informasi kontak" },
+    { id: "advanced" as ActiveSection, group: "Pengaturan", label: "Data Lanjutan", icon: PiCodeBold, description: "Editor data lengkap" },
   ], []);
+
+  const navigationGroups = useMemo(() => {
+    const query = navigationSearch.trim().toLowerCase();
+    const filteredItems = query
+      ? navigationItems.filter((item) => `${item.label} ${item.description}`.toLowerCase().includes(query))
+      : navigationItems;
+    return ["Ringkasan", "Tampilan Utama", "Konten Website", "Publikasi", "Pengaturan"]
+      .map((group) => ({ group, items: filteredItems.filter((item) => item.group === group) }))
+      .filter((section) => section.items.length > 0);
+  }, [navigationItems, navigationSearch]);
+
+  const safeNavigationGroups = useMemo(() => {
+    return navigationGroups
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((item) => SAFE_CONTENT_SECTIONS.has(item.id)),
+      }))
+      .filter((section) => section.items.length > 0);
+  }, [navigationGroups]);
+
+  const addNavigationItem = () => {
+    setContent((prev) => ({
+      ...prev,
+      navigation: {
+        ...prev.navigation,
+        menu: [...prev.navigation.menu, { label: "Menu Baru", href: "#section" }],
+      },
+    }));
+  };
+
+  const updateNavigationItem = (index: number, field: keyof NavItem, value: string) => {
+    setContent((prev) => ({
+      ...prev,
+      navigation: {
+        ...prev.navigation,
+        menu: prev.navigation.menu.map((item, itemIndex) =>
+          itemIndex === index ? { ...item, [field]: value } : item,
+        ),
+      },
+    }));
+  };
+
+  const removeNavigationItem = (index: number) => {
+    setContent((prev) => ({
+      ...prev,
+      navigation: {
+        ...prev.navigation,
+        menu: prev.navigation.menu.filter((_, itemIndex) => itemIndex !== index),
+      },
+    }));
+  };
+
+  const applyAdvancedContent = () => {
+    try {
+      const parsed = JSON.parse(advancedJson) as SiteContent;
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        throw new Error("Format konten harus berupa object JSON.");
+      }
+      setContent(parsed);
+      setAdvancedError(null);
+    } catch (error) {
+      setAdvancedError(error instanceof Error ? error.message : "JSON tidak valid.");
+    }
+  };
 
   const handleHeroChange = (field: keyof typeof content.hero, value: string) => {
     setContent((prev) => ({ ...prev, hero: { ...prev.hero, [field]: value } }));
@@ -247,13 +539,25 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
     }));
   };
 
-  const handleCalloutChange = (
-    field: keyof typeof content.callToAction,
+  const handleFreeTrialChange = (
+    field: Exclude<keyof SiteContent["freeTrial"], "benefits">,
     value: string,
   ) => {
     setContent((prev) => ({
       ...prev,
-      callToAction: { ...prev.callToAction, [field]: value },
+      freeTrial: { ...prev.freeTrial, [field]: value },
+    }));
+  };
+
+  const updateFreeTrialBenefit = (index: number, value: string) => {
+    setContent((prev) => ({
+      ...prev,
+      freeTrial: {
+        ...prev.freeTrial,
+        benefits: prev.freeTrial.benefits.map((item, itemIndex) =>
+          itemIndex === index ? value : item,
+        ),
+      },
     }));
   };
 
@@ -267,12 +571,24 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
 
   const updateProgram = (
     index: number,
-    field: keyof (typeof content.programs)[number],
+    field: "title" | "description" | "ageRange" | "image" | "projectImage",
     value: string,
   ) => {
     setContent((prev) => {
       const programs = [...prev.programs];
       programs[index] = { ...programs[index], [field]: value };
+      return { ...prev, programs };
+    });
+  };
+
+  const updateProgramList = (
+    index: number,
+    field: "learningPoints" | "projectExamples" | "tools",
+    value: string,
+  ) => {
+    setContent((prev) => {
+      const programs = [...prev.programs];
+      programs[index] = { ...programs[index], [field]: value.split(/\r?\n/).slice(0, 6) };
       return { ...prev, programs };
     });
   };
@@ -288,6 +604,10 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
           description: "Deskripsi singkat program",
           ageRange: "3-5 Tahun",
           image: prev.programs[0]?.image ?? "/assets/img/program/01.jpg",
+          learningPoints: ["Logika coding", "Kreativitas digital", "Problem solving"],
+          projectExamples: ["Game sederhana", "Animasi interaktif"],
+          tools: ["Scratch", "Canva"],
+          projectImage: prev.programs[0]?.projectImage ?? prev.programs[0]?.image ?? "/assets/img/program/01.jpg",
         },
       ],
     }));
@@ -324,6 +644,10 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
           title: "Event Baru",
           location: "Clevio Center",
           description: "Tambahkan detail event",
+          image: prev.events[0]?.image ?? "/assets/img/news/01.jpg",
+          status: "draft",
+          audience: "Usia peserta",
+          landingPageUrl: "https://",
         },
       ],
     }));
@@ -333,6 +657,16 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
     setContent((prev) => ({
       ...prev,
       events: prev.events.filter((_, idx) => idx !== index),
+    }));
+  };
+
+  const updateEventsSection = (
+    field: keyof SiteContent["eventsSection"],
+    value: string,
+  ) => {
+    setContent((prev) => ({
+      ...prev,
+      eventsSection: { ...prev.eventsSection, [field]: value },
     }));
   };
 
@@ -357,11 +691,18 @@ export default function AdminDashboard({ initialContent, templateMarkup }: Props
           ...prev.blog.posts,
           {
             id: crypto.randomUUID(),
+            slug: "judul-artikel-baru",
             title: "Judul Artikel",
             excerpt: "Ringkasan singkat artikel baru.",
             image: prev.blog.posts[0]?.image ?? "",
             date: "01 Jan 2025",
             author: "Clevio Team",
+            category: "Insight Clevio",
+            readingTime: "5 menit baca",
+            status: "draft",
+            body: "Tulis isi artikel lengkap di sini.",
+            gallery: [],
+            galleryMode: "carousel",
           },
         ],
       },
@@ -556,7 +897,7 @@ const updateFooterContact = (
   };
 
   const handleActivitiesFieldChange = (
-    field: "tagline" | "title" | "image",
+    field: "tagline" | "title" | "description" | "image",
     value: string,
   ) => {
     setContent((prev) => ({
@@ -584,7 +925,7 @@ const updateFooterContact = (
         ...prev.activities,
         items: [
           ...prev.activities.items,
-          { title: "Aktivitas baru", description: "Deskripsi singkat", icon: "icon-icon-1" },
+          { title: "Aktivitas baru", description: "Deskripsi singkat", icon: "fa-solid fa-code" },
         ],
       },
     }));
@@ -598,67 +939,6 @@ const updateFooterContact = (
         items: prev.activities.items.filter((_, idx) => idx !== index),
       },
     }));
-  };
-
-  const addInstructor = () => {
-    setContent((prev) => ({
-      ...prev,
-      instructors: [
-        ...prev.instructors,
-        {
-          id: crypto.randomUUID(),
-          name: "Nama Mentor",
-          role: "Peran",
-          avatar: "/assets/img/team/01.jpg",
-          socials: [],
-        },
-      ],
-    }));
-  };
-
-  const removeInstructor = (index: number) => {
-    setContent((prev) => ({
-      ...prev,
-      instructors: prev.instructors.filter((_, idx) => idx !== index),
-    }));
-  };
-
-  const updateInstructorField = (
-    index: number,
-    field: keyof (typeof content.instructors)[number],
-    value: string,
-  ) => {
-    setContent((prev) => {
-      const instructors = [...prev.instructors];
-      instructors[index] = { ...instructors[index], [field]: value };
-      return { ...prev, instructors };
-    });
-  };
-
-  const updateInstructorSocial = (
-    index: number,
-    icon: string,
-    value: string,
-  ) => {
-    setContent((prev) => {
-      const instructors = [...prev.instructors];
-      const current = instructors[index];
-      const socialMap = new Map(
-        current.socials.map((item) => [item.icon, item.href]),
-      );
-      if (value.trim()) {
-        socialMap.set(icon, value);
-      } else {
-        socialMap.delete(icon);
-      }
-      const socials = Array.from(socialMap.entries()).map(([key, href]) => ({
-        label: key,
-        icon,
-        href,
-      }));
-      instructors[index] = { ...current, socials };
-      return { ...prev, instructors };
-    });
   };
 
   const addInstagramItem = () => {
@@ -751,7 +1031,10 @@ const updateFooterContact = (
     }));
   };
 
-  const handleWorkProcessFieldChange = (field: "tagline" | "title", value: string) => {
+  const handleWorkProcessFieldChange = (
+    field: "tagline" | "title" | "description",
+    value: string,
+  ) => {
     setContent((prev) => ({
       ...prev,
       benefits: { ...prev.benefits, [field]: value },
@@ -780,7 +1063,7 @@ const updateFooterContact = (
           {
             title: "Langkah baru",
             description: "Deskripsi singkat proses.",
-            icon: "/assets/img/icon/new.svg"
+            icon: "fa-solid fa-code"
           },
         ],
       },
@@ -814,16 +1097,6 @@ const updateFooterContact = (
     }));
   };
 
-  const handleInstructorsDecorationChange = (
-    field: keyof SiteContent["instructorsDecorations"],
-    value: string,
-  ) => {
-    setContent((prev) => ({
-      ...prev,
-      instructorsDecorations: { ...prev.instructorsDecorations, [field]: value },
-    }));
-  };
-
   const handleTestimonialsSectionChange = (
     field: keyof SiteContent["testimonialsSection"],
     value: string,
@@ -837,6 +1110,7 @@ const updateFooterContact = (
   const saveChanges = async () => {
     if (status === "saving") return;
     setStatus("saving");
+    setSaveError(null);
     try {
       const response = await fetch("/api/content", {
         method: "PUT",
@@ -846,19 +1120,26 @@ const updateFooterContact = (
       });
 
       if (!response.ok) {
-        throw new Error("Gagal menyimpan");
+        const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+        throw new Error(payload?.message || "Gagal menyimpan perubahan.");
       }
       setStatus("saved");
+      lastSavedSnapshotRef.current = JSON.stringify(content);
       setTimeout(() => setStatus("idle"), 2000);
     } catch (error) {
       console.error(error);
+      setSaveError(error instanceof Error ? error.message : "Gagal menyimpan perubahan.");
       setStatus("error");
       setTimeout(() => setStatus("idle"), 3000);
     }
   };
 
   const resetContent = () => {
-    setContent(initialContent);
+    const savedContent = JSON.parse(lastSavedSnapshotRef.current) as SiteContent;
+    setContent(savedContent);
+    setAdvancedJson(JSON.stringify(savedContent, null, 2));
+    setAdvancedError(null);
+    setSaveError(null);
   };
 
   const handleLogout = async () => {
@@ -872,32 +1153,124 @@ const updateFooterContact = (
       case "overview":
         return (
           <div className="admin-overview">
-            <div className="admin-stats">
-              {statCards.map((stat) => (
-                <div key={stat.label}>
-                  <strong>{stat.value}</strong>
-                  <span>{stat.label}</span>
-                </div>
-              ))}
+            <div className={`admin-save-notice ${isDirty ? "dirty" : "saved"}`}>
+              <PiCheckCircleBold />
+              <div>
+                <strong>{isDirty ? "Ada perubahan yang belum disimpan" : "Semua perubahan sudah tersimpan"}</strong>
+                <span>{isDirty ? "Periksa hasilnya lalu klik Simpan Perubahan." : "Konten website sudah sama dengan data di dashboard."}</span>
+              </div>
             </div>
 
-            <div className="overview-cards">
-              <div className="overview-card">
-                <h3>🎉 Selamat datang di Dashboard Clevio!</h3>
-                <p>Gunakan menu di kiri untuk mengelola konten website. Semua perubahan akan langsung tersimpan setelah menekan tombol &quot;Simpan Perubahan&quot;.</p>
-              </div>
+            <div className="admin-quick-actions">
+              <button onClick={() => setActiveSection("eventLinks")}>
+                <span><PiRocketLaunchBold /></span>
+                <div><strong>Tambahkan Event</strong><small>Hubungkan kartu ke landing page yang sudah jadi.</small></div>
+                <PiArrowRightBold />
+              </button>
+              <button onClick={() => setActiveSection("blog")}>
+                <span><PiNewspaperBold /></span>
+                <div><strong>Tulis Artikel</strong><small>Kelola ringkasan dan isi halaman artikel.</small></div>
+                <PiArrowRightBold />
+              </button>
+            </div>
 
-              <div className="overview-card">
-                <h3>📝 Cara Penggunaan:</h3>
+            <div className="admin-stats">
+              {statCards.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div key={stat.label}>
+                    <span className="admin-stat-icon"><Icon /></span>
+                    <strong>{stat.value}</strong>
+                    <span>{stat.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="admin-overview-panels">
+              <section className="admin-recent-panel">
+                <div className="admin-panel-heading"><div><span>Konten terbaru</span><h2>Event dan artikel</h2></div></div>
+                <div className="admin-recent-list">
+                  {recentContent.map((item) => (
+                    <button key={`${item.type}-${item.id}`} onClick={() => setActiveSection(item.section)}>
+                      <span className="recent-content-icon">{item.type === "Event" ? <PiCalendarBold /> : <PiNewspaperBold />}</span>
+                      <div><strong>{item.title}</strong><small>{item.type}</small></div>
+                      <span className={`admin-content-status ${item.status}`}>{item.status === "published" ? "Tayang" : "Draft"}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+              <section className="admin-help-panel">
+                <span>Alur kerja aman</span>
+                <h2>Edit dengan lebih terarah</h2>
                 <ol>
-                  <li>Pilih menu di sidebar kiri sesuai konten yang ingin diubah</li>
-                  <li>Edit konten sesuai kebutuhan</li>
-                  <li>Klik &quot;Simpan Perubahan&quot; untuk menyimpan</li>
-                  <li>Perubahan akan langsung terlihat di website</li>
+                  <li>Pilih bagian konten dari menu kiri.</li>
+                  <li>Isi form dan perhatikan batas karakter.</li>
+                  <li>Buka pratinjau atau halaman publik.</li>
+                  <li>Simpan setelah hasilnya sesuai.</li>
                 </ol>
-              </div>
+                <a href="/" target="_blank" rel="noreferrer">Buka website <PiArrowSquareOutBold /></a>
+              </section>
             </div>
           </div>
+        );
+
+      case "navigation":
+        return (
+          <>
+            <div className="section-context">
+              <h2>Menu Utama Website</h2>
+              <p>Atur label dan tujuan menu yang tampil di header website.</p>
+            </div>
+
+            <PreviewFrame
+              section="header"
+              title="Navigasi Header"
+              description="Preview menu utama website"
+              height={260}
+              content={content}
+              templateMarkup={templateMarkup}
+            />
+
+            <AdminCard title="Daftar Menu" description="Gunakan tautan section seperti #about atau URL halaman lengkap.">
+              <div className="list-header">
+                <p>{content.navigation.menu.length} Menu</p>
+                <button className="ghost-btn small" onClick={addNavigationItem}>
+                  <PiPlusBold /> Tambah Menu
+                </button>
+              </div>
+              <div className="admin-list">
+                {content.navigation.menu.map((item, index) => (
+                  <div key={`navigation-${index}`} className="list-card">
+                    <div className="list-card-header">
+                      <strong>{item.label || `Menu ${index + 1}`}</strong>
+                      <button onClick={() => removeNavigationItem(index)} aria-label={`Hapus ${item.label}`}>
+                        <PiTrashBold />
+                      </button>
+                    </div>
+                    <div className="form-grid">
+                      <label>
+                        Label Menu
+                        <input
+                          value={item.label}
+                          onChange={(event) => updateNavigationItem(index, "label", event.target.value)}
+                          placeholder="Tentang Kami"
+                        />
+                      </label>
+                      <label>
+                        URL Menu
+                        <input
+                          value={item.href}
+                          onChange={(event) => updateNavigationItem(index, "href", event.target.value)}
+                          placeholder="#about"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </AdminCard>
+          </>
         );
 
       case "branding":
@@ -927,7 +1300,7 @@ const updateFooterContact = (
                 <input
                   value={content.branding.name}
                   onChange={(e) => handleBrandingChange("name", e.target.value)}
-                  placeholder="Clevio Kindergarten"
+                  placeholder="Clevio Innovator Camp"
                 />
               </label>
               <label>
@@ -942,6 +1315,7 @@ const updateFooterContact = (
                 label="Logo Website"
                 value={content.branding.logo}
                 onChange={(value) => handleBrandingChange("logo", value)}
+                previewMode="logo"
               />
               <label>
                 Telepon
@@ -1008,8 +1382,8 @@ const updateFooterContact = (
         return (
           <>
             <div className="section-context">
-              <h2>dY^ Partner Clevio</h2>
-              <p>Logo partner ditampilkan sebagai marquee di bawah hero. Atur urutan dan logo di sini.</p>
+              <h2>Partner Clevio</h2>
+              <p>Logo partner ditampilkan berurutan di bawah hero. Preview di setiap kartu menunjukkan logo yang sedang Anda ubah.</p>
             </div>
 
             <PreviewFrame
@@ -1023,29 +1397,34 @@ const updateFooterContact = (
 
             <AdminCard
               title="Logo Partner"
-              description="Tambahkan atau ubah logo partner yang tampil di marquee"
+              description="Preview logo ditampilkan langsung agar setiap aset mudah dikenali."
             >
               <div className="list-header">
-                <p>{content.partners.length} Logo Partner</p>
+                <p><strong>{content.partners.length}</strong> logo aktif di website</p>
                 <button className="ghost-btn small" onClick={addPartner}>
                   <PiPlusBold /> Tambah Logo
                 </button>
               </div>
-              <div className="admin-list">
+              <div className="partner-admin-grid">
                 {content.partners.map((partner, index) => (
-                  <div key={partner.id} className="list-card">
-                    <div className="list-card-header">
-                      <strong>Logo {index + 1}</strong>
-                      <button onClick={() => removePartner(index)}>
+                  <article key={partner.id} className="partner-admin-card">
+                    <header className="partner-admin-card-header">
+                      <div>
+                        <span>Logo {String(index + 1).padStart(2, "0")}</span>
+                        <strong>{getPartnerDisplayName(partner.id, index)}</strong>
+                      </div>
+                      <button onClick={() => removePartner(index)} aria-label={`Hapus logo ${getPartnerDisplayName(partner.id, index)}`}>
                         <PiTrashBold />
                       </button>
-                    </div>
+                    </header>
                     <ImageInput
-                      label="URL atau upload logo"
+                      label="Sumber logo"
                       value={partner.logo}
                       onChange={(value) => updatePartner(index, value)}
+                      helperText="Gunakan PNG transparan, SVG, atau WebP agar logo tetap tajam."
+                      previewMode="logo"
                     />
-                  </div>
+                  </article>
                 ))}
               </div>
             </AdminCard>
@@ -1064,7 +1443,7 @@ const updateFooterContact = (
               section="hero"
               title="Hero Section"
               description="Area pertama yang muncul ketika halaman dibuka"
-              height={520}
+              height={620}
               content={content}
               templateMarkup={templateMarkup}
             />
@@ -1136,6 +1515,38 @@ const updateFooterContact = (
                       }))
                     }
                     placeholder="/register"
+                  />
+                </label>
+                <label>
+                  Teks Tombol Kedua
+                  <input
+                    value={content.hero.secondaryCta.label}
+                    onChange={(e) =>
+                      setContent((prev) => ({
+                        ...prev,
+                        hero: {
+                          ...prev.hero,
+                          secondaryCta: { ...prev.hero.secondaryCta, label: e.target.value },
+                        },
+                      }))
+                    }
+                    placeholder="Kenali Program Clevio"
+                  />
+                </label>
+                <label>
+                  Link Tombol Kedua
+                  <input
+                    value={content.hero.secondaryCta.href}
+                    onChange={(e) =>
+                      setContent((prev) => ({
+                        ...prev,
+                        hero: {
+                          ...prev.hero,
+                          secondaryCta: { ...prev.hero.secondaryCta, href: e.target.value },
+                        },
+                      }))
+                    }
+                    placeholder="#programs"
                   />
                 </label>
                 <label>
@@ -1229,7 +1640,7 @@ const updateFooterContact = (
                   <input
                     value={content.about.title}
                     onChange={(e) => handleAboutFieldChange("title", e.target.value)}
-                    placeholder="Tentang Clevio Kindergarten"
+                    placeholder="Tentang Clevio Innovator Camp"
                   />
                 </label>
                 <label>
@@ -1351,28 +1762,28 @@ const updateFooterContact = (
                   helperText="Default: /assets/img/section-bottom-shape.png"
                 />
                 <ImageInput
-                  label="Icon Awan / Mask"
+                  label="Ikon Code Cloud"
                   value={content.programDecorations.mask}
                   onChange={(value) => handleProgramDecorationChange("mask", value)}
-                  helperText="Default: /assets/img/program/mask.png"
+                  helperText="Default: /assets/img/tech/code-cloud.svg"
                 />
                 <ImageInput
-                  label="Icon Plus / Mask 2"
+                  label="Ikon Circuit Plus"
                   value={content.programDecorations.mask2}
                   onChange={(value) => handleProgramDecorationChange("mask2", value)}
-                  helperText="Default: /assets/img/program/mask-2.png"
+                  helperText="Default: /assets/img/tech/circuit-plus.svg"
                 />
                 <ImageInput
-                  label="Ikon Pensil"
+                  label="Ikon Code Pencil"
                   value={content.programDecorations.pencil}
                   onChange={(value) => handleProgramDecorationChange("pencil", value)}
-                  helperText="Default: /assets/img/program/pencil.png"
+                  helperText="Default: /assets/img/tech/code-pencil.svg"
                 />
                 <ImageInput
-                  label="Ikon Penggaris / Compass"
+                  label="Ikon Chip Ruler"
                   value={content.programDecorations.compass}
                   onChange={(value) => handleProgramDecorationChange("compass", value)}
-                  helperText="Default: /assets/img/program/compass.png"
+                  helperText="Default: /assets/img/tech/chip-ruler.svg"
                 />
               </div>
             </AdminCard>
@@ -1451,19 +1862,220 @@ const updateFooterContact = (
                       />
                     </label>
                     <ImageInput
-                      label="Gambar Program"
+                      label="Gambar Card Level"
                       value={program.image}
                       onChange={(value) => updateProgram(index, "image", value)}
                     />
                     <p className="image-note">
                       <strong>Rekomendasi:</strong> 560 × 360 px (rasio 14:9)
                     </p>
+                    <label>
+                      Materi Inti
+                      <textarea
+                        value={(program.learningPoints ?? []).join("\n")}
+                        onChange={(e) => updateProgramList(index, "learningPoints", e.target.value)}
+                        placeholder={"Logika coding dasar\nAnimasi dan storytelling\nProblem solving"}
+                        style={{ minHeight: "110px" }}
+                      />
+                      <span className="field-hint">Satu poin per baris, maksimal 6 poin.</span>
+                    </label>
+                    <label>
+                      Contoh Project
+                      <textarea
+                        value={(program.projectExamples ?? []).join("\n")}
+                        onChange={(e) => updateProgramList(index, "projectExamples", e.target.value)}
+                        placeholder={"Maze game\nCerita interaktif\nPoster digital"}
+                        style={{ minHeight: "110px" }}
+                      />
+                      <span className="field-hint">Satu project per baris, maksimal 6 project.</span>
+                    </label>
+                    <label>
+                      Software & Tools
+                      <textarea
+                        value={(program.tools ?? []).join("\n")}
+                        onChange={(e) => updateProgramList(index, "tools", e.target.value)}
+                        placeholder={"Scratch\nCode.org\nCanva"}
+                        style={{ minHeight: "110px" }}
+                      />
+                      <span className="field-hint">Satu nama software per baris, maksimal 6 tools.</span>
+                    </label>
+                    <ImageInput
+                      label="Screenshot Showcase Project"
+                      value={program.projectImage ?? program.image}
+                      onChange={(value) => updateProgram(index, "projectImage", value)}
+                      helperText="Rekomendasi 1200 × 800 px. Tampil saat detail Level dibuka."
+                    />
                   </div>
                 </div>
               ))}
             </div>
           </AdminCard>
         </>
+        );
+
+      case "freeTrial":
+        return (
+          <>
+            <div className="section-context">
+              <h2>Free Trial Class</h2>
+              <p>Ajakan utama setelah pengunjung melihat pilihan Level. Struktur section dikunci agar tetap rapi; Anda cukup mengubah isi teks dan link pendaftaran.</p>
+            </div>
+
+            <PreviewFrame
+              section="freeTrial"
+              title="Free Trial Class"
+              description="CTA pendaftaran yang tampil tepat setelah section Program"
+              height={760}
+              content={content}
+              templateMarkup={templateMarkup}
+            />
+
+            <AdminCard
+              title="Konten Free Trial"
+              description="Gunakan copy singkat dan spesifik. Batas karakter diterapkan otomatis agar layout tetap presisi."
+            >
+              <div className="form-grid">
+                <label>
+                  Label Atas
+                  <input
+                    value={content.freeTrial.eyebrow}
+                    onChange={(e) => handleFreeTrialChange("eyebrow", e.target.value)}
+                    placeholder="Free Trial Class"
+                  />
+                </label>
+                <label>
+                  Judul Utama
+                  <input
+                    value={content.freeTrial.title}
+                    onChange={(e) => handleFreeTrialChange("title", e.target.value)}
+                    placeholder="Yuk Coba Free Trial Coding"
+                  />
+                </label>
+                <label>
+                  Teks Highlight Oranye
+                  <input
+                    value={content.freeTrial.highlight}
+                    onChange={(e) => handleFreeTrialChange("highlight", e.target.value)}
+                    placeholder="Gratis!"
+                  />
+                </label>
+                <label>
+                  Subjudul
+                  <input
+                    value={content.freeTrial.subtitle}
+                    onChange={(e) => handleFreeTrialChange("subtitle", e.target.value)}
+                    placeholder="Lihat Anak Mulai Belajar & Berkarya"
+                  />
+                </label>
+                <label>
+                  Deskripsi
+                  <textarea
+                    value={content.freeTrial.description}
+                    onChange={(e) => handleFreeTrialChange("description", e.target.value)}
+                    placeholder="Jelaskan manfaat sesi trial secara singkat."
+                    style={{ minHeight: "120px" }}
+                  />
+                </label>
+                <label>
+                  Teks Tombol
+                  <input
+                    value={content.freeTrial.ctaLabel}
+                    onChange={(e) => handleFreeTrialChange("ctaLabel", e.target.value)}
+                    placeholder="Daftar Free Trial"
+                  />
+                </label>
+                <label>
+                  Link Pendaftaran
+                  <input
+                    value={content.freeTrial.ctaLink}
+                    onChange={(e) => handleFreeTrialChange("ctaLink", e.target.value)}
+                    placeholder="https://lms.clev.io/free-trial"
+                  />
+                  <span className="field-hint">Gunakan URL lengkap. Link akan dibuka di tab baru.</span>
+                </label>
+                <label>
+                  Catatan di Samping Tombol
+                  <input
+                    value={content.freeTrial.note}
+                    onChange={(e) => handleFreeTrialChange("note", e.target.value)}
+                    placeholder="Pendaftaran cepat melalui LMS Clevio"
+                  />
+                </label>
+              </div>
+            </AdminCard>
+
+            <AdminCard
+              title="Visual & Informasi Kepercayaan"
+              description="Gambar utama dan dua informasi singkat di bagian bawah section."
+            >
+              <ImageInput
+                label="Gambar Free Trial"
+                value={content.freeTrial.visualImage}
+                onChange={(value) => handleFreeTrialChange("visualImage", value)}
+                helperText="Rekomendasi 3:2. Sisi kiri gambar otomatis dicrop sekitar 5%."
+              />
+              <div className="form-grid">
+                <label>
+                  Judul Ketersediaan Slot
+                  <input
+                    value={content.freeTrial.availabilityTitle}
+                    onChange={(e) => handleFreeTrialChange("availabilityTitle", e.target.value)}
+                    placeholder="Slot Free Trial Masih Tersedia!"
+                  />
+                </label>
+                <label>
+                  Deskripsi Ketersediaan
+                  <input
+                    value={content.freeTrial.availabilityText}
+                    onChange={(e) => handleFreeTrialChange("availabilityText", e.target.value)}
+                    placeholder="Isi form singkat dan tim Clevio akan menghubungi Anda."
+                  />
+                </label>
+                <label>
+                  Label Kuota
+                  <input
+                    value={content.freeTrial.availabilityBadge}
+                    onChange={(e) => handleFreeTrialChange("availabilityBadge", e.target.value)}
+                    placeholder="Kuota Terbatas"
+                  />
+                </label>
+                <label>
+                  Judul Kepercayaan
+                  <input
+                    value={content.freeTrial.trustTitle}
+                    onChange={(e) => handleFreeTrialChange("trustTitle", e.target.value)}
+                    placeholder="Aman & Terpercaya"
+                  />
+                </label>
+                <label>
+                  Deskripsi Kepercayaan
+                  <input
+                    value={content.freeTrial.trustText}
+                    onChange={(e) => handleFreeTrialChange("trustText", e.target.value)}
+                    placeholder="Kelas trial bersama mentor berpengalaman Clevio."
+                  />
+                </label>
+              </div>
+            </AdminCard>
+
+            <AdminCard
+              title="Tiga Manfaat Utama"
+              description="Jumlah manfaat dibatasi tiga agar section mudah dipindai dan tidak terlalu panjang."
+            >
+              <div className="form-grid">
+                {content.freeTrial.benefits.slice(0, 3).map((benefit, index) => (
+                  <label key={`free-trial-benefit-${index}`}>
+                    Manfaat {index + 1}
+                    <input
+                      value={benefit}
+                      onChange={(e) => updateFreeTrialBenefit(index, e.target.value)}
+                      placeholder="Manfaat yang diterima peserta"
+                    />
+                  </label>
+                ))}
+              </div>
+            </AdminCard>
+          </>
         );
 
       case "activities":
@@ -1485,7 +2097,7 @@ const updateFooterContact = (
 
             <AdminCard
               title="Informasi Aktivitas"
-              description="Tagline, judul section, dan gambar kegiatan"
+              description="Tagline, judul, deskripsi, dan gambar kegiatan"
             >
             <div className="form-grid">
               <label>
@@ -1504,6 +2116,17 @@ const updateFooterContact = (
                   placeholder="Aktivitas Kami"
                 />
               </label>
+              <label className="full-width">
+                Deskripsi Section
+                <textarea
+                  value={content.activities.description ?? ""}
+                  onChange={(e) => handleActivitiesFieldChange("description", e.target.value)}
+                  placeholder="Jelaskan cara belajar dan pendampingan Coach di Clevio."
+                  maxLength={220}
+                  rows={4}
+                />
+                <small>{(content.activities.description ?? "").length}/220 karakter</small>
+              </label>
               <ImageInput
                 label="Gambar Kegiatan"
                 value={content.activities.image}
@@ -1517,22 +2140,22 @@ const updateFooterContact = (
             >
               <div className="form-grid">
                 <ImageInput
-                  label="Ikon Pensil"
+                  label="Ikon Code Pencil"
                   value={content.activitiesDecorations.pencil}
                   onChange={(value) => handleActivitiesDecorationChange("pencil", value)}
-                  helperText="Default: /assets/img/about/pencil.png"
+                  helperText="Default: /assets/img/tech/code-pencil.svg"
                 />
                 <ImageInput
-                  label="Ikon Jerapah"
+                  label="Ikon AI Bot"
                   value={content.activitiesDecorations.giraffe}
                   onChange={(value) => handleActivitiesDecorationChange("giraffe", value)}
-                  helperText="Default: /assets/img/about/zebra.png"
+                  helperText="Default: /assets/img/tech/ai-bot.svg"
                 />
                 <ImageInput
-                  label="Shape Radius"
+                  label="Ikon Neural Network"
                   value={content.activitiesDecorations.radius}
                   onChange={(value) => handleActivitiesDecorationChange("radius", value)}
-                  helperText="Default: /assets/img/about/radius-shape-1.png"
+                  helperText="Default: /assets/img/tech/neural-network.svg"
                 />
               </div>
             </AdminCard>
@@ -1570,125 +2193,20 @@ const updateFooterContact = (
                         style={{ minHeight: "80px" }}
                       />
                     </label>
-                    <label>
-                      Ikon Aktivitas (class/icon)
-                      <input
-                        value={item.icon ?? ""}
-                        onChange={(e) => updateActivityItem(index, "icon", e.target.value)}
-                        placeholder="contoh: icon-icon-1"
-                      />
-                    </label>
-                  </div>
-                </div>
-              ))}
-            </div>
-            </AdminCard>
-        </>
-        );
-
-      case "instructors":
-        return (
-          <>
-            <div className="section-context">
-              <h2>👩‍🏫 Tim Pengajar</h2>
-              <p>Informasi tim pengajar akan ditampilkan di carousel/slider. Setiap pengajar memiliki foto, nama, peran, dan link media sosial.</p>
-            </div>
-
-            <PreviewFrame
-              section="instructors"
-              title="Slider Pengajar"
-              description="Carousel mentor/pengajar sesuai tampilan situs"
-              height={520}
-              content={content}
-              templateMarkup={templateMarkup}
-            />
-
-            <AdminCard
-              title="Icon/Shape Dekorasi"
-              description="Atur dua ikon bergerak pada section pengajar."
-            >
-              <div className="form-grid">
-                <ImageInput
-                  label="Ikon Love (kiri)"
-                  value={content.instructorsDecorations.loveShape}
-                  onChange={(value) => handleInstructorsDecorationChange("loveShape", value)}
-                />
-                <ImageInput
-                  label="Icon Frame (kanan)"
-                  value={content.instructorsDecorations.frameShape}
-                  onChange={(value) => handleInstructorsDecorationChange("frameShape", value)}
-                />
-              </div>
-            </AdminCard>
-
-            <AdminCard
-              title="Daftar Pengajar"
-              description="Kelola informasi mentor dan pengajar sekolah"
-            >
-            <div className="list-header">
-              <p>{content.instructors.length} Pengajar</p>
-              <button className="ghost-btn small" onClick={addInstructor}>
-                <PiPlusBold /> Tambah
-              </button>
-            </div>
-            <div className="admin-list">
-              {content.instructors.map((instructor, index) => (
-                <div key={instructor.id} className="list-card">
-                  <div className="list-card-header">
-                    <strong>{instructor.name}</strong>
-                    <button onClick={() => removeInstructor(index)}>
-                      <PiTrashBold />
-                    </button>
-                  </div>
-                  <div className="form-grid">
-                    <label>
-                      Nama Lengkap
-                      <input
-                        value={instructor.name}
-                        onChange={(e) => updateInstructorField(index, "name", e.target.value)}
-                        placeholder="Nama Pengajar"
-                      />
-                    </label>
-                    <label>
-                      Jabatan/Peran
-                      <input
-                        value={instructor.role}
-                        onChange={(e) => updateInstructorField(index, "role", e.target.value)}
-                        placeholder="Head Teacher"
-                      />
-                    </label>
-                    <ImageInput
-                      label="Foto Pengajar"
-                      value={instructor.avatar}
-                      onChange={(value) => updateInstructorField(index, "avatar", value)}
+                    <TechIconSelect
+                      label="Ikon Aktivitas"
+                      value={item.icon ?? "fa-solid fa-code"}
+                      onChange={(value) => updateActivityItem(index, "icon", value)}
                     />
                   </div>
-
-                  <div className="social-inputs" style={{ marginTop: "1rem" }}>
-                    <p style={{ fontWeight: "600", marginBottom: "0.5rem" }}>Media Sosial:</p>
-                    {SOCIAL_FIELDS.map((social) => (
-                      <label key={`${instructor.id}-${social.icon}`}>
-                        {social.label}
-                        <input
-                          value={
-                            instructor.socials.find((item) => item.icon === social.icon)?.href ?? ""
-                          }
-                          onChange={(e) =>
-                            updateInstructorSocial(index, social.icon, e.target.value)
-                          }
-                          placeholder={`https://${social.label.toLowerCase()}.com/username`}
-                        />
-                      </label>
-                    ))}
-                  </div>
                 </div>
               ))}
             </div>
-          </AdminCard>
+            </AdminCard>
         </>
         );
 
-      case "events":
+      case "workProcess":
         return (
           <>
             <div className="section-context">
@@ -1715,7 +2233,8 @@ const updateFooterContact = (
                   <input
                     value={content.benefits.tagline}
                     onChange={(e) => handleWorkProcessFieldChange("tagline", e.target.value)}
-                    placeholder="Bagaimana proses kami berjalan"
+                    placeholder="Perjalanan Belajar Anak"
+                    maxLength={60}
                   />
                 </label>
                 <label>
@@ -1723,8 +2242,19 @@ const updateFooterContact = (
                   <textarea
                     value={content.benefits.title}
                     onChange={(e) => handleWorkProcessFieldChange("title", e.target.value)}
-                    placeholder="Langkah kerja utama di Clevio"
+                    placeholder="Dari Ide hingga Produk Siap Diluncurkan"
                     style={{ minHeight: "90px" }}
+                    maxLength={90}
+                  />
+                </label>
+                <label className="field-full">
+                  Deskripsi Pendukung
+                  <textarea
+                    value={content.benefits.description}
+                    onChange={(e) => handleWorkProcessFieldChange("description", e.target.value)}
+                    placeholder="Jelaskan singkat manfaat rangkaian tahap belajar."
+                    style={{ minHeight: "90px" }}
+                    maxLength={180}
                   />
                 </label>
               </div>
@@ -1758,11 +2288,10 @@ const updateFooterContact = (
                           placeholder="Brainstorming"
                         />
                       </label>
-                      <ImageInput
-                        label="Icon Langkah"
-                        value={item.icon || ""}
+                      <TechIconSelect
+                        label="Ikon Langkah"
+                        value={item.icon || "fa-solid fa-code"}
                         onChange={(value) => updateWorkProcessItem(index, "icon", value)}
-                        helperText="Upload icon khusus untuk langkah ini (PNG/SVG)."
                       />
                       <label>
                         Deskripsi Langkah
@@ -1783,12 +2312,112 @@ const updateFooterContact = (
           </>
         );
 
+      case "eventLinks":
+        return (
+          <>
+            <div className="section-context section-context-with-action">
+              <div>
+                <h2>Event & Link Landing Page</h2>
+                <p>Atur kartu event yang tampil di website. Setiap kartu langsung membuka landing page yang sudah Anda siapkan.</p>
+              </div>
+              <a href="/events" target="_blank" rel="noreferrer" className="context-action-link">
+                Lihat halaman event <PiArrowSquareOutBold />
+              </a>
+            </div>
+
+            <AdminCard title="Judul Section Event" description="Teks ini tampil di bagian daftar event pada website.">
+              <div className="form-grid">
+                <label>
+                  Tagline
+                  <input value={content.eventsSection.tagline} onChange={(event) => updateEventsSection("tagline", event.target.value)} />
+                </label>
+                <label>
+                  Judul Section
+                  <input value={content.eventsSection.title} onChange={(event) => updateEventsSection("title", event.target.value)} />
+                </label>
+                <label className="full-width-field">
+                  Deskripsi Section
+                  <textarea value={content.eventsSection.description} onChange={(event) => updateEventsSection("description", event.target.value)} />
+                </label>
+              </div>
+            </AdminCard>
+
+            <AdminCard title="Daftar Event" description="Isi informasi ringkas dan tempel URL landing page event pada kolom tujuan.">
+              <div className="list-header">
+                <p>{content.events.length} Event</p>
+                <button className="ghost-btn small" onClick={addEvent}><PiPlusBold /> Tambah Event</button>
+              </div>
+              <div className="admin-list admin-publish-list">
+                {content.events.map((event, index) => (
+                  <div key={event.id} className="list-card publish-card">
+                    <div className="list-card-header publish-card-header">
+                      <div>
+                        <span className={`admin-content-status ${event.status}`}>{event.status === "published" ? "Tayang" : "Draft"}</span>
+                        <strong>{event.title || `Event ${index + 1}`}</strong>
+                      </div>
+                      <div className="list-card-actions">
+                        {event.landingPageUrl && event.landingPageUrl !== "https://" && (
+                          <a href={publicContentHref(event.landingPageUrl)} target="_blank" rel="noreferrer" aria-label={`Buka ${event.title}`}><PiArrowSquareOutBold /></a>
+                        )}
+                        <button onClick={() => removeEvent(index)} aria-label={`Hapus ${event.title}`}><PiTrashBold /></button>
+                      </div>
+                    </div>
+                    <div className="form-grid">
+                      <label>
+                        Status
+                        <select value={event.status} onChange={(changeEvent) => updateEvent(index, "status", changeEvent.target.value)}>
+                          <option value="draft">Draft</option>
+                          <option value="published">Tayang</option>
+                        </select>
+                      </label>
+                      <label>
+                        Judul Event
+                        <input value={event.title} onChange={(changeEvent) => updateEvent(index, "title", changeEvent.target.value)} />
+                      </label>
+                      <label>
+                        Target Peserta
+                        <input value={event.audience} onChange={(changeEvent) => updateEvent(index, "audience", changeEvent.target.value)} />
+                      </label>
+                      <label>
+                        Tanggal
+                        <input value={event.date} onChange={(changeEvent) => updateEvent(index, "date", changeEvent.target.value)} placeholder="20 Mei 2026" />
+                      </label>
+                      <label>
+                        Waktu
+                        <input value={event.time} onChange={(changeEvent) => updateEvent(index, "time", changeEvent.target.value)} placeholder="09.00 - 12.00" />
+                      </label>
+                      <label>
+                        Lokasi
+                        <input value={event.location} onChange={(changeEvent) => updateEvent(index, "location", changeEvent.target.value)} />
+                      </label>
+                      <label className="full-width-field">
+                        Ringkasan Event
+                        <textarea value={event.description} onChange={(changeEvent) => updateEvent(index, "description", changeEvent.target.value)} />
+                      </label>
+                      <label className="full-width-field landing-link-field">
+                        URL Landing Page
+                        <span className="input-with-icon"><PiLinkBold /><input value={event.landingPageUrl} onChange={(changeEvent) => updateEvent(index, "landingPageUrl", changeEvent.target.value)} placeholder="https://event.clevio.id/nama-event" /></span>
+                      </label>
+                      <div className="full-width-field"><ImageInput label="Gambar Kartu Event" value={event.image} onChange={(value) => updateEvent(index, "image", value)} helperText="Rasio yang disarankan 16:10." /></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </AdminCard>
+          </>
+        );
+
       case "blog":
         return (
           <>
-            <div className="section-context">
-              <h2>📰 Artikel & Berita</h2>
-              <p>Artikel-artikel ini akan ditampilkan di blog/berita website. Setiap artikel memiliki gambar, judul, ringkasan, penulis, dan tanggal publikasi.</p>
+            <div className="section-context section-context-with-action">
+              <div>
+                <h2>Artikel & Berita</h2>
+                <p>Kelola kartu artikel sekaligus isi halaman artikelnya. Artikel draft tidak akan terlihat oleh pengunjung.</p>
+              </div>
+              <a href="/articles" target="_blank" rel="noreferrer" className="context-action-link">
+                Lihat semua artikel <PiArrowSquareOutBold />
+              </a>
             </div>
 
             <PreviewFrame
@@ -1800,26 +2429,50 @@ const updateFooterContact = (
               templateMarkup={templateMarkup}
             />
 
+            <AdminCard title="Judul Section Artikel" description="Atur tagline dan judul daftar artikel di halaman utama.">
+              <div className="form-grid">
+                <label>
+                  Tagline
+                  <input value={content.blog.tagline} onChange={(event) => setContent((prev) => ({ ...prev, blog: { ...prev.blog, tagline: event.target.value } }))} />
+                </label>
+                <label>
+                  Judul Section
+                  <input value={content.blog.title} onChange={(event) => setContent((prev) => ({ ...prev, blog: { ...prev.blog, title: event.target.value } }))} />
+                </label>
+              </div>
+            </AdminCard>
+
             <AdminCard
               title="Daftar Artikel"
-              description="Kelola konten blog dan berita sekolah"
+              description="Lengkapi ringkasan untuk kartu dan isi artikel untuk halaman detail."
             >
             <div className="list-header">
-              <p>{content.blog.posts.length} Artikel Dipublikasi</p>
+              <p>{content.blog.posts.filter((post) => post.status === "published").length} Tayang · {content.blog.posts.filter((post) => post.status === "draft").length} Draft</p>
               <button className="ghost-btn small" onClick={addBlogPost}>
                 <PiPlusBold /> Tambah Artikel
               </button>
             </div>
-            <div className="admin-list">
+            <div className="admin-list admin-publish-list">
               {content.blog.posts.map((post, index) => (
-                <div key={post.id} className="list-card">
-                  <div className="list-card-header">
-                    <strong>{post.title}</strong>
-                    <button onClick={() => removeBlogPost(index)}>
-                      <PiTrashBold />
-                    </button>
+                <div key={post.id} className="list-card publish-card">
+                  <div className="list-card-header publish-card-header">
+                    <div>
+                      <span className={`admin-content-status ${post.status}`}>{post.status === "published" ? "Tayang" : "Draft"}</span>
+                      <strong>{post.title}</strong>
+                    </div>
+                    <div className="list-card-actions">
+                      {post.status === "published" && <a href={`/articles/${post.slug}`} target="_blank" rel="noreferrer" aria-label={`Buka ${post.title}`}><PiArrowSquareOutBold /></a>}
+                      <button onClick={() => removeBlogPost(index)} aria-label={`Hapus ${post.title}`}><PiTrashBold /></button>
+                    </div>
                   </div>
                   <div className="form-grid">
+                    <label>
+                      Status
+                      <select value={post.status} onChange={(event) => updateBlog(index, "status", event.target.value)}>
+                        <option value="draft">Draft</option>
+                        <option value="published">Tayang</option>
+                      </select>
+                    </label>
                     <label>
                       Judul Artikel
                       <input
@@ -1827,6 +2480,18 @@ const updateFooterContact = (
                         onChange={(e) => updateBlog(index, "title", e.target.value)}
                         placeholder="Judul Menarik Artikel"
                       />
+                    </label>
+                    <label>
+                      Slug URL
+                      <input value={post.slug} onChange={(event) => updateBlog(index, "slug", event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))} placeholder="judul-artikel" />
+                    </label>
+                    <label>
+                      Kategori
+                      <input value={post.category} onChange={(event) => updateBlog(index, "category", event.target.value)} placeholder="Insight Clevio" />
+                    </label>
+                    <label>
+                      Waktu Baca
+                      <input value={post.readingTime} onChange={(event) => updateBlog(index, "readingTime", event.target.value)} placeholder="5 menit baca" />
                     </label>
                     <label>
                       Ringkasan
@@ -1858,98 +2523,13 @@ const updateFooterContact = (
                       value={post.image}
                       onChange={(value) => updateBlog(index, "image", value)}
                     />
+                    <label className="full-width-field">
+                      Isi Artikel Lengkap
+                      <textarea className="article-body-editor" value={post.body} onChange={(event) => updateBlog(index, "body", event.target.value)} placeholder="Tulis isi artikel. Pisahkan paragraf dengan satu baris kosong." />
+                    </label>
                   </div>
                 </div>
               ))}
-            </div>
-          </AdminCard>
-        </>
-        );
-
-      case "cta":
-        return (
-          <>
-            <div className="section-context">
-              <h2>🎯 Call to Action (Ajakan Bertindak)</h2>
-              <p>Section ini untuk mendorong pengunjung melakukan aksi (daftar, hubungi, dll). Biasanya muncul di tengah halaman dengan gambar dan tombol yang menonjol.</p>
-            </div>
-
-            <PreviewFrame
-              section="cta"
-              title="Call to Action"
-              description="Banner ajakan bertindak dengan gambar"
-              height={460}
-              content={content}
-              templateMarkup={templateMarkup}
-            />
-
-            <AdminCard
-              title="Konten Call to Action"
-              description="Eyebrow, judul, deskripsi, dan tombol ajakan"
-            >
-            <div className="form-grid">
-              <label>
-                Label Atas (Eyebrow)
-                <input
-                  value={content.callToAction.eyebrow}
-                  onChange={(e) => handleCalloutChange("eyebrow", e.target.value)}
-                  placeholder="Limited Seats"
-                />
-              </label>
-              <label>
-                Judul Utama
-                <input
-                  value={content.callToAction.title}
-                  onChange={(e) => handleCalloutChange("title", e.target.value)}
-                  placeholder="Daftar Sekarang Juga!"
-                />
-              </label>
-              <label>
-                Deskripsi
-                <textarea
-                  value={content.callToAction.text}
-                  onChange={(e) => handleCalloutChange("text", e.target.value)}
-                  placeholder="Jangan lewatkan kesempatan terbaik untuk..."
-                  style={{ minHeight: "100px" }}
-                />
-              </label>
-              <ImageInput
-                label="Gambar Pendukung"
-                value={content.callToAction.image}
-                onChange={(value) => handleCalloutChange("image", value)}
-              />
-              <label>
-                Teks Tombol
-                <input
-                  value={content.callToAction.button.label}
-                  onChange={(e) =>
-                    setContent((prev) => ({
-                      ...prev,
-                      callToAction: {
-                        ...prev.callToAction,
-                        button: { ...prev.callToAction.button, label: e.target.value },
-                      },
-                    }))
-                  }
-                  placeholder="Hubungi Kami"
-                />
-              </label>
-              <label>
-                Link Tombol
-                <input
-                  value={content.callToAction.button.href}
-                  onChange={(e) =>
-                    setContent((prev) => ({
-                      ...prev,
-                      callToAction: {
-                        ...prev.callToAction,
-                        button: { ...prev.callToAction.button, href: e.target.value },
-                      },
-                    }))
-                  }
-                  placeholder="/contact"
-                />
-              </label>
             </div>
           </AdminCard>
         </>
@@ -1982,6 +2562,7 @@ const updateFooterContact = (
                 <input
                   value={content.newsletter.eyebrow}
                   onChange={(e) => handleNewsletterChange("eyebrow", e.target.value)}
+                  maxLength={32}
                   placeholder="Stay Updated"
                 />
               </label>
@@ -1990,7 +2571,18 @@ const updateFooterContact = (
                 <textarea
                   value={content.newsletter.title}
                   onChange={(e) => handleNewsletterChange("title", e.target.value)}
+                  maxLength={100}
                   placeholder="Dapatkan informasi terbaru tentang kegiatan kami"
+                  style={{ minHeight: "80px" }}
+                />
+              </label>
+              <label>
+                Deskripsi Singkat
+                <textarea
+                  value={content.newsletter.description ?? ""}
+                  onChange={(e) => handleNewsletterChange("description", e.target.value)}
+                  maxLength={150}
+                  placeholder="Info event, kelas baru, dan promo pilihan untuk keluarga Clevio."
                   style={{ minHeight: "80px" }}
                 />
               </label>
@@ -1999,6 +2591,7 @@ const updateFooterContact = (
                 <input
                   value={content.newsletter.buttonLabel}
                   onChange={(e) => handleNewsletterChange("buttonLabel", e.target.value)}
+                  maxLength={28}
                   placeholder="Berlangganan"
                 />
               </label>
@@ -2069,13 +2662,13 @@ const updateFooterContact = (
         return (
           <>
             <div className="section-context">
-              <h2>dY'? Testimonial</h2>
-              <p>Atur judul dan tagline pada bagian testimonial agar sesuai dengan konten yang ingin ditampilkan.</p>
+              <h2>Testimonial</h2>
+              <p>Atur judul, pengantar, dan testimoni orang tua yang tampil di halaman utama.</p>
             </div>
 
             <PreviewFrame
               section="testimonials"
-              title="Testimonials"
+              title="Testimoni Orang Tua"
               description="Bagian ulasan orang tua"
               height={480}
               content={content}
@@ -2083,8 +2676,8 @@ const updateFooterContact = (
             />
 
             <AdminCard
-              title="Judul & Tagline Testimonial"
-              description="Ubah teks atas dan judul besar di section testimonial."
+              title="Pengantar Testimonial"
+              description="Teks dibatasi agar komposisi section tetap presisi pada desktop dan mobile."
             >
               <div className="form-grid">
                 <label>
@@ -2092,7 +2685,8 @@ const updateFooterContact = (
                   <input
                     value={content.testimonialsSection.tagline}
                     onChange={(e) => handleTestimonialsSectionChange("tagline", e.target.value)}
-                    placeholder="Testimonials"
+                    placeholder="Testimoni Orang Tua"
+                    maxLength={40}
                   />
                 </label>
                 <label>
@@ -2100,12 +2694,24 @@ const updateFooterContact = (
                   <textarea
                     value={content.testimonialsSection.title}
                     onChange={(e) => handleTestimonialsSectionChange("title", e.target.value)}
-                    placeholder={"Parents' Words Are The Key\nTo Happy Kids"}
+                    placeholder="Apa Kata Orang Tua Tentang Clevio"
+                    maxLength={72}
                     style={{ minHeight: "90px" }}
                   />
                   <span className="field-hint">
                     Gunakan baris baru untuk line break pada judul.
                   </span>
+                </label>
+                <label className="full-width">
+                  Deskripsi
+                  <textarea
+                    value={content.testimonialsSection.description}
+                    onChange={(e) => handleTestimonialsSectionChange("description", e.target.value)}
+                    placeholder="Cerita nyata tentang pengalaman belajar anak bersama Clevio."
+                    maxLength={150}
+                    style={{ minHeight: "86px" }}
+                  />
+                  <span className="field-hint">Maksimal 150 karakter agar tetap satu sampai dua baris.</span>
                 </label>
               </div>
             </AdminCard>
@@ -2136,6 +2742,7 @@ const updateFooterContact = (
                           value={testi.message}
                           onChange={(e) => updateTestimonial(index, "message", e.target.value)}
                           placeholder="Tuliskan pesan testimoni"
+                          maxLength={210}
                           style={{ minHeight: "90px" }}
                         />
                       </label>
@@ -2145,6 +2752,7 @@ const updateFooterContact = (
                           value={testi.name}
                           onChange={(e) => updateTestimonial(index, "name", e.target.value)}
                           placeholder="Nama Orang Tua"
+                          maxLength={36}
                         />
                       </label>
                       <label>
@@ -2153,6 +2761,7 @@ const updateFooterContact = (
                           value={testi.role}
                           onChange={(e) => updateTestimonial(index, "role", e.target.value)}
                           placeholder="Orang Tua Murid"
+                          maxLength={42}
                         />
                       </label>
                       <label>
@@ -2175,6 +2784,37 @@ const updateFooterContact = (
                     </div>
                   </div>
                 ))}
+              </div>
+            </AdminCard>
+          </>
+        );
+
+      case "advanced":
+        return (
+          <>
+            <div className="section-context">
+              <h2>Semua Konten Website</h2>
+              <p>Editor lanjutan untuk data yang belum tersedia pada formulir terstruktur.</p>
+            </div>
+            <AdminCard
+              title="Editor JSON Lengkap"
+              description="Gunakan dengan hati-hati. Klik Terapkan JSON sebelum menyimpan perubahan."
+            >
+              <label>
+                Data Konten
+                <textarea
+                  className="advanced-json-editor"
+                  data-no-limit
+                  spellCheck={false}
+                  value={advancedJson}
+                  onChange={(event) => setAdvancedJson(event.target.value)}
+                />
+              </label>
+              {advancedError && <p className="field-error">JSON tidak valid: {advancedError}</p>}
+              <div className="admin-actions-inline">
+                <button className="primary-btn" onClick={applyAdvancedContent}>
+                  <PiCheckCircleBold /> Terapkan JSON
+                </button>
               </div>
             </AdminCard>
           </>
@@ -2369,13 +3009,89 @@ const updateFooterContact = (
     }
   };
 
+  if (embedded) {
+    const activeNavigationItem = navigationItems.find((item) => item.id === activeSection);
+    const ActiveNavigationIcon = activeNavigationItem?.icon ?? PiImageBold;
+
+    return (
+      <div className="production-content-editor" ref={adminShellRef}>
+        <header className="production-admin-page-header production-content-header">
+          <div>
+            <span>Konten website</span>
+            <h1>Atur tampilan website</h1>
+            <p>Pilih bagian di sebelah kiri, periksa preview, lalu simpan saat kontennya sudah sesuai.</p>
+          </div>
+          <a href="/" target="_blank" rel="noreferrer" className="production-secondary-button">Lihat website <PiArrowSquareOutBold /></a>
+        </header>
+
+        <div className="production-content-guidance">
+          <div>
+            <PiCheckCircleBold />
+            <span><strong>Bisa diubah</strong><small>Teks, gambar, logo, ikon, dan link.</small></span>
+          </div>
+          <div>
+            <PiLockKeyBold />
+            <span><strong>Tetap dikunci</strong><small>Layout, kode, database, artikel, dan event.</small></span>
+          </div>
+        </div>
+
+        <div className="production-content-layout">
+          <aside className="production-content-nav">
+            <label>
+              <PiMagnifyingGlassBold />
+              <input value={navigationSearch} onChange={(event) => setNavigationSearch(event.target.value)} placeholder="Cari bagian..." />
+            </label>
+            {safeNavigationGroups.map((section) => (
+              <div key={section.group}>
+                <span>{section.group}</span>
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <button key={item.id} className={activeSection === item.id ? "is-active" : ""} onClick={() => setActiveSection(item.id)}>
+                      <Icon />
+                      <span><strong>{item.label}</strong><small>{item.description}</small></span>
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </aside>
+          <section className="production-content-panel">
+            <div className="production-content-panel-heading">
+              <div className="production-content-panel-icon"><ActiveNavigationIcon /></div>
+              <div>
+                <span>Bagian yang sedang diedit</span>
+                <h2>{activeNavigationItem?.label}</h2>
+                <p>{activeNavigationItem?.description}. Perubahan tampil pada preview sebelum disimpan.</p>
+              </div>
+            </div>
+            {renderMainContent()}
+          </section>
+        </div>
+
+        <div className="production-content-savebar">
+          <div className={status === "error" ? "is-error" : isDirty ? "is-dirty" : "is-saved"}>
+            {status === "saving" ? <PiCircleNotchBold className="spin" /> : <PiCheckCircleBold />}
+            <span>{status === "saving" ? "Sedang menyimpan..." : status === "error" ? saveError || "Gagal menyimpan." : isDirty ? "Ada perubahan yang belum disimpan" : "Semua perubahan tersimpan"}</span>
+          </div>
+          <span className="production-content-save-actions">
+            <button className="production-secondary-button" onClick={resetContent} disabled={status === "saving" || !isDirty}>Batalkan</button>
+            <button className="production-primary-button" onClick={saveChanges} disabled={status === "saving" || !isDirty}>{status === "saving" ? "Menyimpan..." : "Simpan perubahan"}</button>
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="admin-shell">
+    <div className="admin-shell" ref={adminShellRef}>
       <div className="admin-layout">
         {/* Mobile Menu Toggle */}
         <button
           className="mobile-menu-toggle"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? "Tutup menu admin" : "Buka menu admin"}
+          type="button"
         >
           <PiListBold size={20} />
         </button>
@@ -2385,38 +3101,50 @@ const updateFooterContact = (
           <div className="sidebar-header">
             {sidebarOpen && (
               <div className="admin-heading">
-                <p className="eyebrow">Clevio Admin Panel</p>
-                <h1>Dashboard Konten Website</h1>
-                <div className="active-section-pill">
-                  <span>Sedang mengedit</span>
-                  <strong>{navigationItems.find((item) => item.id === activeSection)?.label ?? "Dashboard"}</strong>
-                </div>
+                <p className="eyebrow"><PiCodeBold /> Clevio CMS</p>
+                <h1>Kelola Website</h1>
               </div>
             )}
-            <button className="sidebar-toggle" onClick={() => setSidebarOpen((prev) => !prev)}>
+            <button className="sidebar-toggle" onClick={() => setSidebarOpen((prev) => !prev)} aria-label={sidebarOpen ? "Ciutkan sidebar" : "Lebarkan sidebar"} type="button">
               {sidebarOpen ? "❮" : "❯"}
             </button>
           </div>
 
-          {/* Navigation */}
+          {sidebarOpen && (
+            <label className="sidebar-search">
+              <PiMagnifyingGlassBold />
+              <input value={navigationSearch} onChange={(event) => setNavigationSearch(event.target.value)} placeholder="Cari pengaturan..." />
+            </label>
+          )}
+
           <nav className="sidebar-nav">
-            {navigationItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  className={`sidebar-item ${activeSection === item.id ? "active" : ""}`}
-                  onClick={() => setActiveSection(item.id)}
-                >
-                  <Icon size={18} />
-                  {sidebarOpen && (
-                    <div className="sidebar-content">
-                      <span className="sidebar-label">{item.label}</span>
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+            {navigationGroups.map((section) => (
+              <div className="sidebar-nav-group" key={section.group}>
+                {sidebarOpen && <span className="sidebar-group-label">{section.group}</span>}
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.id}
+                      className={`sidebar-item ${activeSection === item.id ? "active" : ""}`}
+                      onClick={() => {
+                        setActiveSection(item.id);
+                        setMobileMenuOpen(false);
+                      }}
+                      title={!sidebarOpen ? item.label : undefined}
+                    >
+                      <Icon size={18} />
+                      {sidebarOpen && (
+                        <div className="sidebar-content">
+                          <span className="sidebar-label">{item.label}</span>
+                          <span className="sidebar-description">{item.description}</span>
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
           </nav>
 
           {/* Footer Section with Status and Actions */}
@@ -2435,7 +3163,7 @@ const updateFooterContact = (
               )}
               {status === "error" && (
                 <p className="status error">
-                  ❌ Gagal menyimpan. Coba beberapa detik lagi.
+                  ❌ {saveError || "Gagal menyimpan. Coba beberapa detik lagi."}
                 </p>
               )}
             </div>
@@ -2469,16 +3197,11 @@ const updateFooterContact = (
         <main className={`admin-main ${sidebarOpen ? "" : "expanded"}`}>
           <div className="admin-main-header">
             <div className="admin-heading">
-              <p className="eyebrow">Clevio Admin Panel</p>
-              <h1>Dashboard Konten Website</h1>
-              <div className="active-section-pill">
-                <span>Sedang mengedit</span>
-                <strong>{navigationItems.find((item) => item.id === activeSection)?.label ?? "Dashboard"}</strong>
-              </div>
+              <p className="eyebrow">Dashboard Konten</p>
+              <h1>{navigationItems.find((item) => item.id === activeSection)?.label ?? "Dashboard"}</h1>
+              <p className="admin-subtitle">{navigationItems.find((item) => item.id === activeSection)?.description ?? "Kelola konten website."}</p>
             </div>
-            <p className="admin-subtitle">
-              Kelola konten secara real-time. Pilih menu di kiri, lihat pratinjau, lalu sesuaikan teks, gambar, dan CTA.
-            </p>
+            <a href="/" target="_blank" rel="noreferrer" className="admin-open-site">Buka Website <PiArrowSquareOutBold /></a>
           </div>
           {renderMainContent()}
         </main>
@@ -2486,11 +3209,23 @@ const updateFooterContact = (
 
       {/* Floating action buttons */}
       <div className="admin-action-bar floating">
+        <div className={`admin-action-status ${status === "error" ? "error" : isDirty ? "dirty" : "saved"}`}>
+          {status === "saving" ? <PiCircleNotchBold className="spin" /> : <PiCheckCircleBold />}
+          <span>
+            {status === "saving"
+              ? "Sedang menyimpan..."
+              : status === "error"
+                ? saveError || "Gagal menyimpan perubahan."
+                : isDirty
+                  ? "Perubahan belum disimpan"
+                  : "Semua perubahan tersimpan"}
+          </span>
+        </div>
         <div className="action-bar-buttons">
-          <button className="ghost-btn" onClick={resetContent} disabled={status === "saving"}>
-            Reset
+          <button className="ghost-btn" onClick={resetContent} disabled={status === "saving" || !isDirty}>
+            Batalkan
           </button>
-          <button className="theme-btn" onClick={saveChanges} disabled={status === "saving"}>
+          <button className="theme-btn" onClick={saveChanges} disabled={status === "saving" || !isDirty}>
             {status === "saving" ? (
               <>
                 <PiCircleNotchBold className="spin" /> Menyimpan...
@@ -2551,12 +3286,13 @@ function PreviewFrame({
           {description && <p className="preview-description">{description}</p>}
         </div>
       </div>
-      <div className="preview-frame" style={frameHeight ? { minHeight: frameHeight } : undefined}>
+      <div className="preview-frame">
         <SectionPreviewCanvas
           key={section}
           markup={templateMarkup}
           content={content}
           allowedKeys={allowedKeys}
+          initialHeight={frameHeight}
         />
       </div>
     </div>
@@ -2567,52 +3303,142 @@ interface SectionPreviewCanvasProps {
   markup: string;
   content: SiteContent;
   allowedKeys: string[];
+  initialHeight?: number;
 }
 
-function SectionPreviewCanvas({ markup, content, allowedKeys }: SectionPreviewCanvasProps) {
+const PREVIEW_CANVAS_WIDTH = 1440;
+
+function SectionPreviewCanvas({
+  markup,
+  content,
+  allowedKeys,
+  initialHeight = 180,
+}: SectionPreviewCanvasProps) {
   const uniqueId = useId().replace(/:/g, "");
   const previewRootId = `preview-source-${uniqueId}`;
-  const previewTargetId = `preview-output-${uniqueId}`;
+  const previewFrameRef = useRef<HTMLIFrameElement>(null);
+  const previewStageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const sourceRoot = document.getElementById(previewRootId);
-    const target = document.getElementById(previewTargetId);
-    if (!sourceRoot || !target) return;
+    const previewFrame = previewFrameRef.current;
+    const previewStage = previewStageRef.current;
+    if (!sourceRoot || !previewFrame || !previewStage) return;
 
     const allowed = new Set(allowedKeys);
+    let renderedHeight = initialHeight;
+    let syncRaf = 0;
+
+    const updateScale = () => {
+      const availableWidth = Math.max(previewStage.clientWidth, 1);
+      const scale = Math.min(1, availableWidth / PREVIEW_CANVAS_WIDTH);
+      previewFrame.style.setProperty("--preview-scale", String(scale));
+      previewStage.style.height = `${Math.ceil(renderedHeight * scale)}px`;
+    };
+
+    const measureFrame = () => {
+      const frameDocument = previewFrame.contentDocument;
+      if (!frameDocument) return;
+
+      const nextHeight = Math.max(
+        frameDocument.documentElement.scrollHeight,
+        frameDocument.body?.scrollHeight ?? 0,
+        initialHeight,
+      );
+      renderedHeight = nextHeight;
+      previewFrame.style.height = `${nextHeight}px`;
+      previewStage.style.minHeight = "0px";
+      updateScale();
+      previewFrame.style.visibility = "visible";
+      previewStage.dataset.previewReady = "true";
+
+      frameDocument.querySelectorAll("img").forEach((image) => {
+        if (!image.complete) image.addEventListener("load", measureFrame, { once: true });
+      });
+    };
 
     const sync = () => {
       const nodes = Array.from(
         sourceRoot.querySelectorAll<HTMLElement>("[data-preview]"),
       ).filter((node) => allowed.has(node.dataset.preview ?? ""));
 
-      const fragment = document.createDocumentFragment();
-      nodes.forEach((node) => fragment.appendChild(node.cloneNode(true)));
+      const previewContainer = document.createElement("div");
+      previewContainer.className = "preview-iframe-root preview-scoped";
+      nodes.forEach((node) => previewContainer.appendChild(node.cloneNode(true)));
+      fixAssetPaths(previewContainer);
 
-      target.innerHTML = "";
-      target.appendChild(fragment);
-      fixAssetPaths(target);
+      const stylesheetLinks = Array.from(
+        document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'),
+      )
+        .map((link) => `<link rel="stylesheet" href="${link.href}">`)
+        .join("");
+
+      previewStage.dataset.previewReady = "false";
+      previewFrame.style.visibility = "hidden";
+      previewFrame.srcdoc = `<!doctype html>
+        <html lang="id">
+          <head>
+            <base href="${window.location.origin}/">
+            <meta name="viewport" content="width=${PREVIEW_CANVAS_WIDTH}">
+            ${stylesheetLinks}
+            <style>
+              html, body {
+                width: ${PREVIEW_CANVAS_WIDTH}px !important;
+                min-width: ${PREVIEW_CANVAS_WIDTH}px !important;
+                margin: 0 !important;
+                overflow: hidden !important;
+                background: transparent !important;
+              }
+              *, *::before, *::after { box-sizing: border-box; }
+              .preview-iframe-root {
+                display: flex;
+                width: ${PREVIEW_CANVAS_WIDTH}px;
+                flex-direction: column;
+                gap: 32px;
+              }
+              .preview-iframe-root > * { width: 100% !important; }
+              #header-sticky { display: none !important; }
+              .wow { visibility: visible !important; animation: none !important; }
+            </style>
+          </head>
+          <body>${previewContainer.outerHTML}</body>
+        </html>`;
     };
 
-    const raf = requestAnimationFrame(sync);
-    const syncTimer = window.setTimeout(sync, 200);
-    const observer = new MutationObserver(sync);
+    const scheduleSync = () => {
+      cancelAnimationFrame(syncRaf);
+      syncRaf = requestAnimationFrame(sync);
+    };
+
+    previewFrame.addEventListener("load", measureFrame);
+    const syncTimer = window.setTimeout(scheduleSync, 100);
+    const observer = new MutationObserver(scheduleSync);
     observer.observe(sourceRoot, {
       subtree: true,
       childList: true,
       attributes: true,
       characterData: true,
     });
+    const resizeObserver = new ResizeObserver(updateScale);
+    resizeObserver.observe(previewStage);
+    scheduleSync();
 
     return () => {
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(syncRaf);
       clearTimeout(syncTimer);
       observer.disconnect();
+      resizeObserver.disconnect();
+      previewFrame.removeEventListener("load", measureFrame);
     };
-  }, [allowedKeys, content, markup, previewRootId, previewTargetId]);
+  }, [allowedKeys, initialHeight, markup, previewRootId]);
 
   return (
-    <div className="preview-stage preview-scoped">
+    <div
+      ref={previewStageRef}
+      className="preview-stage"
+      data-preview-ready="false"
+      style={{ minHeight: Math.min(initialHeight, 220) }}
+    >
       <div
         id={previewRootId}
         className="preview-template-root"
@@ -2622,7 +3448,12 @@ function SectionPreviewCanvas({ markup, content, allowedKeys }: SectionPreviewCa
       />
       <ThemeBinder content={content} rootId={previewRootId} />
       <PreviewAssets rootId={previewRootId} />
-      <div id={previewTargetId} className="preview-output" />
+      <iframe
+        ref={previewFrameRef}
+        className="preview-output"
+        title="Preview tampilan website"
+        sandbox="allow-same-origin"
+      />
     </div>
   );
 }

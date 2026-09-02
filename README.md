@@ -36,13 +36,15 @@ Kunjungi:
 
 Halaman `/admin` dan endpoint `PUT /api/content` dilindungi cookie sesi.
 
-1. Set kredensial lewat environment variable berikut (opsional, sudah ada default):
+1. Set kredensial lewat environment variable berikut. Semua nilai wajib diisi dan tidak memiliki nilai bawaan:
 
 ```
-ADMIN_EMAIL=admin@clevio.id
-ADMIN_PASSWORD=clevio123
-AUTH_SECRET=ganti-dengan-string-random
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=<password-unik-minimal-16-karakter>
+AUTH_SECRET=<secret-acak-minimal-32-karakter>
 ```
+
+Gunakan `.env.local` untuk development dan `.env.production.local` untuk preview/deployment production. Jangan commit kedua file tersebut.
 
 2. Login melalui `/login`, kalau berhasil token akan tersimpan sebagai cookie `clevio_admin_token` (otomatis dicek pada page/admin dan API).
 3. Tombol **Logout** tersedia di header dashboard dan API juga bisa memanggil `/api/auth/logout`.

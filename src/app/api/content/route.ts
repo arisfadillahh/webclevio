@@ -1,17 +1,24 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getSiteContent, updateSiteContent } from "@/lib/content";
+import { validateContentTextLimits } from "@/lib/content-limits";
 import type { SiteContent } from "@/types/content";
-import { ADMIN_SESSION_COOKIE, isValidToken } from "@/lib/auth";
+import { isAuthorizedAdminRequest } from "@/lib/admin-session";
 
-export async function GET() {
+export async function GET(request: Request) {
   const data = await getSiteContent();
-  return NextResponse.json(data);
+  if (await isAuthorizedAdminRequest(request)) return NextResponse.json(data);
+  return NextResponse.json({
+    ...data,
+    events: data.events.filter((item) => item.status === "published"),
+    blog: {
+      ...data.blog,
+      posts: data.blog.posts.filter((item) => item.status === "published"),
+    },
+  });
 }
 
 export async function PUT(request: Request) {
-  const token = await getToken(request);
-  if (!isValidToken(token)) {
+  if (!(await isAuthorizedAdminRequest(request))) {
     return NextResponse.json(
       { ok: false, message: "Unauthorized" },
       { status: 401 },
@@ -19,7 +26,27 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const payload = (await request.json()) as SiteContent;
+    const requestedPayload = (await request.json()) as SiteContent;
+    const currentContent = await getSiteContent();
+    const payload: SiteContent = {
+      ...requestedPayload,
+      events: currentContent.events,
+      blog: {
+        ...requestedPayload.blog,
+        posts: currentContent.blog.posts,
+      },
+    };
+    const limitIssues = validateContentTextLimits(payload);
+    if (limitIssues.length > 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Beberapa teks melebihi batas karakter.",
+          issues: limitIssues.slice(0, 20),
+        },
+        { status: 400 },
+      );
+    }
     await updateSiteContent(payload);
 
     if (process.env.N8N_SYNC_WEBHOOK) {
@@ -38,23 +65,4 @@ export async function PUT(request: Request) {
       { status: 500 },
     );
   }
-}
-
-type CookieStore = {
-  get?: (name: string) => { value?: string } | undefined;
-};
-
-async function getToken(request: Request) {
-  const cookieStore = (await cookies()) as unknown as CookieStore;
-  if (typeof cookieStore.get === "function") {
-    const token = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
-    if (token) return token;
-  }
-  const cookieHeader = request.headers.get("cookie") ?? "";
-  const match = cookieHeader
-    .split(";")
-    .map((cookie) => cookie.trim())
-    .find((cookie) => cookie.startsWith(`${ADMIN_SESSION_COOKIE}=`));
-  if (!match) return undefined;
-  return decodeURIComponent(match.substring(ADMIN_SESSION_COOKIE.length + 1));
 }

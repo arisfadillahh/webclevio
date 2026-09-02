@@ -33,12 +33,12 @@
                     <div class="offcanvas__content">
                         <div class="offcanvas__top mb-5 d-flex justify-content-between align-items-center">
                             <div class="offcanvas__logo">
-                                <a href="index.html">
+                                <a href="/" aria-label="Kembali ke beranda Clevio">
                                     <img src="/assets/img/logo/logo.svg" alt="logo-img">
                                 </a>
                             </div>
                             <div class="offcanvas__close">
-                                <button>
+                                <button type="button" aria-label="Tutup menu navigasi">
                                 <i class="fas fa-times"></i>
                                 </button>
                             </div>
@@ -84,7 +84,7 @@
                                 </li>
                             </ul>
                             <div class="header-button mt-4">
-                                <a href="contact.html" class="theme-btn text-center">
+                                <a href="https://lms.clev.io" class="theme-btn text-center" target="_blank" rel="noopener noreferrer">
                                     <span>LMS Clevio<i class="fa-solid fa-arrow-right-long"></i></span>
                                 </a>
                             </div>
@@ -102,14 +102,14 @@
         <div class="offcanvas__overlay"></div>
 
         <!-- Header Section Start -->
-        <header id="header-sticky" class="header-1" data-preview="header">
+        <header id="header-sticky" class="header-1 clevio-navbar" data-preview="header">
             <div class="container-fluid">
-                <div class="mega-menu-wrapper">
+                <div class="mega-menu-wrapper clevio-navbar-shell">
                     <div class="header-main style-2">
                         <div class="header-left">
                             <div class="header-logo">
-                                <a href="index.html">
-                                    <img src="/assets/img/logo/logo.svg" alt="Clevio Kindergarten">
+                                <a href="/" aria-label="Kembali ke beranda Clevio">
+                                    <img src="/assets/img/logo/logo.svg" alt="Clevio Innovator Camp">
                                 </a>
                             </div>
                         </div>
@@ -141,72 +141,77 @@
                         </div>
                         <div class="header-right d-flex justify-content-end align-items-center">
                             <div class="header-button">
-                                <a href="#contact" class="theme-btn">
+                                <a href="https://lms.clev.io" class="theme-btn" target="_blank" rel="noopener noreferrer">
                                     <span>
-                                        Daftar Sekarang
-                                        <i class="fa-solid fa-arrow-right-long"></i>
+                                        <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+                                        <b>Masuk LMS Clevio</b>
+                                        <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
                                     </span>
                                 </a>
                             </div>
                             <div class="header__hamburger d-xl-none my-auto">
-                                <div class="sidebar__toggle">
+                                <button class="sidebar__toggle" type="button" aria-label="Buka menu navigasi" aria-controls="mobile-menu">
                                     <i class="fas fa-bars"></i>
-                                </div>
+                                </button>
                             </div>
                         </div>
                     </div>
+                    <span class="header-tech-dots" aria-hidden="true"></span>
                 </div>
             </div>
         </header>
   
         <!-- Hero Section Start -->
-        <section class="hero-section hero-1 fix" data-preview="hero">
+        <section class="hero-section hero-1 fix" id="hero" data-preview="hero">
             <div class="parasuit-shape float-bob-y">
-                <img src="/assets/img/hero/parasuit.png" alt="shape-img">
+                <img src="/assets/img/tech/code-cloud.svg" alt="Ikon cloud coding">
             </div>
             <div class="left-shape">
-                <img src="/assets/img/hero/left.png" alt="shape-img">
+                <img src="/assets/img/tech/neural-network.svg" alt="Ikon neural network">
             </div>
             <div class="book-shape float-bob-x">
-                <img src="/assets/img/hero/book.png" alt="shape-img">
+                <img src="/assets/img/tech/laptop-code.svg" alt="Ikon laptop coding">
             </div>
             <div class="pencil-shape">
-                <img src="/assets/img/hero/pencil.png" alt="shape-img">
+                <img src="/assets/img/tech/code-pencil.svg" alt="Ikon code pencil">
             </div>
             <div class="bee-shape float-bob-y">
-                <img src="/assets/img/hero/bee.png" alt="shape-img">
+                <img src="/assets/img/tech/ai-bot.svg" alt="Ikon AI bot">
             </div>
             <div class="right-shape">
-                <img src="/assets/img/hero/right.png" alt="shape-img">
+                <img src="/assets/img/tech/chip-ruler.svg" alt="Ikon chip ruler">
             </div>
             <div class="star-shape">
-                <img src="/assets/img/hero/star.png" alt="shape-img">
+                <img src="/assets/img/tech/circuit-plus.svg" alt="Ikon circuit plus">
             </div>
             <div class="container">
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-6">
                         <div class="hero-content">
-                            <h5 class="wow fadeInUp">Clevio Innovator Camp</h5>
+                            <h5 class="wow fadeInUp">
+                                <span class="hero-eyebrow-icon" aria-hidden="true"><i class="fa-solid fa-code"></i></span>
+                                <span data-hero-eyebrow>Clevio Innovator Camp</span>
+                            </h5>
                             <h1 class="wow fadeInUp" data-wow-delay=".3s">
-                                Kids' Promising <br> <span>Tomorrow</span> Ahead
+                                Learn. Create. <span>Innovate.</span> Make an Impact.
                             </h1>
-                            <p class="wow fadeInUp" data-wow-delay=".5s">Suspendisse non blandit sapien Nunc eleifend, enim et porta porta <br> eros risus tincidunt diam, vel sodales </p>
+                            <p class="wow fadeInUp" data-wow-delay=".5s">Clevio Innovator Camp adalah program pendidikan teknologi yang membantu anak usia 6–18 tahun menjadi creator, problem solver, dan innovator melalui pengalaman membuat karya digital untuk memberikan manfaat bagi orang lain.</p>
                             <div class="hero-button">
-                                <a href="contact.html" class="theme-btn wow fadeInUp" data-wow-delay=".7s">
-                                    Apply Today <i class="fa-solid fa-arrow-right-long"></i>
+                            <a href="#contact" class="theme-btn wow fadeInUp" data-wow-delay=".7s">
+                                    Coba Free Trial <i class="fa-solid fa-arrow-right-long"></i>
                                 </a>
-                                <span class="button-text wow fadeInUp" data-wow-delay=".8s">
-                                    <a href="https://www.youtube.com/watch?v=Cn4G2lZ_g2I" class="video-btn ripple video-popup">
-                                        <i class="fa-solid fa-play"></i>
-                                    </a>
-                                    <span class="ms-4 d-line">Play Video</span>
-                                </span>
+                                <a href="https://www.youtube.com/watch?v=1PBu4YtAXv8" class="button-text hero-secondary-link video-popup wow fadeInUp" data-wow-delay=".8s" aria-label="Putar video Kenali Program Clevio">
+                                    <span class="video-btn">
+                                        <i class="fa-solid fa-circle-play" aria-hidden="true"></i>
+                                    </span>
+                                    <span class="ms-4 d-line hero-secondary-label">Lihat Program</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="hero-image wow fadeInUp" data-wow-delay=".4s">
-                            <img src="/assets/img/hero/01.png" alt="hero-img">
+                            <img src="/assets/img/hero/hero-creator-tech-brand-v4.png" alt="Anak berkreasi dengan teknologi bersama Clevio">
                             <div class="hero-shape">
                                 <img src="/assets/img/hero/hero-shape.png" alt="shape-img">
                             </div>
@@ -226,15 +231,15 @@
         </section>
 
         <!-- About Section Start -->
-        <section class="about-section section-padding" data-preview="about">
+        <section class="about-section section-padding" id="about" data-preview="about">
             <div class="bus-shape float-bob-x">
-                <img src="/assets/img/about/bus.png" alt="shape-img">
+                <img src="/assets/img/tech/laptop-code.svg" alt="Ikon laptop coding">
             </div>
             <div class="girl-shape float-bob-y">
-                <img src="/assets/img/about/girl.png" alt="shape-img">
+                <img src="/assets/img/tech/ai-bot.svg" alt="Ikon AI bot">
             </div>
             <div class="dot-shape">
-                <img src="/assets/img/about/dot.png" alt="shape-img">
+                <img src="/assets/img/tech/neural-network.svg" alt="Ikon neural network">
             </div>
             <div class="container">
                 <div class="about-wrapper mb-40">
@@ -255,11 +260,11 @@
                         <div class="col-lg-6">
                             <div class="about-content">
                                 <div class="section-title">
-                                    <span class="wow fadeInUp">About us</span>
-                                     <h2 class="wow fadeInUp" data-wow-delay=".3s">Top Choice for Children</h2>
+                                    <span class="wow fadeInUp">Why Clevio</span>
+                                     <h2 class="wow fadeInUp" data-wow-delay=".3s">Lebih dari Sekadar Skill Teknologi</h2>
                                 </div>
                                 <p class="mt-3 mt-md-0 wow fadeInUp" data-wow-delay=".5s">
-                                    Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse gravida vitae nisi in tincidunt.
+                                    Kami percaya setiap anak memiliki potensi untuk menjadi inovator. Melalui pembelajaran berbasis proyek, teknologi, dan kreativitas, Clevio membantu anak mengembangkan kemampuan problem solving, membangun karya digital, serta berani mengubah ide menjadi solusi nyata.
                                 </p>
                                 <div class="about-list">
                                     <ul class="wow fadeInUp" data-wow-delay=".3s">
@@ -285,7 +290,7 @@
                                 </div>
                                 <div class="about-author">
                                     <div class="about-button wow fadeInUp" data-wow-delay=".3s">
-                                        <a href="about.html" class="theme-btn">
+                                        <a href="#about" class="theme-btn">
                                             Explore More <i class="fa-solid fa-arrow-right-long"></i>
                                         </a>
                                     </div>
@@ -309,7 +314,7 @@
         </section>
 
         <!-- Programs Section Start -->
-        <section class="program-section section-padding section-bg-2 fix" data-preview="programs">
+        <section class="program-section section-padding section-bg-2 fix" id="programs" data-preview="programs">
             <div class="top-shape">
                 <img src="/assets/img/section-top-shape.png" alt="shape-img">
             </div>
@@ -317,21 +322,21 @@
                 <img src="/assets/img/section-bottom-shape.png" alt="shape-img">
             </div>
             <div class="mask-shape float-bob-x">
-                <img src="/assets/img/program/mask.png" alt="shape-img">
+                <img src="/assets/img/tech/code-cloud.svg" alt="Ikon cloud coding">
             </div>
             <div class="pencil-shape">
-                <img src="/assets/img/program/pencil.png" alt="shape-img">
+                <img src="/assets/img/tech/code-pencil.svg" alt="Ikon code pencil">
             </div>
             <div class="mask-shape-2">
-                <img src="/assets/img/program/mask-2.png" alt="shape-img">
+                <img src="/assets/img/tech/circuit-plus.svg" alt="Ikon circuit plus">
             </div>
             <div class="compass-shape">
-                <img src="/assets/img/program/compass.png" alt="shape-img">
+                <img src="/assets/img/tech/chip-ruler.svg" alt="Ikon chip ruler">
             </div>
             <div class="container">
                 <div class="section-title text-center mt-60">
-                    <span class="wow fadeInUp">Our Programs</span>
-                    <h2 class="wow fadeInUp" data-wow-delay=".3s">We meet kids at their level <br> regardless of their age</h2>
+                    <span class="wow fadeInUp">Program Kami</span>
+                    <h2 class="wow fadeInUp" data-wow-delay=".3s">Temukan Level Belajar yang Tepat untuk Anak</h2>
                 </div>
                 <div class="row">
                     <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".3s">
@@ -342,13 +347,13 @@
                             </div>
                             <div class="program-content text-center">
                                 <h4>
-                                    <a href="program-details.html">Kindergarten</a>
+                                                <a href="#programs">Explorer</a>
                                 </h4>
-                                <span>(4-5 years)</span>
+                                <span>Usia 6–9 tahun | Kelas 1–3 SD</span>
                                 <p>
-                                    Lorem ipsum dolor consectur the <br> adipiscing elit eiusmod.
+                                    Saatnya mengeksplorasi dunia digital dengan cara yang menyenangkan melalui project sederhana.
                                 </p>
-                                <a href="program-details.html" class="arrow-icon">
+                                            <a href="#programs" class="arrow-icon">
                                     <i class="fa-solid fa-arrow-right-long"></i>
                                 </a>
                             </div>
@@ -362,13 +367,13 @@
                             </div>
                             <div class="program-content text-center">
                                 <h4>
-                                    <a href="program-details.html">Chemistry Class</a>
+                                                <a href="#programs">Creator</a>
                                 </h4>
-                                <span>(1-2 years)</span>
+                                <span>Usia 10–12 tahun | Kelas 4–6 SD</span>
                                 <p>
-                                    Lorem ipsum dolor consectur the <br> adipiscing elit eiusmod.
+                                    Anak mulai mengembangkan ide menjadi karya digital yang lebih kompleks melalui project.
                                 </p>
-                                <a href="program-details.html" class="arrow-icon color-2">
+                                            <a href="#programs" class="arrow-icon color-2">
                                     <i class="fa-solid fa-arrow-right-long"></i>
                                 </a>
                             </div>
@@ -382,13 +387,13 @@
                             </div>
                             <div class="program-content text-center style-2">
                                 <h4>
-                                    <a href="program-details.html">Drawing Class</a>
+                                                <a href="#programs">Innovator</a>
                                 </h4>
-                                <span>(1-2 years)</span>
+                                <span>Usia 13–18 tahun | SMP &amp; SMA</span>
                                 <p>
-                                    Lorem ipsum dolor consectur the <br> adipiscing elit eiusmod.
+                                    Saatnya teknologi digunakan untuk menciptakan solusi nyata melalui project yang semakin kompleks.
                                 </p>
-                                <a href="program-details.html" class="arrow-icon">
+                                            <a href="#programs" class="arrow-icon">
                                     <i class="fa-solid fa-arrow-right-long"></i>
                                 </a>
                             </div>
@@ -398,71 +403,192 @@
             </div>
         </section>
 
-        <!-- Work Process Section Start -->
-        <section class="work-process-section fix section-padding fix" data-preview="work-process">
+        <div class="program-detail-dialog" data-program-dialog aria-hidden="true" hidden>
+            <button class="program-detail-backdrop" type="button" data-program-close aria-label="Tutup detail level"></button>
+            <aside class="program-detail-panel" role="dialog" aria-modal="true" aria-labelledby="program-detail-title" tabindex="-1">
+                <button class="program-detail-close" type="button" data-program-close aria-label="Tutup detail level">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="program-detail-shell">
+                    <div class="program-detail-hero">
+                        <div class="program-detail-intro">
+                            <span class="program-detail-age" data-program-detail-age>1-3 SD</span>
+                            <h3 id="program-detail-title" data-program-detail-title>Explorer</h3>
+                            <strong class="program-detail-tagline" data-program-detail-tagline>Belajar sambil bermain, eksplorasi tanpa batas!</strong>
+                            <p class="program-detail-description" data-program-detail-description></p>
+                        </div>
+                        <div class="program-detail-showcase">
+                            <span class="program-detail-project-label"><i class="fa-solid fa-sparkles"></i> Contoh Project Anak</span>
+                            <div class="program-detail-media">
+                                <img data-program-detail-image src="/assets/img/program/detail/explorer-project.webp" alt="Contoh project siswa">
+                                <span class="program-detail-project-badge"><i class="fa-solid fa-star"></i> Project Clevio</span>
+                                <span class="program-detail-media-nav is-prev" aria-hidden="true"><i class="fa-solid fa-chevron-left"></i></span>
+                                <span class="program-detail-media-nav is-next" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></span>
+                            </div>
+                            <div class="program-detail-projects" data-program-projects></div>
+                        </div>
+                    </div>
+                    <section class="program-detail-tools" aria-labelledby="program-tools-title">
+                        <h4 id="program-tools-title">Software yang Digunakan</h4>
+                        <div data-program-tools></div>
+                    </section>
+                    <section class="program-detail-benefits" aria-label="Cocok untuk" data-program-learning></section>
+                    <section class="program-detail-actions" aria-labelledby="program-actions-title">
+                        <div class="program-detail-actions-heading">
+                            <h4 id="program-actions-title">Pilih cara terbaik untuk memulai petualangan coding!</h4>
+                        </div>
+                        <div class="program-detail-action-grid">
+                            <a class="program-detail-action is-trial" data-program-trial-link href="https://lms.clev.io/free-trial" target="_blank" rel="noopener noreferrer">
+                                <small><b>01</b> Mulai dari Trial</small>
+                                <span>Daftar Free Trial <i class="fa-solid fa-arrow-right-long"></i></span>
+                                <em>Trial gratis bersama mentor</em>
+                            </a>
+                            <a class="program-detail-action is-class" data-program-class-link href="#contact">
+                                <small><b>02</b> Langsung Gabung Kelas</small>
+                                <span>Daftar Kelas Langsung <i class="fa-solid fa-arrow-right-long"></i></span>
+                                <em>Belajar langsung dan terarah</em>
+                            </a>
+                        </div>
+                        <p class="program-detail-quota"><i class="fa-regular fa-clock"></i> Kuota kelas terbatas setiap minggunya.</p>
+                    </section>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Free Trial Section Start -->
+        <section class="free-trial-section" id="free-trial" data-preview="free-trial">
             <div class="container">
+                <div class="free-trial-card">
+                    <div class="free-trial-main">
+                        <div class="free-trial-copy">
+                            <span class="free-trial-eyebrow">
+                                <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                                <span data-free-trial-eyebrow>Free Trial Terbatas</span>
+                            </span>
+                            <h2>
+                                <span data-free-trial-title>Yuk Coba Free Trial Coding</span>
+                                <strong data-free-trial-highlight>Gratis!</strong>
+                            </h2>
+                            <p class="free-trial-subtitle" data-free-trial-subtitle>Lihat Anak Mulai Belajar &amp; Berkarya</p>
+                            <p class="free-trial-description" data-free-trial-description>Ajak anak ikut sesi trial gratis bersama mentor Clevio. Kuota terbatas untuk kesempatan terbaik ini.</p>
+                            <ul class="free-trial-benefits" data-free-trial-benefits>
+                                <li><i class="fa-solid fa-circle-check"></i> Gratis, tanpa komitmen</li>
+                                <li><i class="fa-solid fa-circle-check"></i> Didampingi mentor langsung</li>
+                                <li><i class="fa-solid fa-circle-check"></i> Dapat rekomendasi level yang tepat</li>
+                            </ul>
+                            <div class="free-trial-actions">
+                                <a class="free-trial-button" data-free-trial-link href="https://lms.clev.io/free-trial" target="_blank" rel="noopener noreferrer">
+                                    <i class="fa-solid fa-rocket" aria-hidden="true"></i>
+                                    <span data-free-trial-label>Daftar Free Trial Gratis</span>
+                                    <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
+                                </a>
+                                <p class="free-trial-note">
+                                    <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                                    <small data-free-trial-note>Kuota free trial terbatas! Daftar sekarang sebelum penuh.</small>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="free-trial-visual">
+                            <div class="free-trial-art-crop">
+                                <img data-free-trial-image src="/assets/img/free-trial-coding-brand-v2.png" alt="Ilustrasi project game coding Clevio">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="free-trial-trust-grid">
+                        <article class="free-trial-trust-item is-availability">
+                            <span class="free-trial-trust-icon"><i class="fa-regular fa-calendar" aria-hidden="true"></i></span>
+                            <div>
+                                <strong data-free-trial-availability-title>Slot Free Trial Masih Tersedia!</strong>
+                                <p data-free-trial-availability-text>Isi form singkat dan tim Clevio akan menghubungi Anda.</p>
+                            </div>
+                            <span class="free-trial-availability-badge" data-free-trial-availability-badge>Kuota Terbatas</span>
+                        </article>
+                        <article class="free-trial-trust-item">
+                            <span class="free-trial-trust-icon"><i class="fa-solid fa-shield-check" aria-hidden="true"></i></span>
+                            <div>
+                                <strong data-free-trial-trust-title>Aman &amp; Terpercaya</strong>
+                                <p data-free-trial-trust-text>Kelas trial bersama mentor berpengalaman Clevio.</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Process Section Start -->
+        <section class="work-process-section work-process-journey fix section-padding" data-preview="work-process">
+            <div class="container">
+                <div class="work-process-heading text-center wow fadeInUp" data-wow-delay=".15s">
+                    <div class="work-process-eyebrow">
+                        <i class="fa-solid fa-rocket" aria-hidden="true"></i>
+                        <span data-work-process-tagline>Perjalanan Belajar Anak</span>
+                    </div>
+                    <h2 data-work-process-title>Dari Ide hingga Produk Siap Diluncurkan</h2>
+                    <p data-work-process-description>Empat tahap pembelajaran terstruktur untuk membantu anak mengubah ide menjadi karya nyata yang berdampak.</p>
+                </div>
                 <div class="process-work-wrapper">
-                    <div class="row g-4">
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".3s">
-                            <div class="work-process-items text-center">
-                                <div class="line-shape">
-                                    <img src="/assets/img/process/line.png" alt="shape-img">
-                                </div>
-                                <div class="icon bg-cover" style="background-image: url('assets/img/process/icon-bg.png');">
-                                    <i class="icon-icon-1"></i>
-                                </div>
+                    <div class="work-process-grid">
+                        <div class="work-process-step work-process-tone-primary wow fadeInUp" data-wow-delay=".2s">
+                            <article class="work-process-items text-center">
+                                <span class="work-process-number">01</span>
+                                <div class="icon"><i class="fa-solid fa-code" aria-hidden="true"></i></div>
                                 <div class="content">
-                                    <h4>Choose A Service</h4>
-                                    <p>
-                                        In a free hour, when our power of choice is untrammeled and 
-                                    </p>
+                                    <h4>Explore</h4>
+                                    <span class="work-process-divider" aria-hidden="true"></span>
+                                    <p>Tahap mencari ide dan memahami masalah yang ingin diselesaikan</p>
                                 </div>
+                            </article>
+                            <div class="work-process-connector" aria-hidden="true">
+                                <svg viewBox="0 0 60 18" focusable="false">
+                                    <path d="M2 9 H54"></path>
+                                    <path d="M47 3 L54 9 L47 15"></path>
+                                </svg>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".5s">
-                            <div class="work-process-items text-center style-2">
-                                <div class="line-shape-2">
-                                    <img src="/assets/img/process/line-2.png" alt="shape-img">
-                                </div>
-                                <div class="icon bg-cover" style="background-image: url('assets/img/process/icon-bg.png');">
-                                    <i class="icon-icon-2"></i>
-                                </div>
+                        <div class="work-process-step work-process-tone-accent wow fadeInUp" data-wow-delay=".32s">
+                            <article class="work-process-items text-center">
+                                <span class="work-process-number">02</span>
+                                <div class="icon"><i class="fa-solid fa-laptop-code" aria-hidden="true"></i></div>
                                 <div class="content">
-                                    <h4>Expert Teachers</h4>
-                                    <p>
-                                        In a free hour, when our power of choice is untrammeled and 
-                                    </p>
+                                    <h4>Project</h4>
+                                    <span class="work-process-divider" aria-hidden="true"></span>
+                                    <p>Tahap pengerjaan terstruktur untuk mengembangkan solusi sesuai tujuan yang telah ditetapkan</p>
                                 </div>
+                            </article>
+                            <div class="work-process-connector" aria-hidden="true">
+                                <svg viewBox="0 0 60 18" focusable="false">
+                                    <path d="M2 9 H54"></path>
+                                    <path d="M47 3 L54 9 L47 15"></path>
+                                </svg>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".7s">
-                            <div class="work-process-items text-center">
-                                <div class="line-shape">
-                                    <img src="/assets/img/process/line.png" alt="shape-img">
-                                </div>
-                                <div class="icon bg-cover" style="background-image: url('assets/img/process/icon-bg.png');">
-                                    <i class="icon-icon-3"></i>
-                                </div>
+                        <div class="work-process-step work-process-tone-primary wow fadeInUp" data-wow-delay=".44s">
+                            <article class="work-process-items text-center">
+                                <span class="work-process-number">03</span>
+                                <div class="icon"><i class="fa-solid fa-microchip" aria-hidden="true"></i></div>
                                 <div class="content">
-                                    <h4>E-Learning Media</h4>
-                                    <p>
-                                        In a free hour, when our power of choice is untrammeled and 
-                                    </p>
+                                    <h4>Big Project</h4>
+                                    <span class="work-process-divider" aria-hidden="true"></span>
+                                    <p>Tahap pembuatan karya besar yang lebih kompleks dan menyeluruh sebagai hasil akhir dari proses belajar</p>
                                 </div>
+                            </article>
+                            <div class="work-process-connector" aria-hidden="true">
+                                <svg viewBox="0 0 60 18" focusable="false">
+                                    <path d="M2 9 H54"></path>
+                                    <path d="M47 3 L54 9 L47 15"></path>
+                                </svg>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".8s">
-                            <div class="work-process-items text-center">
-                                <div class="content style-two">
-                                    <h4>Full Day Programs</h4>
-                                    <p>
-                                        In a free hour, when our power of choice is untrammeled and 
-                                    </p>
+                        <div class="work-process-step work-process-tone-accent wow fadeInUp" data-wow-delay=".56s">
+                            <article class="work-process-items text-center">
+                                <span class="work-process-number">04</span>
+                                <div class="icon"><i class="fa-solid fa-robot" aria-hidden="true"></i></div>
+                                <div class="content">
+                                    <h4>Product Launching</h4>
+                                    <span class="work-process-divider" aria-hidden="true"></span>
+                                    <p>Tahap mempresentasikan dan merilis hasil pembelajaran agar dapat digunakan atau dinilai oleh orang lain.</p>
                                 </div>
-                                <div class="icon bg-cover" style="background-image: url('assets/img/process/icon-bg.png');">
-                                    <i class="icon-icon-4"></i>
-                                </div>
-                            </div>
+                            </article>
                         </div>
                     </div>
                 </div>
@@ -472,10 +598,10 @@
         <!-- About Activities Section Start -->
         <section class="about-activities-section section-padding pt-0" data-preview="activities">
             <div class="pencil-shape">
-                <img src="/assets/img/about/pencil.png" alt="shape-img">
+                <img src="/assets/img/tech/code-pencil.svg" alt="Ikon code pencil">
             </div>
             <div class="zebra-shape float-bob-y">
-                <img src="/assets/img/about/zebra.png" alt="shape-img">
+                <img src="/assets/img/tech/ai-bot.svg" alt="Ikon AI bot">
             </div>
             <div class="container">
                 <div class="about-activities-wrapper">
@@ -486,24 +612,24 @@
                                     <img src="/assets/img/about/03.jpg" alt="img">
                                 </div>
                                 <div class="radius-shape">
-                                    <img src="/assets/img/about/radius-shape-1.png" alt="img">
+                                    <img src="/assets/img/tech/neural-network.svg" alt="Ikon neural network">
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="activities-content">
                                 <div class="section-title">
-                                    <span class="wow fadeInUp">Our Best Activities</span>
-                                    <h2 class="wow fadeInUp" data-wow-delay=".3s">Let Us Know About Our <br> Reading And Cultural</h2>
+                                    <span class="wow fadeInUp">Cara Belajar Clevio</span>
+                                    <h2 class="wow fadeInUp" data-wow-delay=".3s">Belajar dengan Mencipta. Berkembang dengan Coaching.</h2>
                                 </div>
                                 <p class="mt-3 mt-md-0 wow fadeInUp" data-wow-delay=".5s">
-                                    Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse gravida vitae nisi in tincidunt.
+                                    Anak belajar melalui project nyata, didampingi Coach untuk mengeksplorasi ide, membangun solusi, dan merefleksikan proses belajarnya.
                                 </p>
                                 <div class="row g-4 mt-4">
                                     <div class="col-xl-6 col-lg-8 col-md-6 wow fadeInUp" data-wow-delay=".3s">
                                         <div class="icon-items">
                                             <div class="icon box-color-1">
-                                               <i class=" icon-icon-1"></i>
+                                               <i class="fa-solid fa-code"></i>
                                             </div>
                                             <div class="content">
                                                 <h5>Early Learning</h5>
@@ -514,7 +640,7 @@
                                     <div class="col-xl-6 col-lg-8 col-md-6 wow fadeInUp" data-wow-delay=".5s">
                                         <div class="icon-items">
                                             <div class="icon box-color-3">
-                                                <i class="icon-icon-16"></i>
+                                                <i class="fa-solid fa-microchip"></i>
                                             </div>
                                             <div class="content">
                                                 <h5>Early Learning</h5>
@@ -525,7 +651,7 @@
                                     <div class="col-xl-6 col-lg-8 col-md-6 wow fadeInUp" data-wow-delay=".6s">
                                         <div class="icon-items">
                                             <div class="icon box-color-2">
-                                                <i class="icon-icon-7"></i>
+                                                <i class="fa-solid fa-robot"></i>
                                             </div>
                                             <div class="content">
                                                 <h5>Early Learning</h5>
@@ -536,7 +662,7 @@
                                     <div class="col-xl-6 col-lg-8 col-md-6 wow fadeInUp" data-wow-delay=".8s">
                                         <div class="icon-items">
                                             <div class="icon box-color-4">
-                                                <i class="icon-icon-8"></i>
+                                                <i class="fa-solid fa-brain"></i>
                                             </div>
                                             <div class="content">
                                                 <h5>Early Learning</h5>
@@ -552,136 +678,91 @@
             </div>
         </section>
 
-        <!-- Team Section Start -->
-        <section class="team-section fix section-bg section-padding" data-preview="teachers">
-            <div class="top-shape">
-                <img src="/assets/img/section-top-shape.png" alt="shape-img">
-            </div>
-            <div class="love-shape float-bob-x">
-                <img src="/assets/img/team/love.png" alt="shape-img">
-            </div>
-            <div class="frame-shape">
-                <img src="/assets/img/team/frame.png" alt="shape-img">
-            </div>
-            <div class="container">
-                <div class="section-title-area">
-                    <div class="section-title mt-60">
-                        <span class="wow fadeInUp">Our Experts</span>
-                        <h2 class="wow fadeInUp" data-wow-delay=".3s">Our Expert Instructors</h2>
-                    </div>
-                    <div class="array-button wow fadeInUp" data-wow-delay=".5s">
-                        <button class="array-prev"><i class="fal fa-arrow-left"></i></button>
-                        <button class="array-next"><i class="fal fa-arrow-right"></i></button>
-                    </div>
-                </div>
-                <div class="team-grid" data-team-grid></div>
-            </div>
-        </section>
-
         <!-- Testimonial Section Start -->
-        <section class="testimonial-section fix section-padding" data-preview="testimonials">
-            <div class="tree-shape float-bob-y">
-                <img src="/assets/img/tree-shape.png" alt="shape-img">
+        <section class="testimonial-section testimonial-clevio-section fix" id="testimonials" data-preview="testimonials">
+            <div class="testimonial-decor testimonial-decor-chat" aria-hidden="true">
+                <i class="fa-regular fa-comment-dots"></i>
             </div>
-            <div class="right-shape">
-                <img src="/assets/img/testi-r-shape.png" alt="shape-img">
+            <div class="testimonial-decor testimonial-decor-dots testimonial-decor-dots-left" aria-hidden="true"></div>
+            <div class="testimonial-decor testimonial-decor-dots testimonial-decor-dots-right" aria-hidden="true"></div>
+            <div class="testimonial-decor testimonial-decor-code" aria-hidden="true">
+                <i class="fa-solid fa-code"></i>
             </div>
-            <div class="bee-shape float-bob-y">
-                <img src="/assets/img/testi-bee-shape.png" alt="shape-img">
-            </div>
+            <div class="testimonial-decor testimonial-decor-braces" aria-hidden="true">{ }</div>
             <div class="container">
-                <div class="section-title text-center">
-                    <span class="wow fadeInUp">testimonials</span>
-                    <h2 class="wow fadeInUp" data-wow-delay=".3s">Parents' words are the key <br> to happy kids</h2>
-                </div>
-                <div class="swiper testimonial-slider">
+                <header class="testimonial-clevio-header text-center">
+                    <div class="testimonial-clevio-eyebrow wow fadeInUp">
+                        <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
+                        <span>Testimoni Orang Tua</span>
+                        <i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>
+                    </div>
+                    <h2 class="wow fadeInUp" data-wow-delay=".2s">Apa Kata Orang Tua Tentang Clevio</h2>
+                    <p class="testimonial-clevio-description wow fadeInUp" data-wow-delay=".3s">Cerita nyata tentang anak yang belajar, bertumbuh, dan makin percaya diri bersama Clevio.</p>
+                </header>
+                <div class="swiper testimonial-slider testimonial-clevio-slider">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
-                            <div class="testimonial-items">
-                                <div class="icon">
-                                    <img src="/assets/img/quote.png" alt="img">
-                                </div>
-                                <div class="testimonial-bg"></div>
+                            <article class="testimonial-items testimonial-clevio-card">
+                                <span class="testimonial-quote-watermark" aria-hidden="true">“</span>
+                                <span class="testimonial-quote-badge" aria-hidden="true">“</span>
                                 <div class="testimonial-content">
-                                    <p>
-                                        Corquent per conubia nostra, per inceptos himenaeos. Suspendisse gravida vitae nisi
-                                        Class aptent taciti sociosqu ad litora  
-                                    </p>
-                                    <h6>Esther Howard</h6>
+                                    <p>Kerja sama antara guru, parent, dan materi di platformnya jelas suka desain menarik anak. Kakak jadi nya balance banget.</p>
+                                    <div class="testimonial-author">
+                                        <span class="testimonial-author-icon" aria-hidden="true"><i class="fa-regular fa-lightbulb"></i></span>
+                                        <span class="testimonial-author-copy"><h6>Rio Putra</h6><span>Ayah Raya</span></span>
+                                    </div>
                                 </div>
-                            </div>
+                            </article>
                         </div>
                         <div class="swiper-slide">
-                            <div class="testimonial-items style-2">
-                                <div class="icon">
-                                    <img src="/assets/img/quote-2.png" alt="img">
-                                </div>
-                                <div class="testimonial-bg bg-2"></div>
+                            <article class="testimonial-items testimonial-clevio-card">
+                                <span class="testimonial-quote-watermark" aria-hidden="true">“</span>
+                                <span class="testimonial-quote-badge" aria-hidden="true">“</span>
                                 <div class="testimonial-content">
-                                    <p>
-                                        Corquent per conubia nostra, per inceptos himenaeos. Suspendisse gravida vitae nisi
-                                        Class aptent taciti sociosqu ad litora  
-                                    </p>
-                                    <h6>Wade Warren</h6>
+                                    <p>Fasilitas lengkap, materi seru, dan komunikasi dengan orang tua selalu jelas. Highly recommended!</p>
+                                    <div class="testimonial-author">
+                                        <span class="testimonial-author-icon" aria-hidden="true"><i class="fa-regular fa-comment-dots"></i></span>
+                                        <span class="testimonial-author-copy"><h6>Maria Lintang</h6><span>Orang Tua Pre-A</span></span>
+                                    </div>
                                 </div>
-                            </div>
+                            </article>
                         </div>
                         <div class="swiper-slide">
-                            <div class="testimonial-items style-3">
-                                <div class="icon">
-                                    <img src="/assets/img/quote-3.png" alt="img">
-                                </div>
-                                <div class="testimonial-bg bg-3"></div>
+                            <article class="testimonial-items testimonial-clevio-card">
+                                <span class="testimonial-quote-watermark" aria-hidden="true">“</span>
+                                <span class="testimonial-quote-badge" aria-hidden="true">“</span>
                                 <div class="testimonial-content">
-                                    <p>
-                                        Corquent per conubia nostra, per inceptos himenaeos. Suspendisse gravida vitae nisi
-                                        Class aptent taciti sociosqu ad litora  
-                                    </p>
-                                    <h6>Jenny Wilson</h6>
+                                    <p>Guru-gurunya bukan hanya mengajar, tapi jadi partner dalam meningkatkan potensi terbaik di aplikasi ini aja deh.!</p>
+                                    <div class="testimonial-author">
+                                        <span class="testimonial-author-icon" aria-hidden="true"><i class="fa-regular fa-file-lines"></i></span>
+                                        <span class="testimonial-author-copy"><h6>Dewi Amanda</h6><span>Orang Tua Arka</span></span>
+                                    </div>
                                 </div>
-                            </div>
+                            </article>
                         </div>
                     </div>
-                    <div class="swiper-dot text-center pt-5">
-                        <div class="dot"></div>
+                    <div class="testimonial-clevio-pagination" aria-label="Navigasi testimonial">
+                        <span class="testimonial-pagination-line" aria-hidden="true"></span>
+                        <div class="swiper-dot"><div class="dot"></div></div>
+                        <span class="testimonial-pagination-line" aria-hidden="true"></span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Cta Section Start -->
-        <section class="cta-section fix section-padding bg-cover" data-preview="cta" style="background-image: url('assets/img/cta/cta-bg.jpg');">
-            <div class="plane-shape">
-                <img src="/assets/img/cta/plane.png" alt="img">
-            </div>
-            <div class="pencil-shape">
-                <img src="/assets/img/cta/pencil.png" alt="img">
-            </div>
+        <!-- Event Links Section Start -->
+        <section class="home-events-section section-padding" id="events" data-preview="events">
             <div class="container">
-                <div class="cta-wrapper">
-                    <div class="row justify-content-between">
-                        <div class="col-lg-6">
-                            <div class="section-title">
-                                <span class="text-white wow fadeInUp">Get your quality</span>
-                                <h2 class="text-white wow fadeInUp" data-wow-delay=".3s">
-                                    Come and be Part of <br> Our Latest Session
-                                </h2>
-                            </div>
-                            <div class="cta-button mt-4 mt-md-0 wow fadeInUp" data-wow-delay=".5s">
-                                <a href="contact.html" class="theme-btn bg-white">
-                                    Apply Now <i class="fa-solid fa-arrow-right-long"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-lg-5 wow fadeInUp" data-wow-delay=".4s">
-                            <div class="cta-image">
-                                <img src="/assets/img/cta/cta-1.png" alt="cta-img">
-                                <div class="cta-shape">
-                                    <img src="/assets/img/cta/cta-shape.png" alt="img">
-                                </div>
-                            </div>
-                        </div>
+                <div class="home-events-heading">
+                    <div class="section-title">
+                        <span class="home-events-tagline">Event Clevio</span>
+                        <h2 class="home-events-title">Belajar, bereksperimen, dan berkarya bersama</h2>
                     </div>
+                    <p class="home-events-description">Temukan workshop, kelas spesial, dan aktivitas teknologi terbaru dari Clevio.</p>
+                </div>
+                <div class="home-events-grid"></div>
+                <div class="home-events-footer">
+                    <a href="/events" class="theme-btn">Lihat Semua Event <i class="fa-solid fa-arrow-right-long"></i></a>
                 </div>
             </div>
         </section>
@@ -694,7 +775,7 @@
                         <span class="wow fadeInUp">Our Blogs</span>
                         <h2 class="wow fadeInUp" data-wow-delay=".3s">Explore blogs and news</h2>
                     </div>
-                    <a href="news.html" class="theme-btn wow fadeInUp" data-wow-delay=".5s">
+                        <a href="/articles" class="theme-btn wow fadeInUp" data-wow-delay=".5s">
                         See All Article <i class="fa-solid fa-arrow-right-long"></i>
                     </a>
                 </div>
@@ -715,7 +796,7 @@
                                         </li>
                                     </ul>
                                     <h3>
-                                        <a href="news-details.html">Questions to Ask Vendors Before Choosing an <br> LMS Platform</a>
+                                            <a href="/articles">Questions to Ask Vendors Before Choosing an <br> LMS Platform</a>
                                     </h3>
                                     <p>
                                         Phasellus turpis sapien, venenatis tempus vestibulum in, cursus quis enim. Nunc mollis vitae ipsum sit amet ultrices. Duis in dapibus erat
@@ -730,7 +811,7 @@
                                                 <h6>Ronald Richards</h6>
                                             </div>
                                         </div>
-                                        <a href="news-details.html" class="theme-btn">
+                                        <a href="/articles" class="theme-btn">
                                             Read More <i class="fa-solid fa-arrow-right-long"></i>
                                         </a>
                                     </div>
@@ -752,7 +833,7 @@
                                         </li>
                                     </ul>
                                     <h3>
-                                        <a href="news-details.html">
+                                            <a href="/articles">
                                             That jerk Form Finance <br>
                                             really threw me
                                         </a>
@@ -782,7 +863,7 @@
                                         </li>
                                     </ul>
                                     <h3>
-                                        <a href="news-details.html">
+                                            <a href="/articles">
                                             From without content <br>
                                             style without 
                                         </a>
@@ -805,40 +886,55 @@
         </section>
 
         <!-- Main Cta Section Start -->
-        <section class="main-cta-section" data-preview="newsletter">
+        <section class="main-cta-section" id="newsletter" data-preview="newsletter">
             <div class="plane-shape float-bob-y">
-                <img src="/assets/img/plane.png" alt="shape-img">
+                <img src="/assets/img/tech/code-cloud.svg" alt="Dekorasi cloud coding">
             </div>
             <div class="container">
-                <div class="main-cta-wrapper section-padding">
+                <div class="main-cta-wrapper">
                     <div class="pencil-shape">
-                        <img src="/assets/img/cta/pencil-2.png" alt="img">
+                        <img src="/assets/img/tech/code-pencil.svg" alt="Dekorasi code pencil">
                     </div>
                     <div class="plane-shape float-bob-y">
-                        <img src="/assets/img/cta/plane.png" alt="img">
+                        <img src="/assets/img/tech/laptop-code.svg" alt="Dekorasi laptop coding">
                     </div>
                     <div class="cta-shape float-bob-x">
-                        <img src="/assets/img/cta/shape.png" alt="img">
+                        <img src="/assets/img/tech/circuit-plus.svg" alt="Dekorasi sirkuit">
                     </div>
                     <div class="cta-bg"></div>
-                    <div class="section-title text-center">
-                        <span class="text-white wow fadeInUp">Newsletter</span>
-                        <h2 class="text-white wow fadeInUp" data-wow-delay=".3s">Subscribe to our newsletter <br> for daily updates</h2>
-                    </div>
-                    <div class="newsletter-items">
-                        <div class="form-clt wow fadeInUp" data-wow-delay=".5s">
-                            <input type="text" name="email" id="email" placeholder="Email Address">
+                    <div class="newsletter-copy">
+                        <div class="section-title">
+                            <span class="text-white wow fadeInUp">Update Clevio</span>
+                            <h2 class="text-white wow fadeInUp" data-wow-delay=".3s">Dapatkan update kegiatan Clevio dan promo kelas pilihan</h2>
                         </div>
-                        <button class="theme-btn wow fadeInUp" data-wow-delay=".7s" type="submit">
-                            <span>Subscribe Now</span>
-                        </button>
+                        <p class="newsletter-support-text wow fadeInUp" data-wow-delay=".4s">Info event, kelas baru, dan promo pilihan yang relevan untuk keluarga Clevio.</p>
+                    </div>
+                    <div class="newsletter-form-panel wow fadeInUp" data-wow-delay=".45s">
+                        <div class="newsletter-form-heading">
+                            <span><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
+                            <div>
+                                <strong>Update yang relevan</strong>
+                                <small>Dikirim seperlunya, tanpa memenuhi inbox.</small>
+                            </div>
+                        </div>
+                        <div class="newsletter-items">
+                            <div class="form-clt">
+                                <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+                                <input type="email" name="email" id="newsletter-email" autocomplete="email" aria-label="Alamat email" placeholder="nama@email.com">
+                            </div>
+                            <button class="theme-btn" type="button">
+                                <span>Ikuti Update</span>
+                                <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <p class="newsletter-privacy-note"><i class="fa-solid fa-lock" aria-hidden="true"></i> Email Anda hanya digunakan untuk informasi Clevio.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Instagram Banner Section Start -->
-        <div class="instagram-banner fix section-padding" data-preview="instagram">
+        <div id="gallery" class="instagram-banner fix section-padding" data-preview="instagram">
             <div class="instagram-wrapper">
                 <h3 class="text-center wow fadeInUp" data-wow-delay=".3s">Follow Instagram</h3>
                 <div class="instagram-grid" data-instagram-grid></div>
@@ -846,59 +942,59 @@
         </div>
 
         <!--<< Footer Section Start >>-->
-        <footer class="footer-section section-bg fix" data-preview="contact">
+        <footer class="footer-section section-bg fix" id="contact" data-preview="contact">
             <div class="footer-top-shape">
                 <img src="/assets/img/footer-top.png" alt="shape-img">
             </div>
             <div class="frame-shape">
-                <img src="/assets/img/frame.png" alt="shape-img">
+                <img src="/assets/img/tech/circuit-arc.svg" alt="Dekorasi sirkuit Clevio">
             </div>
             <div class="zebra-shape float-bob-y">
-                <img src="/assets/img/about/zebra.png" alt="shape-img">
+                <img src="/assets/img/tech/ai-bot.svg" alt="Ikon AI bot">
             </div>
             <div class="container">
                 <div class="contact-info-area">
                     <div class="contact-info-items wow fadeInUp" data-wow-delay=".3s">
                         <div class="icon">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M23.7891 1.81641H16.7578C13.3658 1.81641 10.6055 4.5767 10.6055 7.96875C10.6055 11.063 12.9015 13.631 15.8789 14.0585V16.7578C15.8788 16.9317 15.9303 17.1016 16.0268 17.2462C16.1234 17.3907 16.2607 17.5033 16.4214 17.5697C16.7456 17.705 17.1258 17.6325 17.3793 17.3792L20.6374 14.1211H23.7891C27.1811 14.1211 30 11.3608 30 7.96875C30 4.5767 27.1811 1.81641 23.7891 1.81641ZM16.7578 8.84754C16.2723 8.84754 15.8789 8.45402 15.8789 7.96863C15.8789 7.48324 16.2723 7.08973 16.7578 7.08973C17.2432 7.08973 17.6367 7.48324 17.6367 7.96863C17.6367 8.45402 17.2432 8.84754 16.7578 8.84754ZM20.2734 8.84754C19.7879 8.84754 19.3945 8.45402 19.3945 7.96863C19.3945 7.48324 19.7879 7.08973 20.2734 7.08973C20.7588 7.08973 21.1523 7.48324 21.1523 7.96863C21.1523 8.45402 20.7588 8.84754 20.2734 8.84754ZM23.7891 8.84754C23.3036 8.84754 22.9102 8.45402 22.9102 7.96863C22.9102 7.48324 23.3036 7.08973 23.7891 7.08973C24.2745 7.08973 24.668 7.48324 24.668 7.96863C24.668 8.45402 24.2745 8.84754 23.7891 8.84754Z" fill="#F39F5F"/>
-                                <path d="M19.7461 28.1836C21.2 28.1836 22.3828 27.0008 22.3828 25.5469V22.0312C22.3828 21.6527 22.1408 21.3171 21.782 21.1978L16.5209 19.44C16.2634 19.3533 15.9819 19.3928 15.7553 19.5421L13.5186 21.033C11.1496 19.9035 8.33871 17.0925 7.20914 14.7236L8.7 12.4868C8.77415 12.3754 8.82189 12.2485 8.83958 12.1158C8.85728 11.9831 8.84447 11.8482 8.80213 11.7212L7.04432 6.46014C6.98611 6.28516 6.87428 6.13295 6.72469 6.02512C6.5751 5.91728 6.39534 5.85929 6.21094 5.85938H2.63672C1.18277 5.85938 0 7.02979 0 8.48373C0 18.61 9.6198 28.1836 19.7461 28.1836Z" fill="#F39F5F"/>
+                                <path d="M23.7891 1.81641H16.7578C13.3658 1.81641 10.6055 4.5767 10.6055 7.96875C10.6055 11.063 12.9015 13.631 15.8789 14.0585V16.7578C15.8788 16.9317 15.9303 17.1016 16.0268 17.2462C16.1234 17.3907 16.2607 17.5033 16.4214 17.5697C16.7456 17.705 17.1258 17.6325 17.3793 17.3792L20.6374 14.1211H23.7891C27.1811 14.1211 30 11.3608 30 7.96875C30 4.5767 27.1811 1.81641 23.7891 1.81641ZM16.7578 8.84754C16.2723 8.84754 15.8789 8.45402 15.8789 7.96863C15.8789 7.48324 16.2723 7.08973 16.7578 7.08973C17.2432 7.08973 17.6367 7.48324 17.6367 7.96863C17.6367 8.45402 17.2432 8.84754 16.7578 8.84754ZM20.2734 8.84754C19.7879 8.84754 19.3945 8.45402 19.3945 7.96863C19.3945 7.48324 19.7879 7.08973 20.2734 7.08973C20.7588 7.08973 21.1523 7.48324 21.1523 7.96863C21.1523 8.45402 20.7588 8.84754 20.2734 8.84754ZM23.7891 8.84754C23.3036 8.84754 22.9102 8.45402 22.9102 7.96863C22.9102 7.48324 23.3036 7.08973 23.7891 7.08973C24.2745 7.08973 24.668 7.48324 24.668 7.96863C24.668 8.45402 24.2745 8.84754 23.7891 8.84754Z" fill="#9DC83B"/>
+                                <path d="M19.7461 28.1836C21.2 28.1836 22.3828 27.0008 22.3828 25.5469V22.0312C22.3828 21.6527 22.1408 21.3171 21.782 21.1978L16.5209 19.44C16.2634 19.3533 15.9819 19.3928 15.7553 19.5421L13.5186 21.033C11.1496 19.9035 8.33871 17.0925 7.20914 14.7236L8.7 12.4868C8.77415 12.3754 8.82189 12.2485 8.83958 12.1158C8.85728 11.9831 8.84447 11.8482 8.80213 11.7212L7.04432 6.46014C6.98611 6.28516 6.87428 6.13295 6.72469 6.02512C6.5751 5.91728 6.39534 5.85929 6.21094 5.85938H2.63672C1.18277 5.85938 0 7.02979 0 8.48373C0 18.61 9.6198 28.1836 19.7461 28.1836Z" fill="#9DC83B"/>
                             </svg>                                        
                         </div>
                         <div class="content">
-                            <p>Call Us 7/24</p>
+                            <p>Konsultasi Kelas</p>
                             <h3>
-                                <a href="tel:+2085550112">+208-555-0112</a>
+                                <a href="tel:+6285117143238">+62 851-1714-3238</a>
                             </h3>
                         </div>
                     </div>
                     <div class="contact-info-items wow fadeInUp" data-wow-delay=".5s">
                         <div class="icon">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12.6493 10.8272C12.8019 10.914 12.9755 10.9569 13.1509 10.9509C13.3307 10.9344 13.5048 10.8798 13.6618 10.7906L24.9212 4.22062C24.6765 3.79416 24.324 3.43955 23.8989 3.19239C23.4739 2.94523 22.9913 2.81422 22.4996 2.8125H3.74965C3.25782 2.81406 2.77505 2.94499 2.34983 3.19216C1.92461 3.43932 1.57191 3.79402 1.32715 4.22062L12.6493 10.8272Z" fill="#F39F5F"/>
-                                <path d="M25.3125 6.15918V12.6748C24.4104 12.3501 23.4587 12.1852 22.5 12.1873C20.2633 12.1908 18.1192 13.0808 16.5376 14.6624C14.956 16.244 14.066 18.3881 14.0625 20.6248C14.0623 20.9382 14.0811 21.2512 14.1188 21.5623H3.75C3.00476 21.5601 2.29069 21.263 1.76372 20.7361C1.23676 20.2091 0.939726 19.495 0.9375 18.7498V6.15918L11.7094 12.4498C12.1434 12.6872 12.6303 12.8116 13.125 12.8116C13.6197 12.8116 14.1066 12.6872 14.5406 12.4498L25.3125 6.15918Z" fill="#F39F5F"/>
-                                <path d="M22.5 14.0625C20.7595 14.0625 19.0903 14.7539 17.8596 15.9846C16.6289 17.2153 15.9375 18.8845 15.9375 20.625C15.9375 22.3655 16.6289 24.0347 17.8596 25.2654C19.0903 26.4961 20.7595 27.1875 22.5 27.1875C22.7486 27.1875 22.9871 27.0887 23.1629 26.9129C23.3387 26.7371 23.4375 26.4986 23.4375 26.25C23.4375 26.0014 23.3387 25.7629 23.1629 25.5871C22.9871 25.4113 22.7486 25.3125 22.5 25.3125C21.5729 25.3125 20.6666 25.0376 19.8958 24.5225C19.1249 24.0074 18.5241 23.2754 18.1693 22.4188C17.8145 21.5623 17.7217 20.6198 17.9026 19.7105C18.0834 18.8012 18.5299 17.966 19.1854 17.3104C19.841 16.6549 20.6762 16.2084 21.5855 16.0276C22.4948 15.8467 23.4373 15.9395 24.2938 16.2943C25.1504 16.6491 25.8824 17.2499 26.3975 18.0208C26.9126 18.7916 27.1875 19.6979 27.1875 20.625V21.5625C27.1875 21.8111 27.0887 22.0496 26.9129 22.2254C26.7371 22.4012 26.4986 22.5 26.25 22.5C26.0014 22.5 25.7629 22.4012 25.5871 22.2254C25.4113 22.0496 25.3125 21.8111 25.3125 21.5625V20.625C25.3125 20.0687 25.1476 19.525 24.8385 19.0625C24.5295 18.5999 24.0902 18.2395 23.5763 18.0266C23.0624 17.8137 22.4969 17.758 21.9513 17.8665C21.4057 17.9751 20.9046 18.2429 20.5113 18.6363C20.1179 19.0296 19.8501 19.5307 19.7415 20.0763C19.633 20.6219 19.6887 21.1874 19.9016 21.7013C20.1145 22.2152 20.4749 22.6545 20.9375 22.9635C21.4 23.2726 21.9437 23.4375 22.5 23.4375C22.9843 23.4344 23.4594 23.3048 23.8781 23.0616C24.2022 23.578 24.6856 23.9748 25.2552 24.1921C25.8248 24.4094 26.4496 24.4353 27.0353 24.266C27.621 24.0967 28.1356 23.7412 28.5013 23.2535C28.867 22.7657 29.064 22.1721 29.0625 21.5625V20.625C29.0605 18.8851 28.3685 17.2171 27.1382 15.9868C25.9079 14.7565 24.2399 14.0645 22.5 14.0625ZM22.5 21.5625C22.3146 21.5625 22.1333 21.5075 21.9792 21.4045C21.825 21.3015 21.7048 21.1551 21.6339 20.9838C21.5629 20.8125 21.5443 20.624 21.5805 20.4421C21.6167 20.2602 21.706 20.0932 21.8371 19.9621C21.9682 19.831 22.1352 19.7417 22.3171 19.7055C22.499 19.6693 22.6875 19.6879 22.8588 19.7589C23.0301 19.8298 23.1765 19.95 23.2795 20.1042C23.3825 20.2583 23.4375 20.4396 23.4375 20.625C23.4375 20.8736 23.3387 21.1121 23.1629 21.2879C22.9871 21.4637 22.7486 21.5625 22.5 21.5625Z" fill="#F39F5F"/>
+                                <path d="M12.6493 10.8272C12.8019 10.914 12.9755 10.9569 13.1509 10.9509C13.3307 10.9344 13.5048 10.8798 13.6618 10.7906L24.9212 4.22062C24.6765 3.79416 24.324 3.43955 23.8989 3.19239C23.4739 2.94523 22.9913 2.81422 22.4996 2.8125H3.74965C3.25782 2.81406 2.77505 2.94499 2.34983 3.19216C1.92461 3.43932 1.57191 3.79402 1.32715 4.22062L12.6493 10.8272Z" fill="#9DC83B"/>
+                                <path d="M25.3125 6.15918V12.6748C24.4104 12.3501 23.4587 12.1852 22.5 12.1873C20.2633 12.1908 18.1192 13.0808 16.5376 14.6624C14.956 16.244 14.066 18.3881 14.0625 20.6248C14.0623 20.9382 14.0811 21.2512 14.1188 21.5623H3.75C3.00476 21.5601 2.29069 21.263 1.76372 20.7361C1.23676 20.2091 0.939726 19.495 0.9375 18.7498V6.15918L11.7094 12.4498C12.1434 12.6872 12.6303 12.8116 13.125 12.8116C13.6197 12.8116 14.1066 12.6872 14.5406 12.4498L25.3125 6.15918Z" fill="#9DC83B"/>
+                                <path d="M22.5 14.0625C20.7595 14.0625 19.0903 14.7539 17.8596 15.9846C16.6289 17.2153 15.9375 18.8845 15.9375 20.625C15.9375 22.3655 16.6289 24.0347 17.8596 25.2654C19.0903 26.4961 20.7595 27.1875 22.5 27.1875C22.7486 27.1875 22.9871 27.0887 23.1629 26.9129C23.3387 26.7371 23.4375 26.4986 23.4375 26.25C23.4375 26.0014 23.3387 25.7629 23.1629 25.5871C22.9871 25.4113 22.7486 25.3125 22.5 25.3125C21.5729 25.3125 20.6666 25.0376 19.8958 24.5225C19.1249 24.0074 18.5241 23.2754 18.1693 22.4188C17.8145 21.5623 17.7217 20.6198 17.9026 19.7105C18.0834 18.8012 18.5299 17.966 19.1854 17.3104C19.841 16.6549 20.6762 16.2084 21.5855 16.0276C22.4948 15.8467 23.4373 15.9395 24.2938 16.2943C25.1504 16.6491 25.8824 17.2499 26.3975 18.0208C26.9126 18.7916 27.1875 19.6979 27.1875 20.625V21.5625C27.1875 21.8111 27.0887 22.0496 26.9129 22.2254C26.7371 22.4012 26.4986 22.5 26.25 22.5C26.0014 22.5 25.7629 22.4012 25.5871 22.2254C25.4113 22.0496 25.3125 21.8111 25.3125 21.5625V20.625C25.3125 20.0687 25.1476 19.525 24.8385 19.0625C24.5295 18.5999 24.0902 18.2395 23.5763 18.0266C23.0624 17.8137 22.4969 17.758 21.9513 17.8665C21.4057 17.9751 20.9046 18.2429 20.5113 18.6363C20.1179 19.0296 19.8501 19.5307 19.7415 20.0763C19.633 20.6219 19.6887 21.1874 19.9016 21.7013C20.1145 22.2152 20.4749 22.6545 20.9375 22.9635C21.4 23.2726 21.9437 23.4375 22.5 23.4375C22.9843 23.4344 23.4594 23.3048 23.8781 23.0616C24.2022 23.578 24.6856 23.9748 25.2552 24.1921C25.8248 24.4094 26.4496 24.4353 27.0353 24.266C27.621 24.0967 28.1356 23.7412 28.5013 23.2535C28.867 22.7657 29.064 22.1721 29.0625 21.5625V20.625C29.0605 18.8851 28.3685 17.2171 27.1382 15.9868C25.9079 14.7565 24.2399 14.0645 22.5 14.0625ZM22.5 21.5625C22.3146 21.5625 22.1333 21.5075 21.9792 21.4045C21.825 21.3015 21.7048 21.1551 21.6339 20.9838C21.5629 20.8125 21.5443 20.624 21.5805 20.4421C21.6167 20.2602 21.706 20.0932 21.8371 19.9621C21.9682 19.831 22.1352 19.7417 22.3171 19.7055C22.499 19.6693 22.6875 19.6879 22.8588 19.7589C23.0301 19.8298 23.1765 19.95 23.2795 20.1042C23.3825 20.2583 23.4375 20.4396 23.4375 20.625C23.4375 20.8736 23.3387 21.1121 23.1629 21.2879C22.9871 21.4637 22.7486 21.5625 22.5 21.5625Z" fill="#9DC83B"/>
                             </svg>
                                                                         
                         </div>
                         <div class="content">
-                            <p>Make a Quote</p>
+                            <p>Email Clevio</p>
                             <h3>
-                                <a href="mailto:care@clevio.id">care@clevio.id</a>
+                                <a href="mailto:camp@clevio.co">camp@clevio.co</a>
                             </h3>
                         </div>
                     </div>
                     <div class="contact-info-items wow fadeInUp" data-wow-delay=".7s">
                         <div class="icon">
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 1.66699C11.036 1.66699 7 5.73899 7 10.7617C7 12.463 7.74933 14.5737 8.84 16.679C11.2413 21.315 15.2413 25.9843 15.2413 25.9843C15.3352 26.0937 15.4516 26.1814 15.5826 26.2416C15.7135 26.3017 15.8559 26.3328 16 26.3328C16.1441 26.3328 16.2865 26.3017 16.4174 26.2416C16.5484 26.1814 16.6648 26.0937 16.7587 25.9843C16.7587 25.9843 20.7587 21.315 23.16 16.679C24.2507 14.5737 25 12.463 25 10.7617C25 5.73899 20.964 1.66699 16 1.66699ZM16 7.00033C15.0447 7.02609 14.1371 7.4237 13.4705 8.10853C12.8039 8.79335 12.4309 9.7113 12.4309 10.667C12.4309 11.6227 12.8039 12.5406 13.4705 13.2255C14.1371 13.9103 15.0447 14.3079 16 14.3337C16.9553 14.3079 17.8629 13.9103 18.5295 13.2255C19.1961 12.5406 19.5691 11.6227 19.5691 10.667C19.5691 9.7113 19.1961 8.79335 18.5295 8.10853C17.8629 7.4237 16.9553 7.02609 16 7.00033Z" fill="#F39F5F"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M22.3783 23.1693C23.4623 23.4946 24.3557 23.8973 24.973 24.3693C25.373 24.6733 25.6663 24.9706 25.6663 25.3333C25.6663 25.5466 25.545 25.74 25.3743 25.9333C25.0917 26.252 24.6717 26.5386 24.1517 26.8053C22.3143 27.7453 19.3437 28.3333 15.9997 28.3333C12.6557 28.3333 9.68501 27.7453 7.84767 26.8053C7.32767 26.5386 6.90767 26.252 6.62501 25.9333C6.45434 25.74 6.33301 25.5466 6.33301 25.3333C6.33301 24.9706 6.62634 24.6733 7.02634 24.3693C7.64367 23.8973 8.53701 23.4946 9.62101 23.1693C9.87509 23.0929 10.0884 22.9187 10.2141 22.6851C10.3397 22.4514 10.3674 22.1774 10.291 21.9233C10.2146 21.6692 10.0404 21.4559 9.80677 21.3302C9.5731 21.2046 9.29909 21.1769 9.04501 21.2533C7.39434 21.7506 6.11167 22.432 5.34101 23.1853C4.66367 23.8453 4.33301 24.584 4.33301 25.3333C4.33301 26.2693 4.86234 27.2026 5.93834 27.9813C7.82634 29.3466 11.6183 30.3333 15.9997 30.3333C20.381 30.3333 24.173 29.3466 26.061 27.9813C27.137 27.2026 27.6663 26.2693 27.6663 25.3333C27.6663 24.584 27.3357 23.8453 26.6583 23.1853C25.8877 22.432 24.605 21.7506 22.9543 21.2533C22.8285 21.2155 22.6965 21.2028 22.5658 21.216C22.4351 21.2292 22.3083 21.268 22.1926 21.3302C22.0769 21.3925 21.9746 21.4769 21.8915 21.5786C21.8084 21.6804 21.7462 21.7975 21.7083 21.9233C21.6705 22.0491 21.6578 22.1811 21.6711 22.3118C21.6843 22.4425 21.7231 22.5694 21.7853 22.6851C21.8475 22.8008 21.9319 22.9031 22.0337 22.9862C22.1354 23.0692 22.2525 23.1315 22.3783 23.1693Z" fill="#F39F5F"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 1.66699C11.036 1.66699 7 5.73899 7 10.7617C7 12.463 7.74933 14.5737 8.84 16.679C11.2413 21.315 15.2413 25.9843 15.2413 25.9843C15.3352 26.0937 15.4516 26.1814 15.5826 26.2416C15.7135 26.3017 15.8559 26.3328 16 26.3328C16.1441 26.3328 16.2865 26.3017 16.4174 26.2416C16.5484 26.1814 16.6648 26.0937 16.7587 25.9843C16.7587 25.9843 20.7587 21.315 23.16 16.679C24.2507 14.5737 25 12.463 25 10.7617C25 5.73899 20.964 1.66699 16 1.66699ZM16 7.00033C15.0447 7.02609 14.1371 7.4237 13.4705 8.10853C12.8039 8.79335 12.4309 9.7113 12.4309 10.667C12.4309 11.6227 12.8039 12.5406 13.4705 13.2255C14.1371 13.9103 15.0447 14.3079 16 14.3337C16.9553 14.3079 17.8629 13.9103 18.5295 13.2255C19.1961 12.5406 19.5691 11.6227 19.5691 10.667C19.5691 9.7113 19.1961 8.79335 18.5295 8.10853C17.8629 7.4237 16.9553 7.02609 16 7.00033Z" fill="#9DC83B"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M22.3783 23.1693C23.4623 23.4946 24.3557 23.8973 24.973 24.3693C25.373 24.6733 25.6663 24.9706 25.6663 25.3333C25.6663 25.5466 25.545 25.74 25.3743 25.9333C25.0917 26.252 24.6717 26.5386 24.1517 26.8053C22.3143 27.7453 19.3437 28.3333 15.9997 28.3333C12.6557 28.3333 9.68501 27.7453 7.84767 26.8053C7.32767 26.5386 6.90767 26.252 6.62501 25.9333C6.45434 25.74 6.33301 25.5466 6.33301 25.3333C6.33301 24.9706 6.62634 24.6733 7.02634 24.3693C7.64367 23.8973 8.53701 23.4946 9.62101 23.1693C9.87509 23.0929 10.0884 22.9187 10.2141 22.6851C10.3397 22.4514 10.3674 22.1774 10.291 21.9233C10.2146 21.6692 10.0404 21.4559 9.80677 21.3302C9.5731 21.2046 9.29909 21.1769 9.04501 21.2533C7.39434 21.7506 6.11167 22.432 5.34101 23.1853C4.66367 23.8453 4.33301 24.584 4.33301 25.3333C4.33301 26.2693 4.86234 27.2026 5.93834 27.9813C7.82634 29.3466 11.6183 30.3333 15.9997 30.3333C20.381 30.3333 24.173 29.3466 26.061 27.9813C27.137 27.2026 27.6663 26.2693 27.6663 25.3333C27.6663 24.584 27.3357 23.8453 26.6583 23.1853C25.8877 22.432 24.605 21.7506 22.9543 21.2533C22.8285 21.2155 22.6965 21.2028 22.5658 21.216C22.4351 21.2292 22.3083 21.268 22.1926 21.3302C22.0769 21.3925 21.9746 21.4769 21.8915 21.5786C21.8084 21.6804 21.7462 21.7975 21.7083 21.9233C21.6705 22.0491 21.6578 22.1811 21.6711 22.3118C21.6843 22.4425 21.7231 22.5694 21.7853 22.6851C21.8475 22.8008 21.9319 22.9031 22.0337 22.9862C22.1354 23.0692 22.2525 23.1315 22.3783 23.1693Z" fill="#9DC83B"/>
                             </svg>                     
                         </div>
                         <div class="content">
-                            <p>Location</p>
+                            <p>Lokasi Clevio</p>
                             <h3>
-                                4517 Washington ave.
+                                Bukit Golf Riverside Blok A7 no. 25
                             </h3>
                         </div>
                     </div>
@@ -908,9 +1004,9 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".3s">
-                            <div class="single-footer-widget">
+                            <div class="single-footer-widget footer-brand-widget">
                                 <div class="widget-head">
-                                    <a href="index.html">
+                                    <a href="/" aria-label="Kembali ke beranda Clevio">
                                         <img src="/assets/img/logo/logo.svg" alt="logo-img">
                                     </a>
                                 </div>
@@ -929,67 +1025,67 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-2 col-lg-4 col-md-6 ps-lg-5 wow fadeInUp" data-wow-delay=".5s">
-                            <div class="single-footer-widget">
+                        <div class="col-xl-2 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".5s">
+                            <div class="single-footer-widget footer-quick-links">
                                 <div class="widget-head">
-                                    <h3>Quick Links</h3>
+                                    <h3>Tautan Cepat</h3>
                                 </div>
                                 <ul class="list-area">
                                     <li>
-                                        <a href="program-details.html">
+                                        <a href="#about">
                                             <i class="fa-solid fa-chevron-right"></i>
-                                            Our Services
+                                            Tentang Kami
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="news-details.html">
+                                        <a href="#programs">
                                             <i class="fa-solid fa-chevron-right"></i>
-                                            Our Blogs
+                                            Program
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="faq.html">
+                                        <a href="#testimonials">
                                             <i class="fa-solid fa-chevron-right"></i>
-                                            FAQ’S
+                                            Testimonial
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="contact.html">
+                                        <a href="#events">
                                             <i class="fa-solid fa-chevron-right"></i>
-                                            Contact Us
+                                            Event Clevio
                                         </a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-6 ps-lg-5 wow fadeInUp" data-wow-delay=".5s">
-                            <div class="single-footer-widget style-margin">
+                        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".5s">
+                            <div class="single-footer-widget style-margin footer-program-links">
                                 <div class="widget-head">
-                                    <h3>Categories</h3>
+                                    <h3>Program Clevio</h3>
                                 </div>
                                 <ul class="list-area">
                                     <li>
-                                        <a href="program-details.html">
+                                        <a href="#programs">
                                             <i class="fa-solid fa-chevron-right"></i>
-                                            Music Learning
+                                            Explorer (1-3 SD)
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="program-details.html">
+                                        <a href="#programs">
                                             <i class="fa-solid fa-chevron-right"></i>
-                                            Sports, Games
+                                            Creator (4-6 SD)
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="program-details.html">
+                                        <a href="#programs">
                                             <i class="fa-solid fa-chevron-right"></i>
-                                            Science Class
+                                            Innovator (SMP-SMA)
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="program-details.html">
+                                        <a href="#free-trial">
                                             <i class="fa-solid fa-chevron-right"></i>
-                                            Drawing
+                                            Free Trial Class
                                         </a>
                                     </li>
                                 </ul>
@@ -998,7 +1094,7 @@
                         <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".7s">
                             <div class="single-footer-widget style-margin">
                                 <div class="widget-head">
-                                    <h3>Recent Posts</h3>
+                                    <h3>Artikel Terbaru</h3>
                                 </div>
                                 <div class="recent-post-area">
                                     <div class="recent-post-items">
@@ -1013,7 +1109,7 @@
                                                 </li>
                                             </ul>
                                             <h6>
-                                                <a href="news-details.html">
+                                                <a href="/articles">
                                                     That jerk Form Finance <br>
                                                     really threw me
                                                 </a>
@@ -1032,7 +1128,7 @@
                                                 </li>
                                             </ul>
                                             <h6>
-                                                <a href="news-details.html">
+                                                <a href="/articles">
                                                     From without content <br>
                                                     style without 
                                                 </a>
@@ -1052,16 +1148,16 @@
                 <div class="container">
                     <div class="footer-wrapper d-flex align-items-center justify-content-between">
                         <p class="wow fadeInLeft color-2" data-wow-delay=".3s">
-                            © All Copyright 2024 by <a href="index.html">Clevio</a>
+                            © All Copyright 2024 by <a href="/">Clevio</a>
                         </p>
                         <ul class="footer-menu wow fadeInRight" data-wow-delay=".5s">
                             <li>
-                                <a href="contact.html">
+                                        <a href="#contact">
                                     Terms & Condition
                                 </a>
                             </li>
                             <li>
-                                <a href="contact.html">
+                                        <a href="#contact">
                                     Privacy Policy
                                 </a>
                             </li>
@@ -1073,26 +1169,3 @@
                 </a>
             </div>
         </footer>
-
-        <!--<< All JS Plugins >>-->
-        <script src="/assets/js/jquery-3.7.1.min.js"></script>
-        <!--<< Viewport Js >>-->
-        <script src="/assets/js/viewport.jquery.js"></script>
-        <!--<< Bootstrap Js >>-->
-        <script src="/assets/js/bootstrap.bundle.min.js"></script>
-        <!--<< Nice Select Js >>-->
-        <script src="/assets/js/jquery.nice-select.min.js"></script>
-        <!--<< Waypoints Js >>-->
-        <script src="/assets/js/jquery.waypoints.js"></script>
-        <!--<< Counterup Js >>-->
-        <script src="/assets/js/jquery.counterup.min.js"></script>
-        <!--<< Swiper Slider Js >>-->
-        <script src="/assets/js/swiper-bundle.min.js"></script>
-        <!--<< MeanMenu Js >>-->
-        <script src="/assets/js/jquery.meanmenu.min.js"></script>
-        <!--<< Magnific Popup Js >>-->
-        <script src="/assets/js/jquery.magnific-popup.min.js"></script>
-        <!--<< Wow Animation Js >>-->
-        <script src="/assets/js/wow.min.js"></script>
-        <!--<< Main.js >>-->
-        <script src="/assets/js/main.js"></script>

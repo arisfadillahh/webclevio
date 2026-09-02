@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default async function HomePage({ content, rootId = DEFAULT_ROOT_ID }: Props) {
-  const markup = await getTemplateMarkup();
+  const markup = await getTemplateMarkup(content.branding.logo);
 
   return (
     <>
