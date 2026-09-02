@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title">
+  <title id="title">Technology chip</title>
+  <rect x="37" y="37" width="86" height="86" rx="22" fill="#FFFFFF" stroke="#22367B" stroke-width="8"/>
+  <rect x="61" y="61" width="38" height="38" rx="10" fill="#9DC83B"/>
+  <path d="M52 37V21M80 37V21M108 37V21M52 139v-16M80 139v-16M108 139v-16M37 52H21M37 80H21M37 108H21M139 52h-16M139 80h-16M139 108h-16" fill="none" stroke="#22367B" stroke-width="8" stroke-linecap="round"/>
+</svg>

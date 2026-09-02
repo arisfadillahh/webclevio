@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title">
+  <title id="title">Coding pencil</title>
+  <path d="m35 117 9-32 59-59c7-7 18-7 25 0l6 6c7 7 7 18 0 25l-59 59-32 9-8-8Z" fill="#FFFFFF" stroke="#22367B" stroke-width="8" stroke-linejoin="round"/>
+  <path d="m94 36 30 30M44 85l31 31M23 137h114" fill="none" stroke="#9DC83B" stroke-width="8" stroke-linecap="round"/>
+  <path d="m64 53-13 12 13 12M83 53l13 12-13 12" fill="none" stroke="#22367B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

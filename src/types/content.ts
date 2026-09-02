@@ -54,11 +54,33 @@ export interface Program {
   description: string;
   ageRange: string;
   image: string;
+  learningPoints: string[];
+  projectExamples: string[];
+  tools: string[];
+  projectImage: string;
 }
 
 export interface ProgramSectionContent {
   tagline: string;
   title: string;
+}
+
+export interface FreeTrialSection {
+  eyebrow: string;
+  title: string;
+  highlight: string;
+  subtitle: string;
+  description: string;
+  benefits: string[];
+  ctaLabel: string;
+  ctaLink: string;
+  note: string;
+  visualImage: string;
+  availabilityTitle: string;
+  availabilityText: string;
+  availabilityBadge: string;
+  trustTitle: string;
+  trustText: string;
 }
 
 export interface InstructorsDecorations {
@@ -89,6 +111,7 @@ export interface Partner {
 export interface TestimonialsSectionContent {
   tagline: string;
   title: string;
+  description: string;
 }
 
 export interface AboutSection {
@@ -114,12 +137,14 @@ export interface FeatureItem {
 export interface BenefitsSection {
   tagline: string;
   title: string;
+  description: string;
   items: Array<FeatureItem & { icon: string }>;
 }
 
 export interface ActivitiesSection {
   tagline: string;
   title: string;
+  description: string;
   image: string;
   items: ActivityItem[];
 }
@@ -156,15 +181,32 @@ export interface EventItem {
   title: string;
   location: string;
   description: string;
+  image: string;
+  status: "published" | "draft";
+  audience: string;
+  landingPageUrl: string;
+}
+
+export interface EventsSection {
+  tagline: string;
+  title: string;
+  description: string;
 }
 
 export interface BlogPost {
   id: string;
+  slug: string;
   title: string;
   excerpt: string;
   image: string;
   date: string;
   author: string;
+  category: string;
+  readingTime: string;
+  status: "published" | "draft";
+  body: string;
+  gallery: string[];
+  galleryMode: "carousel" | "grid";
 }
 
 export interface BlogSection {
@@ -222,6 +264,7 @@ export interface SiteContent {
   branding: Branding;
   navigation: Navigation;
   programsSection: ProgramSectionContent;
+  freeTrial: FreeTrialSection;
   hero: HeroContent;
   programs: Program[];
   programDecorations: ProgramDecorations;
@@ -235,6 +278,7 @@ export interface SiteContent {
   gallery: GallerySection;
   stats: Stat[];
   testimonials: Testimonial[];
+  eventsSection: EventsSection;
   events: EventItem[];
   blog: BlogSection;
   callToAction: CallToAction;
@@ -248,6 +292,7 @@ export interface SiteContent {
 export interface NewsletterSection {
   eyebrow: string;
   title: string;
+  description?: string;
   buttonLabel: string;
 }
 

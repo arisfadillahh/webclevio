@@ -4,11 +4,13 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
+import { getSafeLocalPath } from "@/lib/safe-local-path";
+
 function LoginContent() {
   const router = useRouter();
   const search = useSearchParams();
-  const redirectTo = search.get("from") || "/admin";
-  const [email, setEmail] = useState("");
+  const redirectTo = getSafeLocalPath(search.get("from"));
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -22,12 +24,12 @@ function LoginContent() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
       if (!response.ok) {
         const data = await response.json();
         setStatus("error");
-        setMessage(data?.message || "Email/password salah");
+        setMessage(data?.message || "Username atau password salah");
         return;
       }
       router.replace(redirectTo);
@@ -51,12 +53,13 @@ function LoginContent() {
           </p>
         </div>
         <label>
-          Email
+          Username
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            autoComplete="username"
             required
           />
         </label>
@@ -67,6 +70,7 @@ function LoginContent() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            autoComplete="current-password"
             required
           />
         </label>

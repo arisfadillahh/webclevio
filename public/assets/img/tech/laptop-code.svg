@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-labelledby="title">
+  <title id="title">Laptop coding</title>
+  <rect x="27" y="27" width="106" height="80" rx="15" fill="#FFFFFF" stroke="#22367B" stroke-width="8"/>
+  <path d="M16 122h128l-10 17H26l-10-17Z" fill="#FFFFFF" stroke="#22367B" stroke-width="8" stroke-linejoin="round"/>
+  <path d="m65 52-17 15 17 15M95 52l17 15-17 15M88 46 75 88" fill="none" stroke="#9DC83B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

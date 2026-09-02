@@ -1,28 +1,4 @@
-/*-----------------------------------------------------------------
-
-Template Name: Kidsa - Kindergarten School HTML Template<
-Author:  Gramentheme
-Author URI: https://themeforest.net/user/gramentheme/portfolio
-Version: 1.0.0
-Description: Kidsa - Kindergarten School HTML Template<
-
--------------------------------------------------------------------
-CSS TABLE OF CONTENTS
--------------------------------------------------------------------
-
-01. header
-02. animated text with swiper slider
-03. magnificPopup
-04. counter up
-05. wow animation
-06. nice select
-07. swiper slider
-08. search popup
-09. preloader 
-
-
-------------------------------------------------------------------*/
-
+/* Clevio Innovator Camp — frontend interactions */
 (function($) {
     "use strict";
 
@@ -203,7 +179,7 @@ CSS TABLE OF CONTENTS
         const testimonialSlider = new Swiper(".testimonial-slider", {
             spaceBetween: 30,
             speed: 1500,
-            loop: true,
+            loop: false,
             autoplay: {
                 delay: 15000,
                 disableOnInteraction: false,

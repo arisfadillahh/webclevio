@@ -57,10 +57,12 @@ All website content is managed through `data/content.json` with the following ma
 
 ### Authentication Environment Variables
 ```
-ADMIN_EMAIL=admin@clevio.id
-ADMIN_PASSWORD=clevio123
-AUTH_SECRET=ganti-dengan-string-random
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=<unique-password-at-least-16-characters>
+AUTH_SECRET=<random-secret-at-least-32-characters>
 ```
+
+All authentication values are required. There are no development defaults, and local environment files must not be committed.
 
 ### n8n Integration
 Optional webhook sync for automated workflows:

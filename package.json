@@ -1,27 +1,41 @@
 {
   "name": "clevio-app",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3007",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:security": "node --test tests/security-helpers.test.mts",
+    "db:migrate": "node scripts/migrate-content.mjs",
+    "db:check": "node scripts/check-database.mjs"
   },
   "dependencies": {
     "linkedom": "^0.16.11",
-    "next": "16.0.4",
+    "next": "^16.2.12",
+    "pg": "^8.22.0",
+    "postcss": "^8.5.23",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-icons": "^5.5.0",
-    "swr": "^2.3.6"
+    "sharp": "^0.35.3",
+    "swr": "^2.3.6",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.0.4",
+    "eslint-config-next": "^16.2.12",
     "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "$postcss",
+    "sharp": "$sharp",
+    "nanoid": "3.3.18"
   }
 }
