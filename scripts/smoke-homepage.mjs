@@ -14,7 +14,7 @@ try {
   const requiredCopy = [
     "Di Clevio, teknologi adalah alat.",
     "Karya Anak Layak untuk Dilihat Dunia",
-    "Gallery Karya",
+    "Galeri Karya",
   ];
   const missing = requiredCopy.filter((copy) => !html.includes(copy));
 
