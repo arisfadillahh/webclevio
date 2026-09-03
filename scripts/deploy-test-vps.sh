@@ -16,6 +16,7 @@ IMAGE_NAME="webclevio-test:${TARGET_SHA:0:12}"
 RELEASE_DIR="$RELEASES_DIR/webclevio-test-${TARGET_SHA:0:12}"
 LOCK_FILE="$DEPLOY_ROOT/.webclevio-test-deploy.lock"
 ENV_FILE="$(mktemp "$DEPLOY_ROOT/.webclevio-test-env.XXXXXX")"
+ENV_EXPORTER="$(mktemp "$DEPLOY_ROOT/.webclevio-env-exporter.XXXXXX.mjs")"
 CANDIDATE_NAME="webclevio-candidate-${TARGET_SHA:0:12}"
 PREVIOUS_IMAGE=""
 ROLLBACK_IMAGE=""
@@ -25,7 +26,7 @@ chmod 600 "$ENV_FILE"
 
 cleanup() {
   docker rm -f "$CANDIDATE_NAME" >/dev/null 2>&1 || true
-  rm -f "$ENV_FILE"
+  rm -f "$ENV_FILE" "$ENV_EXPORTER"
 }
 trap cleanup EXIT
 
@@ -55,8 +56,8 @@ fi
 PREVIOUS_IMAGE="$(docker inspect -f '{{.Config.Image}}' "$CONTAINER_NAME")"
 ROLLBACK_IMAGE="webclevio-test:rollback-$(date -u +%Y%m%d%H%M%S)"
 docker image tag "$PREVIOUS_IMAGE" "$ROLLBACK_IMAGE"
-docker inspect "$CONTAINER_NAME" \
-  | node "$SOURCE_REPO/scripts/export-container-env.mjs" >"$ENV_FILE"
+git -C "$SOURCE_REPO" show "$TARGET_SHA:scripts/export-container-env.mjs" >"$ENV_EXPORTER"
+docker inspect "$CONTAINER_NAME" | node "$ENV_EXPORTER" >"$ENV_FILE"
 
 if [[ -e "$RELEASE_DIR" ]]; then
   echo "refusing deployment: release already exists: $RELEASE_DIR" >&2

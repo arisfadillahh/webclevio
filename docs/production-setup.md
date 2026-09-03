@@ -46,6 +46,14 @@ Pada platform yang menyediakan pre-deploy command, jalankan `npm run db:migrate`
 bash scripts/deploy-test-vps.sh <40-character-origin-main-sha>
 ```
 
+Jika checkout VPS memiliki perubahan lokal, jangan checkout atau pull. Jalankan script langsung dari object Git agar working tree tetap tidak tersentuh:
+
+```bash
+git -C /root/web/webclevio fetch --prune origin main
+git -C /root/web/webclevio show origin/main:scripts/deploy-test-vps.sh \
+  | bash -s -- <40-character-origin-main-sha>
+```
+
 Script tersebut memakai deployment lock, membangun release dan image terpisah, mempertahankan environment container aktif tanpa mencetak nilainya, menjalankan smoke test sebelum dan sesudah pergantian container, serta mengembalikan image sebelumnya secara otomatis jika pergantian gagal. Script tidak menjalankan migration atau mengubah database.
 
 Nilai `rollback_image` pada keluaran deployment adalah target rollback manual. Untuk rollback, jalankan kembali image tersebut memakai konfigurasi container yang sama; jangan mengubah source di `/root/web/webclevio` dan jangan menggunakan workflow LMS.
