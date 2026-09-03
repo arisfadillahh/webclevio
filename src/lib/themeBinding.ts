@@ -7,37 +7,6 @@ import type {
 
 export const DEFAULT_ROOT_ID = "clevio-template-root";
 
-const APPROVED_ABOUT = {
-  tagline: "Why Clevio",
-  title: "Lebih dari Sekadar Skill Teknologi",
-  text: "Di Clevio, teknologi adalah alat. Yang kami bangun adalah kemampuan untuk  menciptakan solusi nyata, bukan sekedar menjadi pengguna. Kurikulum Clevio Innovator Camp mengacu pada 4 manfaat:",
-  bullets: ["21st Century Skills", "Positive Characters", "Profil Pelajar Pancasila", "Technology and Entrepreneurship"],
-};
-
-const APPROVED_LEARNING_JOURNEY = {
-  tagline: "Learning Journey",
-  title: "Dari Ide Menjadi Karya Berdampak",
-  description: "Setiap blok pembelajaran dirancang sebagai sebuah perjalanan. Anak belajar melalui project, coaching, feedback, dan refleksi untuk berkembang menjadi pembelajar mandiri. Dari belajar membuat karya → memecahkan masalah → menciptakan solusi → memberikan manfaat. Clevio menerapkan continuous learning agar anak terbiasa menjadi lifelong learner yang terus berkembang mengikuti perubahan teknologi dan dunia.",
-  items: [
-    { title: "Explore", description: "Kenali tools, konsep, dan tema yang akan dipelajari.", icon: "fa-solid fa-code" },
-    { title: "Discover", description: "Gali informasi, pahami masalah, dan temukan ide.", icon: "fa-solid fa-laptop-code" },
-    { title: "Create", description: "Ubah ide menjadi karya digital melalui project.", icon: "fa-solid fa-microchip" },
-    { title: "Collaborate", description: "Diskusikan ide, bekerja dalam tim, dan belajar dari orang lain.", icon: "fa-solid fa-robot" },
-    { title: "Present", description: "Tunjukkan karya dan ceritakan ide di baliknya.", icon: "fa-solid fa-display" },
-    { title: "Reflect", description: "Evaluasi proses, mengenali perkembangan diri, dan menentukan langkah berikutnya.", icon: "fa-solid fa-arrows-rotate" },
-  ],
-} satisfies SiteContent["benefits"];
-
-const APPROVED_HOW_WE_LEARN = {
-  tagline: "How We Learn",
-  title: "Belajar dengan Mencipta. Berkembang dengan Coaching.",
-  description: "Kami percaya bahwa anak belajar paling baik ketika mereka mengalami, mencoba, membuat, dan merefleksikan prosesnya. Karena itu, Clevio menggabungkan dua pendekatan utama:",
-  items: [
-    { title: "Project-Based Learning", description: "Anak belajar melalui project yang memberi ruang untuk: Explore → Plan → Create → Solve → Present → Reflect. Setiap project menghasilkan karya digital yang autentik dan sesuai dengan usia serta kemampuan anak.", icon: "fa-solid fa-code" },
-    { title: "Coaching", description: "Coach bukan pemberi jawaban. Namun Coach membantu anak menemukan jawabannya sendiri melalui pertanyaan, arahan, feedback, dan dukungan. Di Clevio, coach mendorong anak untuk: berpikir mandiri, berani mencoba, belajar dari kesalahan, menyelesaikan project, menerima umpan balik, mengembangkan kemampuan teknis dan soft skills. Karena tujuan akhirnya menjadi pembelajar yang mandiri.", icon: "fa-solid fa-people-arrows" },
-  ],
-};
-
 interface BindOptions {
   attachWindowEvents?: boolean;
   enableSmoothScroll?: boolean;
@@ -58,8 +27,6 @@ export function bindTemplate(
   const doc = documentRef ?? (typeof document !== "undefined" ? document : undefined);
   const cleanups: Array<() => void> = [];
 
-  normalizeHomepageOrder(root);
-
   const preloaderCleanup = bindPreloader(root, attachWindowEvents && rootId === DEFAULT_ROOT_ID);
   if (preloaderCleanup) cleanups.push(preloaderCleanup);
 
@@ -67,7 +34,7 @@ export function bindTemplate(
   bindHero(root, content);
   bindAbout(root, content);
   bindPrograms(root, content);
-  bindWorkProcess(root, content.benefits);
+  bindWorkProcess(root, content.benefits.items);
   bindActivities(root, content.activities, content.activitiesDecorations);
   bindTestimonials(root, content.testimonials, content);
   bindPartners(root, content.partners);
@@ -82,31 +49,6 @@ export function bindTemplate(
   if (smoothScrollCleanup) cleanups.push(smoothScrollCleanup);
 
   return cleanups;
-}
-
-function normalizeHomepageOrder(root: HTMLElement) {
-  const footer = root.querySelector("footer");
-  const parent = footer?.parentElement;
-  if (!footer || !parent) return;
-  root.querySelector<HTMLElement>(".partner-section")?.setAttribute("hidden", "");
-  [
-    ".hero-section",
-    ".about-section",
-    ".about-activities-section",
-    ".program-section",
-    ".program-detail-dialog",
-    ".work-process-section",
-    ".free-trial-section",
-    ".home-events-section",
-    ".project-gallery-section",
-    ".news-section",
-    ".testimonial-section",
-    ".main-cta-section",
-    ".social-journey-section",
-  ].forEach((selector) => {
-    const element = root.querySelector(selector);
-    if (element) parent.insertBefore(element, footer);
-  });
 }
 
 function bindPreloader(root: HTMLElement, attachWindowEvents: boolean) {
@@ -270,25 +212,32 @@ function bindAbout(root: HTMLElement, content: SiteContent) {
   const eyebrow = section.querySelector(".section-title span");
   const title = section.querySelector(".section-title h2");
   const desc = section.querySelector("p");
-  if (eyebrow) eyebrow.textContent = APPROVED_ABOUT.tagline;
-  if (title) title.textContent = APPROVED_ABOUT.title;
-  if (desc) desc.textContent = APPROVED_ABOUT.text;
+  if (eyebrow) eyebrow.textContent = content.about.tagline;
+  if (title) title.textContent = content.about.title;
+  if (desc) desc.textContent = content.about.text;
 
   const listWrapper = section.querySelector(".about-list");
   if (listWrapper) {
-    const benefitDescriptions = [
-      "Kreativitas dan Inovasi, Berpikir Kritis dan Pemecahan Masalah, Komunikasi dan Kolaborasi<br>Kemampuan beradaptasi, memiliki inisatif, kepemimpinan dan bertanggung jawab.",
-      "Leadership, Social Intelligence, Self-control, GRIT, Love of learning, Teamwork, Kindness, Empathy, Growth Mindset",
-      "Bertakwa, Berakhlak mulia, Kebhinekaan global, Mandiri, Gotong royong, Bernalar kritis dan Kreatif.",
-      "Literasi Teknologi, kepedulian sosial, inovasi, dan business planning.",
-    ];
-    listWrapper.innerHTML = APPROVED_ABOUT.bullets
+    const columns: string[][] = [[], []];
+    content.about.bullets.forEach((bullet, index) => {
+      columns[index % 2].push(bullet);
+    });
+    listWrapper.innerHTML = columns
       .map(
-        (item, index) => `
-          <article class="why-clevio-benefit wow fadeInUp" data-wow-delay=".${3 + index}s">
-            <span>${String(index + 1).padStart(2, "0")} —</span>
-            <div><h3>${item}</h3><p>${benefitDescriptions[index] ?? ""}</p></div>
-          </article>`,
+        (items, columnIndex) => `
+        <ul class="wow fadeInUp" data-wow-delay=".${columnIndex === 0 ? 3 : 5}s">
+          ${items
+            .map(
+              (item) => `
+            <li>
+              <i class="fa-regular fa-circle-check"></i>
+              ${item}
+            </li>
+          `,
+            )
+            .join("")}
+        </ul>
+      `,
       )
       .join("");
   }
@@ -327,26 +276,11 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
   if (section) {
     const tagline = section.querySelector("span");
     const heading = section.querySelector("h2");
-    if (tagline) tagline.textContent = "Program Kami";
-    if (heading) heading.textContent = "Temukan Level Belajar yang Tepat untuk Anak";
+    if (tagline) tagline.textContent = content.programsSection.tagline;
+    if (heading) heading.innerHTML = content.programsSection.title.replace(/\n/g, "<br>");
   }
 
   const programs = content.programs;
-  const cardDescriptions: Record<string, string> = {
-    explorer: "Saatnya mengeksplorasi dunia digital dengan cara yang menyenangkan.",
-    creator: "Anak mulai mengembangkan ide menjadi karya digital yang lebih kompleks.",
-    innovator: "Saatnya teknologi digunakan untuk menciptakan solusi nyata",
-  };
-  const focusByProgram: Record<string, string> = {
-    explorer: "Explore • Create • Creativity • Confidence",
-    creator: "Create • Problem Solving • Collaboration • Communication",
-    innovator: "Innovate • Solve • Lead • Create Impact",
-  };
-  const detailDescriptions: Record<string, string> = {
-    explorer: "Saatnya mengeksplorasi dunia digital dengan cara yang menyenangkan. Anak mulai mengenal coding, game, storytelling, desain, dan berbagai tools digital melalui project sederhana.",
-    creator: "Anak mulai mengembangkan ide menjadi karya digital yang lebih kompleks. Mereka belajar coding, game development, digital storytelling, desain, dan pembuatan aplikasi melalui project.",
-    innovator: "Saatnya teknologi digunakan untuk menciptakan solusi nyata\nAnak mengembangkan kemampuan dalam app development, game development, web development, AI & machine learning, serta project yang semakin kompleks.",
-  };
   const wrapper = root.querySelector(".program-section .row");
   if (!wrapper) return;
   wrapper.classList.add("g-4");
@@ -354,7 +288,7 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
     .map(
       (program, index) => `
       <div class="col-xl-4 col-lg-6 col-md-6 mb-4 wow fadeInUp" data-wow-delay="${0.15 + index * 0.1}s">
-        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden program-level-card">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
           <div class="ratio ratio-4x3 bg-light">
             <img src="${program.image}" alt="${program.title}" class="w-100 h-100 object-fit-cover">
           </div>
@@ -363,12 +297,12 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
               <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2">${program.ageRange}</span>
             </div>
             <h4 class="mb-1 fs-4">${program.title}</h4>
-            <p class="mb-2 text-muted">${cardDescriptions[program.title.toLowerCase()] ?? program.description}</p>
+            <p class="mb-2 text-muted">${program.description}</p>
             <div class="mt-auto">
-              <button type="button" class="theme-btn d-inline-flex align-items-center gap-2 program-detail-trigger" data-program-open="${index}" aria-haspopup="dialog">
-                <span>Lihat detail level</span>
+              <a href="${content.branding.ctaLink || "#contact"}" class="theme-btn d-inline-flex align-items-center gap-2">
+                <span>${content.branding.ctaLabel || "Daftar Sekarang"}</span>
                 <i class="fa-solid fa-arrow-right-long"></i>
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -376,74 +310,20 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
     `,
     )
     .join("");
-
-  const dialog = root.querySelector<HTMLElement>("[data-program-dialog]");
-  const panel = dialog?.querySelector<HTMLElement>(".program-detail-panel");
-  if (!dialog || !panel) return;
-  const closeDialog = () => {
-    dialog.hidden = true;
-    dialog.setAttribute("aria-hidden", "true");
-    docBody(root)?.classList.remove("program-dialog-open");
-  };
-  wrapper.querySelectorAll<HTMLButtonElement>("[data-program-open]").forEach((button) => {
-    button.onclick = () => {
-      const program = programs[Number(button.dataset.programOpen)];
-      if (!program) return;
-      const setText = (selector: string, value: string) => {
-        const element = dialog.querySelector<HTMLElement>(selector);
-        if (element) element.textContent = value;
-      };
-      setText("[data-program-detail-age]", program.ageRange);
-      setText("[data-program-detail-title]", program.title);
-      setText("[data-program-detail-description]", detailDescriptions[program.title.toLowerCase()] ?? program.description);
-      const taglines: Record<string, string> = {
-        explorer: "Belajar sambil bermain, eksplorasi tanpa batas!",
-        creator: "Ubah ide menjadi game, aplikasi, dan karya digital.",
-        innovator: "Bangun produk digital, website, dan solusi AI nyata.",
-      };
-      setText("[data-program-detail-tagline]", taglines[program.title.toLowerCase()] ?? "");
-      const image = dialog.querySelector<HTMLImageElement>("[data-program-detail-image]");
-      if (image) image.src = program.projectImage || program.image;
-      const projects = dialog.querySelector<HTMLElement>("[data-program-projects]");
-      if (projects) projects.innerHTML = (program.projectExamples ?? []).slice(0, 3).map((item) => `<span class="program-detail-project-dot" title="${item}"></span>`).join("");
-      const tools = dialog.querySelector<HTMLElement>("[data-program-tools]");
-      if (tools) tools.innerHTML = (program.tools ?? []).slice(0, 3).map((item) => `<article class="program-detail-tool"><strong>${item}</strong></article>`).join("");
-      const focus = dialog.querySelector<HTMLElement>("[data-program-learning]");
-      if (focus) focus.innerHTML = `<h4>Fokus</h4><p>${focusByProgram[program.title.toLowerCase()] ?? ""}</p>`;
-      dialog.hidden = false;
-      dialog.setAttribute("aria-hidden", "false");
-      docBody(root)?.classList.add("program-dialog-open");
-      panel.focus();
-    };
-  });
-  dialog.querySelectorAll<HTMLButtonElement>("[data-program-close]").forEach((button) => {
-    button.onclick = closeDialog;
-  });
 }
 
-function docBody(root: HTMLElement): HTMLElement | null {
-  return root.ownerDocument?.body ?? null;
-}
-
-function bindWorkProcess(root: HTMLElement, sectionContent: SiteContent["benefits"]) {
-  sectionContent = APPROVED_LEARNING_JOURNEY;
-  const section = root.querySelector(".work-process-section");
-  if (!section) return;
-  const tagline = section.querySelector("[data-work-process-tagline]");
-  const title = section.querySelector("[data-work-process-title]");
-  const description = section.querySelector("[data-work-process-description]");
-  if (tagline) tagline.textContent = sectionContent.tagline;
-  if (title) title.textContent = sectionContent.title;
-  if (description) description.textContent = sectionContent.description;
-
-  const items = sectionContent.items;
-  const wrapper = section.querySelector(".work-process-grid");
+function bindWorkProcess(root: HTMLElement, items: SiteContent["benefits"]["items"]) {
+  const wrapper = root.querySelector(".work-process-section .row");
   if (!wrapper) return;
   wrapper.innerHTML = items
     .map(
       (item, index) => {
         const isLast = index === items.length - 1;
-        const iconClass = item.icon || "fa-solid fa-code";
+        const isZigzag = index % 2 === 1;
+        const lineClass = isZigzag ? "line-shape-2" : "line-shape";
+        const lineImg = isZigzag ? "line-2.png" : "line.png";
+        const itemStyle = isZigzag || isLast ? "style-2" : "";
+        const iconClass = item.icon || `icon-icon-${(index % 4) + 1}`;
         const isImageIcon =
           !!item.icon &&
           (item.icon.startsWith("http") ||
@@ -453,8 +333,8 @@ function bindWorkProcess(root: HTMLElement, sectionContent: SiteContent["benefit
         const lineMarkup = isLast
           ? ""
           : `
-            <div class="work-process-connector" aria-hidden="true">
-              <svg viewBox="0 0 60 18"><path d="M2 9 H54"></path><path d="M47 3 L54 9 L47 15"></path></svg>
+            <div class="${lineClass}">
+              <img src="/assets/img/process/${lineImg}" alt="shape">
             </div>`;
 
         const contentMarkup = `
@@ -473,13 +353,13 @@ function bindWorkProcess(root: HTMLElement, sectionContent: SiteContent["benefit
             <i class="${iconClass}"></i>
           </div>`;
 
+        const body = `${lineMarkup}${iconMarkup}${contentMarkup}`;
+
         return `
-        <div class="work-process-step work-process-tone-${index % 2 === 0 ? "primary" : "accent"} wow fadeInUp" data-wow-delay="${0.2 + index * 0.1}s">
-          <article class="work-process-items text-center">
-            <span class="work-process-number">${String(index + 1).padStart(2, "0")}</span>
-            ${iconMarkup}${contentMarkup}
-          </article>
-          ${lineMarkup}
+        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="${0.3 + index * 0.2}s">
+          <div class="work-process-items text-center ${itemStyle}">
+            ${body}
+          </div>
         </div>`;
       },
     )
@@ -491,7 +371,6 @@ function bindActivities(
   activities: SiteContent["activities"],
   decorations: SiteContent["activitiesDecorations"],
 ) {
-  activities = { ...activities, ...APPROVED_HOW_WE_LEARN };
   const pencilShape = root.querySelector(".about-activities-section .pencil-shape img") as HTMLImageElement | null;
   if (pencilShape && decorations?.pencil) {
     pencilShape.src = decorations.pencil;
@@ -511,8 +390,6 @@ function bindActivities(
     const title = section.querySelector(".section-title h2");
     if (eyebrow) eyebrow.textContent = activities.tagline;
     if (title) title.textContent = activities.title;
-    const description = section.querySelector(".activities-content > p");
-    if (description) description.textContent = activities.description;
   }
 
   const activitiesImage = root.querySelector(".activities-image img") as HTMLImageElement | null;
@@ -544,14 +421,12 @@ function bindActivities(
 
 function bindTestimonials(root: HTMLElement, testimonials: Testimonial[], content: SiteContent) {
   const sectionContent = content.testimonialsSection ?? { tagline: "", title: "" };
-  const sectionTitle = root.querySelector(".testimonial-clevio-header");
+  const sectionTitle = root.querySelector(".testimonial-section .section-title");
   if (sectionTitle) {
-    const eyebrow = sectionTitle.querySelector(".testimonial-clevio-eyebrow span");
+    const eyebrow = sectionTitle.querySelector("span");
     const title = sectionTitle.querySelector("h2");
-    const description = sectionTitle.querySelector(".testimonial-clevio-description");
     if (eyebrow) eyebrow.textContent = sectionContent.tagline;
     if (title) title.innerHTML = sectionContent.title.replace(/\n/g, "<br>");
-    if (description) description.textContent = sectionContent.description;
   }
 
   const slider = root.querySelector(".testimonial-section .swiper-wrapper");
@@ -690,16 +565,14 @@ function bindNews(root: HTMLElement, blog: SiteContent["blog"]) {
 }
 
 function bindNewsletter(root: HTMLElement, newsletter: SiteContent["newsletter"]) {
-  const section = root.querySelector(".social-journey-section .section-title");
+  const section = root.querySelector(".main-cta-section .section-title");
   if (section) {
     const eyebrow = section.querySelector("span");
     const title = section.querySelector("h2");
     if (eyebrow) eyebrow.textContent = newsletter.eyebrow;
     if (title) title.textContent = newsletter.title;
   }
-  const description = root.querySelector(".social-journey-description");
-  if (description) description.textContent = newsletter.description ?? "";
-  const button = root.querySelector(".social-journey-section .instagram-follow span");
+  const button = root.querySelector(".main-cta-section .theme-btn span");
   if (button) button.textContent = newsletter.buttonLabel;
 }
 

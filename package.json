@@ -9,7 +9,6 @@
     "start": "next start",
     "lint": "eslint",
     "test:security": "node --test tests/security-helpers.test.mts",
-    "test:homepage": "node --test tests/homepage-copy.test.mjs",
     "db:migrate": "node scripts/migrate-content.mjs",
     "db:check": "node scripts/check-database.mjs"
   },
