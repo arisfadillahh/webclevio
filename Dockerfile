@@ -32,4 +32,6 @@ RUN chown -R nextjs:nodejs /app
 USER nextjs
 
 EXPOSE 3000
+HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=4 \
+  CMD ["node", "/app/scripts/smoke-homepage.mjs", "http://127.0.0.1:3000"]
 CMD ["npm", "start"]

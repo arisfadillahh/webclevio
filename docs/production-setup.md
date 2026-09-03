@@ -38,6 +38,18 @@ npm start
 
 Pada platform yang menyediakan pre-deploy command, jalankan `npm run db:migrate` sebelum versi baru menerima traffic.
 
+### Deployment `test.clev.io` di VPS
+
+`test.clev.io` berjalan sebagai container Docker `webclevio-test` di belakang Traefik. Deployment harus memakai commit penuh yang sama dengan `origin/main`:
+
+```bash
+bash scripts/deploy-test-vps.sh <40-character-origin-main-sha>
+```
+
+Script tersebut memakai deployment lock, membangun release dan image terpisah, mempertahankan environment container aktif tanpa mencetak nilainya, menjalankan smoke test sebelum dan sesudah pergantian container, serta mengembalikan image sebelumnya secara otomatis jika pergantian gagal. Script tidak menjalankan migration atau mengubah database.
+
+Nilai `rollback_image` pada keluaran deployment adalah target rollback manual. Untuk rollback, jalankan kembali image tersebut memakai konfigurasi container yang sama; jangan mengubah source di `/root/web/webclevio` dan jangan menggunakan workflow LMS.
+
 ## 4. Penyimpanan gambar
 
 Folder `public/uploads` hanya cocok untuk development atau server dengan persistent disk. Pada Vercel/serverless, unggah gambar ke Supabase Storage, Cloudinary, S3, atau CDN lain lalu tempel URL-nya di dashboard.
