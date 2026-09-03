@@ -27,6 +27,8 @@ export function bindTemplate(
   const doc = documentRef ?? (typeof document !== "undefined" ? document : undefined);
   const cleanups: Array<() => void> = [];
 
+  normalizeHomepageOrder(root);
+
   const preloaderCleanup = bindPreloader(root, attachWindowEvents && rootId === DEFAULT_ROOT_ID);
   if (preloaderCleanup) cleanups.push(preloaderCleanup);
 
@@ -34,7 +36,7 @@ export function bindTemplate(
   bindHero(root, content);
   bindAbout(root, content);
   bindPrograms(root, content);
-  bindWorkProcess(root, content.benefits.items);
+  bindWorkProcess(root, content.benefits);
   bindActivities(root, content.activities, content.activitiesDecorations);
   bindTestimonials(root, content.testimonials, content);
   bindPartners(root, content.partners);
@@ -49,6 +51,31 @@ export function bindTemplate(
   if (smoothScrollCleanup) cleanups.push(smoothScrollCleanup);
 
   return cleanups;
+}
+
+function normalizeHomepageOrder(root: HTMLElement) {
+  const footer = root.querySelector("footer");
+  const parent = footer?.parentElement;
+  if (!footer || !parent) return;
+  root.querySelector<HTMLElement>(".partner-section")?.setAttribute("hidden", "");
+  [
+    ".hero-section",
+    ".about-section",
+    ".about-activities-section",
+    ".program-section",
+    ".program-detail-dialog",
+    ".work-process-section",
+    ".free-trial-section",
+    ".home-events-section",
+    ".project-gallery-section",
+    ".news-section",
+    ".testimonial-section",
+    ".main-cta-section",
+    ".social-journey-section",
+  ].forEach((selector) => {
+    const element = root.querySelector(selector);
+    if (element) parent.insertBefore(element, footer);
+  });
 }
 
 function bindPreloader(root: HTMLElement, attachWindowEvents: boolean) {
@@ -218,26 +245,19 @@ function bindAbout(root: HTMLElement, content: SiteContent) {
 
   const listWrapper = section.querySelector(".about-list");
   if (listWrapper) {
-    const columns: string[][] = [[], []];
-    content.about.bullets.forEach((bullet, index) => {
-      columns[index % 2].push(bullet);
-    });
-    listWrapper.innerHTML = columns
+    const benefitDescriptions = [
+      "Kreativitas dan Inovasi, Berpikir Kritis dan Pemecahan Masalah, Komunikasi dan Kolaborasi<br>Kemampuan beradaptasi, memiliki inisatif, kepemimpinan dan bertanggung jawab.",
+      "Leadership, Social Intelligence, Self-control, GRIT, Love of learning, Teamwork, Kindness, Empathy, Growth Mindset",
+      "Bertakwa, Berakhlak mulia, Kebhinekaan global, Mandiri, Gotong royong, Bernalar kritis dan Kreatif.",
+      "Literasi Teknologi, kepedulian sosial, inovasi, dan business planning.",
+    ];
+    listWrapper.innerHTML = content.about.bullets
       .map(
-        (items, columnIndex) => `
-        <ul class="wow fadeInUp" data-wow-delay=".${columnIndex === 0 ? 3 : 5}s">
-          ${items
-            .map(
-              (item) => `
-            <li>
-              <i class="fa-regular fa-circle-check"></i>
-              ${item}
-            </li>
-          `,
-            )
-            .join("")}
-        </ul>
-      `,
+        (item, index) => `
+          <article class="why-clevio-benefit wow fadeInUp" data-wow-delay=".${3 + index}s">
+            <span>${String(index + 1).padStart(2, "0")} —</span>
+            <div><h3>${item}</h3><p>${benefitDescriptions[index] ?? ""}</p></div>
+          </article>`,
       )
       .join("");
   }
@@ -281,6 +301,16 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
   }
 
   const programs = content.programs;
+  const cardDescriptions: Record<string, string> = {
+    explorer: "Saatnya mengeksplorasi dunia digital dengan cara yang menyenangkan.",
+    creator: "Anak mulai mengembangkan ide menjadi karya digital yang lebih kompleks.",
+    innovator: "Saatnya teknologi digunakan untuk menciptakan solusi nyata",
+  };
+  const focusByProgram: Record<string, string> = {
+    explorer: "Explore • Create • Creativity • Confidence",
+    creator: "Create • Problem Solving • Collaboration • Communication",
+    innovator: "Innovate • Solve • Lead • Create Impact",
+  };
   const wrapper = root.querySelector(".program-section .row");
   if (!wrapper) return;
   wrapper.classList.add("g-4");
@@ -288,7 +318,7 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
     .map(
       (program, index) => `
       <div class="col-xl-4 col-lg-6 col-md-6 mb-4 wow fadeInUp" data-wow-delay="${0.15 + index * 0.1}s">
-        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden program-level-card">
           <div class="ratio ratio-4x3 bg-light">
             <img src="${program.image}" alt="${program.title}" class="w-100 h-100 object-fit-cover">
           </div>
@@ -297,12 +327,12 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
               <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2">${program.ageRange}</span>
             </div>
             <h4 class="mb-1 fs-4">${program.title}</h4>
-            <p class="mb-2 text-muted">${program.description}</p>
+            <p class="mb-2 text-muted">${cardDescriptions[program.title.toLowerCase()] ?? program.description}</p>
             <div class="mt-auto">
-              <a href="${content.branding.ctaLink || "#contact"}" class="theme-btn d-inline-flex align-items-center gap-2">
-                <span>${content.branding.ctaLabel || "Daftar Sekarang"}</span>
+              <button type="button" class="theme-btn d-inline-flex align-items-center gap-2 program-detail-trigger" data-program-open="${index}" aria-haspopup="dialog">
+                <span>Lihat detail level</span>
                 <i class="fa-solid fa-arrow-right-long"></i>
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -310,20 +340,73 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
     `,
     )
     .join("");
+
+  const dialog = root.querySelector<HTMLElement>("[data-program-dialog]");
+  const panel = dialog?.querySelector<HTMLElement>(".program-detail-panel");
+  if (!dialog || !panel) return;
+  const closeDialog = () => {
+    dialog.hidden = true;
+    dialog.setAttribute("aria-hidden", "true");
+    docBody(root)?.classList.remove("program-dialog-open");
+  };
+  wrapper.querySelectorAll<HTMLButtonElement>("[data-program-open]").forEach((button) => {
+    button.onclick = () => {
+      const program = programs[Number(button.dataset.programOpen)];
+      if (!program) return;
+      const setText = (selector: string, value: string) => {
+        const element = dialog.querySelector<HTMLElement>(selector);
+        if (element) element.textContent = value;
+      };
+      setText("[data-program-detail-age]", program.ageRange);
+      setText("[data-program-detail-title]", program.title);
+      setText("[data-program-detail-description]", program.description);
+      const taglines: Record<string, string> = {
+        explorer: "Belajar sambil bermain, eksplorasi tanpa batas!",
+        creator: "Ubah ide menjadi game, aplikasi, dan karya digital.",
+        innovator: "Bangun produk digital, website, dan solusi AI nyata.",
+      };
+      setText("[data-program-detail-tagline]", taglines[program.title.toLowerCase()] ?? "");
+      const image = dialog.querySelector<HTMLImageElement>("[data-program-detail-image]");
+      if (image) image.src = program.projectImage || program.image;
+      const projects = dialog.querySelector<HTMLElement>("[data-program-projects]");
+      if (projects) projects.innerHTML = (program.projectExamples ?? []).slice(0, 3).map((item) => `<span class="program-detail-project-dot" title="${item}"></span>`).join("");
+      const tools = dialog.querySelector<HTMLElement>("[data-program-tools]");
+      if (tools) tools.innerHTML = (program.tools ?? []).slice(0, 3).map((item) => `<article class="program-detail-tool"><strong>${item}</strong></article>`).join("");
+      const focus = dialog.querySelector<HTMLElement>("[data-program-learning]");
+      if (focus) focus.innerHTML = `<h4>Fokus</h4><p>${focusByProgram[program.title.toLowerCase()] ?? ""}</p>`;
+      dialog.hidden = false;
+      dialog.setAttribute("aria-hidden", "false");
+      docBody(root)?.classList.add("program-dialog-open");
+      panel.focus();
+    };
+  });
+  dialog.querySelectorAll<HTMLButtonElement>("[data-program-close]").forEach((button) => {
+    button.onclick = closeDialog;
+  });
 }
 
-function bindWorkProcess(root: HTMLElement, items: SiteContent["benefits"]["items"]) {
-  const wrapper = root.querySelector(".work-process-section .row");
+function docBody(root: HTMLElement): HTMLElement | null {
+  return root.ownerDocument?.body ?? null;
+}
+
+function bindWorkProcess(root: HTMLElement, sectionContent: SiteContent["benefits"]) {
+  const section = root.querySelector(".work-process-section");
+  if (!section) return;
+  const tagline = section.querySelector("[data-work-process-tagline]");
+  const title = section.querySelector("[data-work-process-title]");
+  const description = section.querySelector("[data-work-process-description]");
+  if (tagline) tagline.textContent = sectionContent.tagline;
+  if (title) title.textContent = sectionContent.title;
+  if (description) description.textContent = sectionContent.description;
+
+  const items = sectionContent.items;
+  const wrapper = section.querySelector(".work-process-grid");
   if (!wrapper) return;
   wrapper.innerHTML = items
     .map(
       (item, index) => {
         const isLast = index === items.length - 1;
-        const isZigzag = index % 2 === 1;
-        const lineClass = isZigzag ? "line-shape-2" : "line-shape";
-        const lineImg = isZigzag ? "line-2.png" : "line.png";
-        const itemStyle = isZigzag || isLast ? "style-2" : "";
-        const iconClass = item.icon || `icon-icon-${(index % 4) + 1}`;
+        const iconClass = item.icon || "fa-solid fa-code";
         const isImageIcon =
           !!item.icon &&
           (item.icon.startsWith("http") ||
@@ -333,8 +416,8 @@ function bindWorkProcess(root: HTMLElement, items: SiteContent["benefits"]["item
         const lineMarkup = isLast
           ? ""
           : `
-            <div class="${lineClass}">
-              <img src="/assets/img/process/${lineImg}" alt="shape">
+            <div class="work-process-connector" aria-hidden="true">
+              <svg viewBox="0 0 60 18"><path d="M2 9 H54"></path><path d="M47 3 L54 9 L47 15"></path></svg>
             </div>`;
 
         const contentMarkup = `
@@ -353,13 +436,13 @@ function bindWorkProcess(root: HTMLElement, items: SiteContent["benefits"]["item
             <i class="${iconClass}"></i>
           </div>`;
 
-        const body = `${lineMarkup}${iconMarkup}${contentMarkup}`;
-
         return `
-        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="${0.3 + index * 0.2}s">
-          <div class="work-process-items text-center ${itemStyle}">
-            ${body}
-          </div>
+        <div class="work-process-step work-process-tone-${index % 2 === 0 ? "primary" : "accent"} wow fadeInUp" data-wow-delay="${0.2 + index * 0.1}s">
+          <article class="work-process-items text-center">
+            <span class="work-process-number">${String(index + 1).padStart(2, "0")}</span>
+            ${iconMarkup}${contentMarkup}
+          </article>
+          ${lineMarkup}
         </div>`;
       },
     )
@@ -390,6 +473,8 @@ function bindActivities(
     const title = section.querySelector(".section-title h2");
     if (eyebrow) eyebrow.textContent = activities.tagline;
     if (title) title.textContent = activities.title;
+    const description = section.querySelector(".activities-content > p");
+    if (description) description.textContent = activities.description;
   }
 
   const activitiesImage = root.querySelector(".activities-image img") as HTMLImageElement | null;
@@ -421,12 +506,14 @@ function bindActivities(
 
 function bindTestimonials(root: HTMLElement, testimonials: Testimonial[], content: SiteContent) {
   const sectionContent = content.testimonialsSection ?? { tagline: "", title: "" };
-  const sectionTitle = root.querySelector(".testimonial-section .section-title");
+  const sectionTitle = root.querySelector(".testimonial-clevio-header");
   if (sectionTitle) {
-    const eyebrow = sectionTitle.querySelector("span");
+    const eyebrow = sectionTitle.querySelector(".testimonial-clevio-eyebrow span");
     const title = sectionTitle.querySelector("h2");
+    const description = sectionTitle.querySelector(".testimonial-clevio-description");
     if (eyebrow) eyebrow.textContent = sectionContent.tagline;
     if (title) title.innerHTML = sectionContent.title.replace(/\n/g, "<br>");
+    if (description) description.textContent = sectionContent.description;
   }
 
   const slider = root.querySelector(".testimonial-section .swiper-wrapper");
@@ -565,14 +652,16 @@ function bindNews(root: HTMLElement, blog: SiteContent["blog"]) {
 }
 
 function bindNewsletter(root: HTMLElement, newsletter: SiteContent["newsletter"]) {
-  const section = root.querySelector(".main-cta-section .section-title");
+  const section = root.querySelector(".social-journey-section .section-title");
   if (section) {
     const eyebrow = section.querySelector("span");
     const title = section.querySelector("h2");
     if (eyebrow) eyebrow.textContent = newsletter.eyebrow;
     if (title) title.textContent = newsletter.title;
   }
-  const button = root.querySelector(".main-cta-section .theme-btn span");
+  const description = root.querySelector(".social-journey-description");
+  if (description) description.textContent = newsletter.description ?? "";
+  const button = root.querySelector(".social-journey-section .instagram-follow span");
   if (button) button.textContent = newsletter.buttonLabel;
 }
 
