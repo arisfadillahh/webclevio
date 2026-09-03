@@ -1,6 +1,5 @@
 import type {
   SiteContent,
-  Program,
   Testimonial,
   BlogPost,
   HeroDecoration,
@@ -33,7 +32,7 @@ export function bindTemplate(
 
   bindHeader(root, content);
   bindHero(root, content);
-  bindAbout(root, content, doc);
+  bindAbout(root, content);
   bindPrograms(root, content);
   bindWorkProcess(root, content.benefits.items);
   bindActivities(root, content.activities, content.activitiesDecorations);
@@ -202,7 +201,7 @@ function bindHeroDecorations(root: HTMLElement, decorations: HeroDecoration[]) {
   });
 }
 
-function bindAbout(root: HTMLElement, content: SiteContent, doc?: Document) {
+function bindAbout(root: HTMLElement, content: SiteContent) {
   const imagePrimary = root.querySelector(".about-image img") as HTMLImageElement | null;
   if (imagePrimary) imagePrimary.src = content.about.images.primary;
   const imageSecondary = root.querySelector(".about-image-2 img") as HTMLImageElement | null;

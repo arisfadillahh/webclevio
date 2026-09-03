@@ -1,5 +1,8 @@
 'use client';
 
+/* Legacy helper bindings remain available for older template integrations. */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { useEffect } from "react";
 import type {
   SiteContent,
