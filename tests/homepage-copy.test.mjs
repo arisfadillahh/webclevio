@@ -4,6 +4,7 @@ import test from "node:test";
 
 const contentPath = new URL("../data/content.json", import.meta.url);
 const templatePath = new URL("../src/templates/home.html", import.meta.url);
+const bindingPath = new URL("../src/lib/themeBinding.ts", import.meta.url);
 
 test("homepage content follows the approved revision", async () => {
   const content = JSON.parse(await readFile(contentPath, "utf8"));
@@ -31,6 +32,16 @@ test("homepage content follows the approved revision", async () => {
   assert.equal(content.blog.tagline, "Berita & Artikel");
   assert.equal(content.blog.title, "Clevio Stories");
   assert.equal(content.callToAction.title, "The Future Needs Innovators and Changemakers.");
+});
+
+test("approved homepage copy overrides stale CMS baseline content", async () => {
+  const binding = await readFile(bindingPath, "utf8");
+
+  assert.match(binding, /const APPROVED_ABOUT =/);
+  assert.match(binding, /const APPROVED_HOW_WE_LEARN =/);
+  assert.match(binding, /const APPROVED_LEARNING_JOURNEY =/);
+  assert.match(binding, /activities = \{ \.\.\.activities, \.\.\.APPROVED_HOW_WE_LEARN \}/);
+  assert.match(binding, /sectionContent = APPROVED_LEARNING_JOURNEY/);
 });
 
 test("homepage template includes the revised showcase, gallery, and social CTA", async () => {

@@ -7,6 +7,37 @@ import type {
 
 export const DEFAULT_ROOT_ID = "clevio-template-root";
 
+const APPROVED_ABOUT = {
+  tagline: "Why Clevio",
+  title: "Lebih dari Sekadar Skill Teknologi",
+  text: "Di Clevio, teknologi adalah alat. Yang kami bangun adalah kemampuan untuk  menciptakan solusi nyata, bukan sekedar menjadi pengguna. Kurikulum Clevio Innovator Camp mengacu pada 4 manfaat:",
+  bullets: ["21st Century Skills", "Positive Characters", "Profil Pelajar Pancasila", "Technology and Entrepreneurship"],
+};
+
+const APPROVED_LEARNING_JOURNEY = {
+  tagline: "Learning Journey",
+  title: "Dari Ide Menjadi Karya Berdampak",
+  description: "Setiap blok pembelajaran dirancang sebagai sebuah perjalanan. Anak belajar melalui project, coaching, feedback, dan refleksi untuk berkembang menjadi pembelajar mandiri. Dari belajar membuat karya → memecahkan masalah → menciptakan solusi → memberikan manfaat. Clevio menerapkan continuous learning agar anak terbiasa menjadi lifelong learner yang terus berkembang mengikuti perubahan teknologi dan dunia.",
+  items: [
+    { title: "Explore", description: "Kenali tools, konsep, dan tema yang akan dipelajari.", icon: "fa-solid fa-code" },
+    { title: "Discover", description: "Gali informasi, pahami masalah, dan temukan ide.", icon: "fa-solid fa-laptop-code" },
+    { title: "Create", description: "Ubah ide menjadi karya digital melalui project.", icon: "fa-solid fa-microchip" },
+    { title: "Collaborate", description: "Diskusikan ide, bekerja dalam tim, dan belajar dari orang lain.", icon: "fa-solid fa-robot" },
+    { title: "Present", description: "Tunjukkan karya dan ceritakan ide di baliknya.", icon: "fa-solid fa-display" },
+    { title: "Reflect", description: "Evaluasi proses, mengenali perkembangan diri, dan menentukan langkah berikutnya.", icon: "fa-solid fa-arrows-rotate" },
+  ],
+} satisfies SiteContent["benefits"];
+
+const APPROVED_HOW_WE_LEARN = {
+  tagline: "How We Learn",
+  title: "Belajar dengan Mencipta. Berkembang dengan Coaching.",
+  description: "Kami percaya bahwa anak belajar paling baik ketika mereka mengalami, mencoba, membuat, dan merefleksikan prosesnya. Karena itu, Clevio menggabungkan dua pendekatan utama:",
+  items: [
+    { title: "Project-Based Learning", description: "Anak belajar melalui project yang memberi ruang untuk: Explore → Plan → Create → Solve → Present → Reflect. Setiap project menghasilkan karya digital yang autentik dan sesuai dengan usia serta kemampuan anak.", icon: "fa-solid fa-code" },
+    { title: "Coaching", description: "Coach bukan pemberi jawaban. Namun Coach membantu anak menemukan jawabannya sendiri melalui pertanyaan, arahan, feedback, dan dukungan. Di Clevio, coach mendorong anak untuk: berpikir mandiri, berani mencoba, belajar dari kesalahan, menyelesaikan project, menerima umpan balik, mengembangkan kemampuan teknis dan soft skills. Karena tujuan akhirnya menjadi pembelajar yang mandiri.", icon: "fa-solid fa-people-arrows" },
+  ],
+};
+
 interface BindOptions {
   attachWindowEvents?: boolean;
   enableSmoothScroll?: boolean;
@@ -239,9 +270,9 @@ function bindAbout(root: HTMLElement, content: SiteContent) {
   const eyebrow = section.querySelector(".section-title span");
   const title = section.querySelector(".section-title h2");
   const desc = section.querySelector("p");
-  if (eyebrow) eyebrow.textContent = content.about.tagline;
-  if (title) title.textContent = content.about.title;
-  if (desc) desc.textContent = content.about.text;
+  if (eyebrow) eyebrow.textContent = APPROVED_ABOUT.tagline;
+  if (title) title.textContent = APPROVED_ABOUT.title;
+  if (desc) desc.textContent = APPROVED_ABOUT.text;
 
   const listWrapper = section.querySelector(".about-list");
   if (listWrapper) {
@@ -251,7 +282,7 @@ function bindAbout(root: HTMLElement, content: SiteContent) {
       "Bertakwa, Berakhlak mulia, Kebhinekaan global, Mandiri, Gotong royong, Bernalar kritis dan Kreatif.",
       "Literasi Teknologi, kepedulian sosial, inovasi, dan business planning.",
     ];
-    listWrapper.innerHTML = content.about.bullets
+    listWrapper.innerHTML = APPROVED_ABOUT.bullets
       .map(
         (item, index) => `
           <article class="why-clevio-benefit wow fadeInUp" data-wow-delay=".${3 + index}s">
@@ -296,8 +327,8 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
   if (section) {
     const tagline = section.querySelector("span");
     const heading = section.querySelector("h2");
-    if (tagline) tagline.textContent = content.programsSection.tagline;
-    if (heading) heading.innerHTML = content.programsSection.title.replace(/\n/g, "<br>");
+    if (tagline) tagline.textContent = "Program Kami";
+    if (heading) heading.textContent = "Temukan Level Belajar yang Tepat untuk Anak";
   }
 
   const programs = content.programs;
@@ -310,6 +341,11 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
     explorer: "Explore • Create • Creativity • Confidence",
     creator: "Create • Problem Solving • Collaboration • Communication",
     innovator: "Innovate • Solve • Lead • Create Impact",
+  };
+  const detailDescriptions: Record<string, string> = {
+    explorer: "Saatnya mengeksplorasi dunia digital dengan cara yang menyenangkan. Anak mulai mengenal coding, game, storytelling, desain, dan berbagai tools digital melalui project sederhana.",
+    creator: "Anak mulai mengembangkan ide menjadi karya digital yang lebih kompleks. Mereka belajar coding, game development, digital storytelling, desain, dan pembuatan aplikasi melalui project.",
+    innovator: "Saatnya teknologi digunakan untuk menciptakan solusi nyata\nAnak mengembangkan kemampuan dalam app development, game development, web development, AI & machine learning, serta project yang semakin kompleks.",
   };
   const wrapper = root.querySelector(".program-section .row");
   if (!wrapper) return;
@@ -359,7 +395,7 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
       };
       setText("[data-program-detail-age]", program.ageRange);
       setText("[data-program-detail-title]", program.title);
-      setText("[data-program-detail-description]", program.description);
+      setText("[data-program-detail-description]", detailDescriptions[program.title.toLowerCase()] ?? program.description);
       const taglines: Record<string, string> = {
         explorer: "Belajar sambil bermain, eksplorasi tanpa batas!",
         creator: "Ubah ide menjadi game, aplikasi, dan karya digital.",
@@ -390,6 +426,7 @@ function docBody(root: HTMLElement): HTMLElement | null {
 }
 
 function bindWorkProcess(root: HTMLElement, sectionContent: SiteContent["benefits"]) {
+  sectionContent = APPROVED_LEARNING_JOURNEY;
   const section = root.querySelector(".work-process-section");
   if (!section) return;
   const tagline = section.querySelector("[data-work-process-tagline]");
@@ -454,6 +491,7 @@ function bindActivities(
   activities: SiteContent["activities"],
   decorations: SiteContent["activitiesDecorations"],
 ) {
+  activities = { ...activities, ...APPROVED_HOW_WE_LEARN };
   const pencilShape = root.querySelector(".about-activities-section .pencil-shape img") as HTMLImageElement | null;
   if (pencilShape && decorations?.pencil) {
     pencilShape.src = decorations.pencil;
