@@ -538,6 +538,242 @@
   }
 }
 
+/* Cara Belajar: replace the inherited template mask and serif fallback with a
+   composed media card and two readable, brand-consistent method cards. */
+#clevio-template-root .about-activities-section {
+  position: relative;
+  padding-block: clamp(72px, 7vw, 108px) !important;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 20%, rgba(157, 200, 59, 0.1), transparent 24%),
+    linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
+}
+
+#clevio-template-root .about-activities-section .pencil-shape,
+#clevio-template-root .about-activities-section .zebra-shape {
+  display: none;
+}
+
+#clevio-template-root .about-activities-wrapper > .row {
+  align-items: center;
+  --bs-gutter-x: clamp(42px, 6vw, 88px);
+}
+
+#clevio-template-root .about-activities-wrapper .activities-img-items {
+  position: relative;
+  max-width: 540px;
+  margin-inline: auto;
+  padding: 14px 14px 0 0;
+}
+
+#clevio-template-root .about-activities-wrapper .activities-img-items::before {
+  position: absolute;
+  inset: 0 0 14px 14px;
+  border-radius: 34px 18px 34px 18px;
+  background: #9dc83b;
+  content: "";
+  transform: rotate(2deg);
+}
+
+#clevio-template-root .about-activities-wrapper .activities-image {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: none;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border: 6px solid #ffffff;
+  border-radius: 30px 16px 30px 16px;
+  mask: none;
+  box-shadow: 0 24px 54px rgba(34, 54, 123, 0.18);
+}
+
+#clevio-template-root .about-activities-wrapper .activities-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+#clevio-template-root .about-activities-wrapper .activities-img-items .radius-shape {
+  position: absolute;
+  z-index: 2;
+  top: -16px;
+  right: -10px;
+  width: 78px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  border: 7px solid #ffffff;
+  border-radius: 24px;
+  background: #22367b;
+  box-shadow: 0 14px 30px rgba(34, 54, 123, 0.2);
+}
+
+#clevio-template-root .about-activities-wrapper .activities-img-items .radius-shape img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+#clevio-template-root .about-activities-wrapper .activities-content {
+  margin: 0;
+}
+
+#clevio-template-root .about-activities-wrapper .activities-content > p {
+  max-width: 650px;
+  margin-top: 22px !important;
+  color: #43577a;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+#clevio-template-root .about-activities-wrapper .activities-content > .row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 30px 0 0 !important;
+}
+
+#clevio-template-root .about-activities-wrapper .activities-content > .row > [class*="col-"] {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+#clevio-template-root .about-activities-wrapper .activities-content .icon-items {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 16px;
+  height: 100%;
+  min-height: 172px;
+  align-items: start;
+  margin: 0;
+  padding: 20px;
+  border: 1px solid rgba(34, 54, 123, 0.1);
+  border-radius: 22px 12px 22px 12px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14px 32px rgba(34, 54, 123, 0.08);
+}
+
+#clevio-template-root .about-activities-wrapper .activities-content .icon-items .icon {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  border-radius: 18px 10px 18px 10px;
+  background: #22367b;
+  color: #ffffff;
+  font-size: 27px;
+  box-shadow: 0 12px 24px rgba(34, 54, 123, 0.18);
+}
+
+#clevio-template-root .about-activities-wrapper .activities-content .icon-items .content {
+  min-width: 0;
+}
+
+#clevio-template-root .about-activities-wrapper .activities-content .icon-items h5 {
+  margin: 0 0 8px;
+  color: #22367b;
+  font-family: "Quicksand", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+#clevio-template-root .about-activities-wrapper .activities-content .icon-items p {
+  margin: 0;
+  color: #53678a;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+@media (max-width: 1199px) {
+  #clevio-template-root .about-activities-wrapper .activities-content > .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-content .icon-items {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 991px) {
+  #clevio-template-root .about-activities-wrapper > .row {
+    gap: 50px;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-img-items {
+    max-width: 680px;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-content > .row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .about-activities-section {
+    padding-block: 64px 72px !important;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-img-items {
+    padding: 9px 9px 0 0;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-image {
+    aspect-ratio: 4 / 3;
+    border-width: 4px;
+    border-radius: 24px 12px 24px 12px;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-img-items .radius-shape {
+    top: -13px;
+    right: -5px;
+    width: 60px;
+    height: 60px;
+    border-width: 5px;
+    border-radius: 18px;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-img-items .radius-shape img {
+    width: 34px;
+    height: 34px;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-content > p {
+    margin-top: 16px !important;
+    font-size: 15px;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-content > .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 24px !important;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-content .icon-items {
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 14px;
+    padding: 16px;
+    border-radius: 18px 10px 18px 10px;
+  }
+
+  #clevio-template-root .about-activities-wrapper .activities-content .icon-items .icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 15px 9px 15px 9px;
+    font-size: 23px;
+  }
+}
+
 /* Admin CMS clarity refresh */
 .admin-shell {
   --admin-navy: #18366f;
