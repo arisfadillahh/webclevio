@@ -52,9 +52,11 @@ export interface Program {
   id: string;
   title: string;
   description: string;
+  summary?: string;
   ageRange: string;
   image: string;
   learningPoints: string[];
+  focus?: string[];
   projectExamples: string[];
   tools: string[];
   projectImage: string;
@@ -119,6 +121,7 @@ export interface AboutSection {
   title: string;
   text: string;
   bullets: string[];
+  benefits?: AboutBenefit[];
   stats: Stat[];
   ctaLabel?: string;
   ctaLink?: string;
@@ -127,6 +130,12 @@ export interface AboutSection {
     primary: string;
     secondary: string;
   };
+}
+
+export interface AboutBenefit {
+  number: string;
+  title: string;
+  description: string;
 }
 
 export interface FeatureItem {
@@ -162,6 +171,7 @@ export interface GalleryItem {
 export interface GallerySection {
   tagline: string;
   title: string;
+  description?: string;
   items: GalleryItem[];
 }
 
@@ -191,6 +201,14 @@ export interface EventsSection {
   tagline: string;
   title: string;
   description: string;
+  showcaseItems?: ShowcaseItem[];
+}
+
+export interface ShowcaseItem {
+  number: string;
+  title: string;
+  description: string;
+  image?: string;
 }
 
 export interface BlogPost {
@@ -212,6 +230,7 @@ export interface BlogPost {
 export interface BlogSection {
   tagline: string;
   title: string;
+  description?: string;
   posts: BlogPost[];
 }
 

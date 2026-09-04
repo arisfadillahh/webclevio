@@ -6732,6 +6732,7 @@ body.program-dialog-open {
 /* Adjust hero floating book icon position */
 .hero-1 .book-shape {
   top: 14% !important;
+}
 /* Final cascade fixes for the CMS refresh */
 body .admin-shell .sidebar-header {
   display: flex;
@@ -9086,7 +9087,7 @@ body .admin-shell .admin-action-bar.floating {
 
   .hero-section.hero-1 .button-text .video-btn {
     width: 56px;
-    height: 56px;
+    height: 66px;
   }
 
   .hero-section.hero-1 .col-lg-6:last-child,
@@ -11411,5 +11412,1489 @@ body .admin-shell .admin-action-bar.floating {
   #clevio-template-root .free-trial-copy,
   #clevio-template-root .main-cta-wrapper {
     padding-inline: 18px !important;
+  }
+}
+
+/* Student showcase and Gallery Karya — visual documentation-led layouts. */
+#clevio-template-root .home-events-section {
+  background: #ffffff;
+}
+
+#clevio-template-root .home-events-heading {
+  display: block;
+  margin-bottom: 34px;
+}
+
+#clevio-template-root .home-events-heading .section-title {
+  max-width: 760px;
+}
+
+#clevio-template-root .home-events-heading .home-events-description {
+  max-width: 700px;
+  margin: 18px 0 0;
+  color: #61768c;
+  line-height: 1.75;
+}
+
+#clevio-template-root .home-events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+#clevio-template-root .showcase-story-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(34, 54, 123, 0.11);
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgba(34, 54, 123, 0.08);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+#clevio-template-root .showcase-story-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 52px rgba(34, 54, 123, 0.14);
+}
+
+#clevio-template-root .showcase-story-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #eaf0fa;
+}
+
+#clevio-template-root .showcase-story-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 320ms ease;
+}
+
+#clevio-template-root .showcase-story-card:hover .showcase-story-media img {
+  transform: scale(1.05);
+}
+
+#clevio-template-root .showcase-story-media-label {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 9px;
+  background: rgba(34, 54, 123, 0.9);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+#clevio-template-root .showcase-story-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 24px 22px 22px;
+}
+
+#clevio-template-root .showcase-story-copy h3 {
+  margin: 0 0 12px;
+  color: #22367b;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+#clevio-template-root .showcase-story-copy p {
+  margin: 0;
+  color: #61768c;
+  font-size: 14px;
+  line-height: 1.72;
+}
+
+#clevio-template-root .showcase-story-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 20px;
+  color: #22367b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#clevio-template-root .showcase-story-link i {
+  color: #9dc83b;
+  transition: transform 180ms ease;
+}
+
+#clevio-template-root .showcase-story-card:hover .showcase-story-link i {
+  transform: translateX(4px);
+}
+
+#clevio-template-root .home-events-footer {
+  margin-top: 30px;
+  text-align: center;
+}
+
+#clevio-template-root .gallery-karya-section {
+  background: #f7f9fd;
+}
+
+#clevio-template-root .gallery-karya-heading {
+  display: block;
+  margin-bottom: 30px;
+}
+
+#clevio-template-root .gallery-karya-heading .section-title {
+  max-width: 760px;
+}
+
+#clevio-template-root .gallery-karya-heading > p {
+  max-width: 760px;
+  margin: 16px 0 0;
+  color: #61768c;
+  line-height: 1.75;
+}
+
+#clevio-template-root .gallery-karya-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 176px;
+  gap: 14px;
+}
+
+#clevio-template-root .gallery-karya-item {
+  position: relative;
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  border: 4px solid #ffffff;
+  border-radius: 20px;
+  background: #22367b;
+  box-shadow: 0 14px 30px rgba(34, 54, 123, 0.12);
+}
+
+#clevio-template-root .gallery-karya-item-1,
+#clevio-template-root .gallery-karya-item-2,
+#clevio-template-root .gallery-karya-item-3,
+#clevio-template-root .gallery-karya-item-4 {
+  grid-row: span 1;
+}
+
+#clevio-template-root .gallery-karya-item-5 {
+  grid-column: span 2;
+}
+
+#clevio-template-root .gallery-karya-item-6 {
+  grid-column: span 2;
+}
+
+#clevio-template-root .gallery-karya-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 320ms ease;
+}
+
+#clevio-template-root .gallery-karya-item:hover img {
+  transform: scale(1.06);
+}
+
+#clevio-template-root .gallery-karya-overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 38px 16px 14px;
+  background: linear-gradient(180deg, transparent, rgba(18, 35, 88, 0.92));
+  color: #ffffff;
+}
+
+#clevio-template-root .gallery-karya-overlay small {
+  color: #d5eba0;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+#clevio-template-root .gallery-karya-overlay strong {
+  font-size: 16px;
+  line-height: 1.25;
+  text-align: right;
+}
+
+#clevio-template-root .gallery-karya-note {
+  margin: 18px 0 0;
+  color: #61768c;
+  font-size: 13px;
+}
+
+@media (max-width: 991px) {
+  #clevio-template-root .home-events-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #clevio-template-root .gallery-karya-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #clevio-template-root .gallery-karya-item-5,
+  #clevio-template-root .gallery-karya-item-6 {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .home-events-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #clevio-template-root .showcase-story-copy {
+    padding: 20px 18px 19px;
+  }
+
+  #clevio-template-root .showcase-story-copy h3 {
+    font-size: 20px;
+  }
+
+  #clevio-template-root .gallery-karya-grid {
+    grid-auto-rows: 150px;
+    gap: 10px;
+  }
+
+  #clevio-template-root .gallery-karya-item {
+    border-width: 3px;
+    border-radius: 15px;
+  }
+
+  #clevio-template-root .gallery-karya-overlay {
+    padding: 30px 10px 9px;
+  }
+
+  #clevio-template-root .gallery-karya-overlay strong {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 479px) {
+  #clevio-template-root .gallery-karya-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 190px;
+  }
+
+  #clevio-template-root .gallery-karya-item-5,
+  #clevio-template-root .gallery-karya-item-6 {
+    grid-column: auto;
+  }
+}
+
+/* Final polish: keep documentation overlays readable on every image. */
+#clevio-template-root .showcase-story-media-label {
+  color: #ffffff !important;
+}
+
+#clevio-template-root .gallery-karya-overlay,
+#clevio-template-root .gallery-karya-overlay strong {
+  color: #ffffff !important;
+}
+
+#clevio-template-root .gallery-karya-overlay small {
+  color: #d5eba0 !important;
+}
+
+/* Closing CTA — a clear final invitation instead of an empty colour block. */
+#clevio-template-root .closing-cta-section {
+  padding: clamp(52px, 7vw, 92px) 0 !important;
+  background: #f7f9fd !important;
+}
+
+#clevio-template-root .closing-cta-section > .plane-shape,
+#clevio-template-root .closing-cta-section .main-cta-wrapper > :where(.pencil-shape, .plane-shape, .cta-shape, .cta-bg) {
+  display: none !important;
+}
+
+#clevio-template-root .closing-cta-section .main-cta-wrapper {
+  position: relative;
+  isolation: isolate;
+  display: flex !important;
+  min-height: 390px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: clamp(48px, 6vw, 82px) clamp(28px, 8vw, 118px) !important;
+  border: 0 !important;
+  border-radius: 38px !important;
+  background:
+    radial-gradient(circle at 85% 12%, rgba(157, 200, 59, 0.24), transparent 31%),
+    radial-gradient(circle at 8% 100%, rgba(75, 128, 210, 0.3), transparent 38%),
+    linear-gradient(135deg, #1d3478 0%, #2b477f 100%) !important;
+  box-shadow: 0 24px 60px rgba(34, 54, 123, 0.18);
+}
+
+#clevio-template-root .closing-cta-section .main-cta-wrapper::before,
+#clevio-template-root .closing-cta-section .main-cta-wrapper::after {
+  position: absolute;
+  z-index: -1;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+#clevio-template-root .closing-cta-section .main-cta-wrapper::before {
+  right: -90px;
+  bottom: -150px;
+  width: 440px;
+  height: 440px;
+}
+
+#clevio-template-root .closing-cta-section .main-cta-wrapper::after {
+  top: -190px;
+  left: -130px;
+  width: 420px;
+  height: 420px;
+}
+
+#clevio-template-root .closing-cta-copy {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 880px);
+  text-align: center;
+}
+
+#clevio-template-root .closing-cta-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: #d5eba0 !important;
+  font-family: "Quicksand", sans-serif;
+  font-size: clamp(16px, 1.2vw, 21px);
+  font-weight: 700;
+}
+
+#clevio-template-root .closing-cta-eyebrow::before {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #9dc83b;
+  content: "";
+}
+
+#clevio-template-root .closing-cta-copy h2 {
+  max-width: 820px;
+  margin: 0 auto;
+  color: #ffffff !important;
+  font-family: "Quicksand", sans-serif;
+  font-size: clamp(36px, 4.2vw, 64px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+#clevio-template-root .closing-cta-copy p {
+  max-width: 760px;
+  margin: 18px auto 0;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: clamp(16px, 1.1vw, 20px);
+  line-height: 1.6;
+}
+
+#clevio-template-root .closing-cta-button {
+  display: inline-flex !important;
+  min-height: 58px;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 30px;
+  padding: 0 28px !important;
+  border: 0 !important;
+  border-radius: 16px !important;
+  background: #9dc83b !important;
+  color: #22367b !important;
+  box-shadow: 0 14px 28px rgba(8, 26, 82, 0.2);
+}
+
+#clevio-template-root .closing-cta-button::before,
+#clevio-template-root .closing-cta-button::after {
+  display: none !important;
+}
+
+#clevio-template-root .closing-cta-button:hover {
+  background: #ffffff !important;
+  color: #22367b !important;
+  transform: translateY(-2px);
+}
+
+/* Social gallery — six equal moments with an intentional, quiet header. */
+#clevio-template-root .instagram-banner {
+  scroll-margin-top: 132px;
+  padding: clamp(58px, 7vw, 90px) 0 clamp(68px, 8vw, 104px) !important;
+  background: #ffffff !important;
+}
+
+#clevio-template-root .instagram-wrapper {
+  width: min(calc(100% - 48px), 1790px);
+  margin-inline: auto;
+  padding: 0 !important;
+}
+
+#clevio-template-root .social-media-heading {
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#clevio-template-root .social-media-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #8bb52d !important;
+  font-family: "Quicksand", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+#clevio-template-root .social-media-kicker::before {
+  width: 24px;
+  height: 2px;
+  background: #9dc83b;
+  content: "";
+}
+
+#clevio-template-root .instagram-wrapper h3 {
+  position: static !important;
+  margin: 12px 0 0 !important;
+  color: #22367b !important;
+  font-family: "Quicksand", sans-serif;
+  font-size: clamp(32px, 3.4vw, 56px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+#clevio-template-root .instagram-wrapper h3::before,
+#clevio-template-root .instagram-wrapper h3::after {
+  display: none !important;
+}
+
+#clevio-template-root .social-media-heading > p {
+  max-width: 690px;
+  margin: 16px auto 0;
+  color: #5e7097 !important;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+#clevio-template-root .social-media-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+#clevio-template-root .social-media-links a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 17px;
+  border: 1px solid rgba(34, 54, 123, 0.18);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #22367b !important;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+#clevio-template-root .social-media-links a i {
+  color: #22367b !important;
+}
+
+#clevio-template-root .social-media-links a:hover {
+  border-color: #9dc83b;
+  background: #f3f8e7;
+  transform: translateY(-2px);
+}
+
+#clevio-template-root .instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(10px, 1.15vw, 20px);
+  margin-top: 42px;
+}
+
+#clevio-template-root .instagram-banner-items,
+#clevio-template-root .instagram-banner-items .banner-image {
+  min-width: 0;
+}
+
+#clevio-template-root .instagram-banner-items .banner-image {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #edf2fb;
+  box-shadow: 0 14px 30px rgba(34, 54, 123, 0.1);
+}
+
+#clevio-template-root .instagram-banner-items .banner-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 360ms ease;
+}
+
+#clevio-template-root .instagram-banner-items .banner-image::before {
+  z-index: 1;
+  background: rgba(34, 54, 123, 0.62) !important;
+  transform: scale(1, 0);
+  transform-origin: bottom center;
+  transition: transform 300ms ease;
+}
+
+#clevio-template-root .instagram-banner-items .banner-image .icon {
+  z-index: 2;
+  width: 58px;
+  height: 58px;
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  background: #9dc83b !important;
+  color: #22367b !important;
+  line-height: 58px;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.86);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+#clevio-template-root .instagram-banner-items .banner-image .icon i {
+  color: #22367b !important;
+  font-size: 25px;
+}
+
+#clevio-template-root .instagram-banner-items:hover .banner-image img,
+#clevio-template-root .instagram-banner-items:focus-within .banner-image img {
+  transform: scale(1.06);
+}
+
+#clevio-template-root .instagram-banner-items:hover .banner-image::before,
+#clevio-template-root .instagram-banner-items:focus-within .banner-image::before {
+  transform: scale(1, 1);
+}
+
+#clevio-template-root .instagram-banner-items:hover .banner-image .icon,
+#clevio-template-root .instagram-banner-items:focus-within .banner-image .icon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+@media (max-width: 991px) {
+  #clevio-template-root .instagram-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575px) {
+  #clevio-template-root .closing-cta-section .main-cta-wrapper {
+    min-height: 420px;
+    padding: 46px 22px !important;
+    border-radius: 28px !important;
+  }
+
+  #clevio-template-root .closing-cta-copy h2 {
+    font-size: 36px;
+  }
+
+  #clevio-template-root .closing-cta-copy p {
+    font-size: 16px;
+  }
+
+  #clevio-template-root .instagram-wrapper {
+    width: min(calc(100% - 32px), 520px);
+  }
+
+  #clevio-template-root .instagram-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  #clevio-template-root .social-media-heading > p {
+    font-size: 16px;
+  }
+}
+
+/* The content binder replaces slides after the legacy Swiper bootstrap. Keep
+   the approved 3 / 2 / 1 card rhythm stable even when Swiper has stale inline widths. */
+@media (min-width: 1200px) {
+  #clevio-template-root .testimonial-clevio-slider .swiper-slide {
+    width: calc((100% - 60px) / 3) !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  #clevio-template-root .testimonial-clevio-slider .swiper-slide {
+    width: calc((100% - 30px) / 2) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .testimonial-clevio-slider .swiper-slide {
+    width: 100% !important;
+  }
+}
+
+/* Compact the learning journey and give Why Clevio a clear benefit-card grid. */
+#clevio-template-root .work-process-section.work-process-journey {
+  padding-block: 70px 82px;
+}
+
+#clevio-template-root .work-process-journey .process-work-wrapper {
+  margin-top: 46px;
+}
+
+#clevio-template-root .work-process-grid {
+  width: min(1200px, 100%);
+  margin-inline: auto;
+  gap: 24px 28px;
+}
+
+#clevio-template-root .work-process-journey .work-process-items {
+  min-height: 252px;
+  padding: 28px 22px 22px;
+  border-radius: 22px;
+}
+
+#clevio-template-root .work-process-journey .work-process-items .icon {
+  width: 76px !important;
+  height: 76px !important;
+  flex-basis: 76px;
+  margin-bottom: 16px !important;
+  border-radius: 19px !important;
+}
+
+#clevio-template-root .work-process-journey .work-process-items .icon i {
+  font-size: 34px;
+}
+
+#clevio-template-root .work-process-journey .work-process-items .content h4 {
+  font-size: clamp(22px, 1.7vw, 26px);
+}
+
+#clevio-template-root .work-process-divider {
+  width: 46px;
+  margin: 11px auto 14px;
+}
+
+#clevio-template-root .work-process-journey .work-process-items .content p {
+  font-size: 13.5px;
+  line-height: 1.52;
+}
+
+#clevio-template-root .work-process-connector {
+  top: 50%;
+  right: -28px;
+  width: 28px;
+  height: 18px;
+  transform: translateY(-50%);
+}
+
+#clevio-template-root .work-process-connector path {
+  stroke-width: 2.2;
+}
+
+#clevio-template-root .about-section .about-wrapper .row {
+  align-items: center;
+}
+
+#clevio-template-root .about-section .about-content {
+  padding: 8px 0 4px;
+}
+
+#clevio-template-root .about-section .about-content > p {
+  max-width: 650px;
+  margin-bottom: 24px;
+  line-height: 1.7;
+}
+
+#clevio-template-root .about-section .about-list.why-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+#clevio-template-root .about-section .why-benefit-card {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  min-width: 0;
+  align-content: start;
+  gap: 12px;
+  padding: 18px 17px 17px;
+  border: 1px solid rgba(34, 54, 123, 0.11);
+  border-radius: 18px;
+  background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
+  box-shadow: 0 12px 28px rgba(34, 54, 123, 0.08);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+#clevio-template-root .about-section .why-benefit-card:hover {
+  border-color: rgba(157, 200, 59, 0.55);
+  box-shadow: 0 18px 34px rgba(34, 54, 123, 0.12);
+  transform: translateY(-3px);
+}
+
+#clevio-template-root .about-section .why-benefit-number {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 11px;
+  background: #9dc83b;
+  color: #22367b;
+  font-family: "Quicksand", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+#clevio-template-root .about-section .why-benefit-card h3 {
+  margin: 1px 0 7px;
+  color: #22367b;
+  font-family: "Quicksand", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.22;
+}
+
+#clevio-template-root .about-section .why-benefit-card p {
+  margin: 0;
+  color: rgba(34, 54, 123, 0.75);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+@media (max-width: 1199px) and (min-width: 768px) {
+  #clevio-template-root .work-process-journey .work-process-items {
+    min-height: 238px;
+  }
+
+  #clevio-template-root .about-section .about-content {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .work-process-section.work-process-journey {
+    padding-block: 58px 68px;
+  }
+
+  #clevio-template-root .work-process-journey .process-work-wrapper {
+    margin-top: 38px;
+  }
+
+  #clevio-template-root .work-process-grid {
+    gap: 20px;
+  }
+
+  #clevio-template-root .work-process-journey .work-process-items {
+    min-height: 0;
+    padding: 30px 20px 22px;
+  }
+
+  #clevio-template-root .about-section .about-list.why-benefits-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  #clevio-template-root .about-section .why-benefit-card {
+    padding: 16px 15px;
+  }
+}
+
+/* Program modal tools: show the complete curriculum list with logo-first tiles. */
+#clevio-template-root .program-detail-tools {
+  align-self: start;
+}
+
+#clevio-template-root .program-detail-tools > div {
+  height: auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#clevio-template-root .program-detail-tool {
+  grid-template-columns: 36px minmax(0, 1fr);
+  min-height: 66px;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 13px;
+}
+
+#clevio-template-root .program-detail-tool-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+#clevio-template-root .program-detail-tool strong {
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  line-height: 1.22;
+}
+
+#clevio-template-root .program-detail-tool small {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .program-detail-tools > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #clevio-template-root .program-detail-tool {
+    min-height: 60px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 7px;
+    padding: 7px;
+  }
+
+  #clevio-template-root .program-detail-tool-icon {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Keep every level's software list complete without turning the modal into a
+   wall of cards, and let the action area remain reachable on short screens. */
+#clevio-template-root .program-detail-shell {
+  grid-template-rows: auto auto auto;
+  height: auto;
+  min-height: 100%;
+  align-content: start;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-padding-bottom: 18px;
+  scrollbar-gutter: stable;
+}
+
+#clevio-template-root .program-detail-tools {
+  align-self: start;
+  padding: 11px 12px 12px;
+  border: 1px solid rgba(34, 54, 123, 0.08);
+  border-radius: 16px;
+  background: linear-gradient(145deg, #f7fbff 0%, #ffffff 100%);
+}
+
+#clevio-template-root .program-detail-tools > h4 {
+  display: block !important;
+  margin: 0 0 8px;
+  color: #22367b;
+  font-family: "Quicksand", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+#clevio-template-root .program-detail-tools > div {
+  height: auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px 7px;
+}
+
+#clevio-template-root .program-detail-tool {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  min-height: 46px;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 6px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+#clevio-template-root .program-detail-tool:hover {
+  background: rgba(157, 200, 59, 0.12);
+  transform: translateY(-1px);
+}
+
+#clevio-template-root .program-detail-tool-icon {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(34, 54, 123, 0.08);
+  border-radius: 9px;
+  background: #ffffff;
+}
+
+#clevio-template-root .program-detail-tool strong {
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+
+#clevio-template-root .program-detail-actions {
+  min-height: 168px;
+  overflow: visible;
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .program-detail-shell {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  #clevio-template-root .program-detail-tools {
+    padding: 10px;
+  }
+
+  #clevio-template-root .program-detail-tools > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #clevio-template-root .program-detail-tool {
+    min-height: 44px;
+  }
+
+  #clevio-template-root .program-detail-actions {
+    min-height: 0;
+  }
+}
+
+/* Final modal polish: restore readable logo scale and keep the CTA cards fully
+   inside the available viewport instead of clipping their lower content. */
+#clevio-template-root .program-detail-tool {
+  grid-template-columns: 42px minmax(0, 1fr);
+  min-height: 58px;
+  gap: 8px;
+  padding: 6px 8px;
+}
+
+#clevio-template-root .program-detail-tool-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+}
+
+#clevio-template-root .program-detail-tool strong {
+  font-size: 11px;
+  line-height: 1.22;
+}
+
+#clevio-template-root .program-detail-actions {
+  min-height: 0;
+  padding: 10px 16px 12px;
+  border-radius: 18px;
+}
+
+#clevio-template-root .program-detail-action-grid {
+  gap: 8px;
+}
+
+#clevio-template-root .program-detail-action {
+  gap: 4px;
+  padding: 8px 10px 7px;
+  border-radius: 13px;
+}
+
+#clevio-template-root .program-detail-action small {
+  gap: 6px;
+  font-size: 10px;
+}
+
+#clevio-template-root .program-detail-action small b {
+  width: 22px;
+  height: 22px;
+  font-size: 8px;
+}
+
+#clevio-template-root .program-detail-action > span {
+  min-height: 30px;
+  padding: 6px 10px;
+  font-size: 10px;
+}
+
+#clevio-template-root .program-detail-action em,
+#clevio-template-root .program-detail-quota {
+  font-size: 8.5px;
+  line-height: 1.25;
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .program-detail-tool {
+    grid-template-columns: 36px minmax(0, 1fr);
+    min-height: 52px;
+  }
+
+  #clevio-template-root .program-detail-tool-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  #clevio-template-root .program-detail-tool strong {
+    font-size: 10.5px;
+  }
+
+  #clevio-template-root .program-detail-actions {
+    padding-inline: 10px;
+  }
+}
+
+/* Responsive modal scale: keep the same hierarchy while reducing density in
+   measured steps for tablet, mobile, and narrow phones. */
+@media (max-width: 991px) and (min-width: 768px) {
+  #clevio-template-root .program-detail-shell {
+    padding-inline: 20px;
+  }
+
+  #clevio-template-root .program-detail-tools > div {
+    gap: 4px 6px;
+  }
+
+  #clevio-template-root .program-detail-tool {
+    grid-template-columns: 36px minmax(0, 1fr);
+    min-height: 52px;
+    padding-inline: 6px;
+  }
+
+  #clevio-template-root .program-detail-tool-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  #clevio-template-root .program-detail-tool strong {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .program-detail-intro h3 {
+    font-size: clamp(36px, 11vw, 48px);
+  }
+
+  #clevio-template-root .program-detail-media {
+    border-radius: 15px;
+  }
+
+  #clevio-template-root .program-detail-tools > div {
+    gap: 4px 6px;
+  }
+}
+
+@media (max-width: 420px) {
+  #clevio-template-root .program-detail-shell {
+    padding: 48px 12px 18px;
+    gap: 9px;
+  }
+
+  #clevio-template-root .program-detail-hero {
+    gap: 13px;
+  }
+
+  #clevio-template-root .program-detail-age {
+    min-height: 27px;
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+
+  #clevio-template-root .program-detail-intro h3 {
+    margin-block: 10px 13px;
+    font-size: clamp(33px, 10.5vw, 42px);
+  }
+
+  #clevio-template-root .program-detail-tagline {
+    font-size: 12px;
+  }
+
+  #clevio-template-root .program-detail-description {
+    margin-top: 9px;
+    font-size: 11px;
+  }
+
+  #clevio-template-root .program-detail-tools {
+    padding: 9px 8px 10px;
+  }
+
+  #clevio-template-root .program-detail-tools > h4 {
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+
+  #clevio-template-root .program-detail-tool {
+    grid-template-columns: 31px minmax(0, 1fr);
+    min-height: 46px;
+    gap: 5px;
+    padding: 5px;
+  }
+
+  #clevio-template-root .program-detail-tool-icon {
+    width: 29px;
+    height: 29px;
+    border-radius: 8px;
+  }
+
+  #clevio-template-root .program-detail-tool strong {
+    font-size: 9.5px;
+  }
+
+  #clevio-template-root .program-detail-actions-heading h4 {
+    font-size: 11px;
+  }
+}
+
+/* Short desktop/tablet viewports need a denser modal so the action buttons do
+   not disappear below the fold at common laptop and tablet heights. */
+@media (max-height: 760px) and (min-width: 768px) {
+  #clevio-template-root .program-detail-panel {
+    height: calc(100dvh - 12px);
+    max-height: calc(100dvh - 12px);
+  }
+
+  #clevio-template-root .program-detail-shell {
+    gap: 8px;
+    padding: 14px 20px 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  #clevio-template-root .program-detail-hero {
+    gap: 15px;
+  }
+
+  #clevio-template-root .program-detail-intro {
+    padding-top: 0;
+  }
+
+  #clevio-template-root .program-detail-intro h3 {
+    margin-block: 8px 11px;
+    font-size: clamp(43px, 5vw, 52px);
+  }
+
+  #clevio-template-root .program-detail-tagline {
+    max-width: 25ch;
+    font-size: 12px;
+  }
+
+  #clevio-template-root .program-detail-description {
+    max-width: 33ch;
+    margin-top: 8px;
+    font-size: 11px;
+    line-height: 1.38;
+  }
+
+  #clevio-template-root .program-detail-tools {
+    padding: 8px 10px 9px;
+  }
+
+  #clevio-template-root .program-detail-tools > h4 {
+    margin-bottom: 5px;
+  }
+
+  #clevio-template-root .program-detail-tools > div {
+    gap: 2px 6px;
+  }
+
+  #clevio-template-root .program-detail-tool {
+    grid-template-columns: 35px minmax(0, 1fr);
+    min-height: 48px;
+    gap: 6px;
+    padding: 4px 6px;
+  }
+
+  #clevio-template-root .program-detail-tool-icon {
+    width: 33px;
+    height: 33px;
+  }
+
+  #clevio-template-root .program-detail-tool strong {
+    font-size: 10px;
+  }
+
+  #clevio-template-root .program-detail-actions {
+    padding: 8px 12px 9px;
+  }
+
+  #clevio-template-root .program-detail-actions-heading h4 {
+    font-size: 11px;
+  }
+
+  #clevio-template-root .program-detail-action {
+    gap: 3px;
+    padding: 6px 8px;
+  }
+
+  #clevio-template-root .program-detail-action small {
+    font-size: 9px;
+  }
+
+  #clevio-template-root .program-detail-action small b {
+    width: 20px;
+    height: 20px;
+  }
+
+  #clevio-template-root .program-detail-action > span {
+    min-height: 28px;
+    padding: 5px 9px;
+    font-size: 9.5px;
+  }
+
+  #clevio-template-root .program-detail-action em,
+  #clevio-template-root .program-detail-quota {
+    font-size: 8px;
+  }
+}
+
+/* Focus panel should follow its content instead of stretching beside the
+   longer software stack. A compact 2x2 list removes the dead vertical space. */
+#clevio-template-root .program-detail-benefits {
+  align-self: center;
+  min-height: 0;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 16px;
+}
+
+#clevio-template-root .program-detail-benefits ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+#clevio-template-root .program-detail-benefits li {
+  min-width: 0;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 6px;
+  border: 1px solid rgba(157, 200, 59, 0.18);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 9.5px;
+  line-height: 1.18;
+}
+
+#clevio-template-root .program-detail-benefits li i {
+  font-size: 9px;
+}
+
+#clevio-template-root .program-detail-tool[hidden] {
+  display: none !important;
+}
+
+#clevio-template-root .program-detail-tools-toggle {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 3px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 9px;
+  background: rgba(34, 54, 123, 0.07);
+  color: #22367b;
+  font-family: "Quicksand", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+#clevio-template-root .program-detail-tools-toggle:hover,
+#clevio-template-root .program-detail-tools-toggle:focus-visible {
+  background: rgba(157, 200, 59, 0.2);
+  color: #22367b;
+}
+
+#clevio-template-root .program-detail-tools-toggle:focus-visible {
+  outline: 2px solid #9dc83b;
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  #clevio-template-root .program-detail-shell {
+    height: 100%;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  #clevio-template-root .program-detail-benefits {
+    align-self: start;
+  }
+
+  #clevio-template-root .program-detail-benefits ul {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  #clevio-template-root .program-detail-benefits li {
+    min-height: 27px;
+    justify-content: flex-start;
+    padding: 6px 8px;
+    white-space: nowrap;
+  }
+}
+
+/* Program modal final fit pass: keep the decision CTA fully visible instead of
+   letting its nested cards disappear below the fixed-height dialog. */
+@media (min-width: 768px) {
+  #clevio-template-root .program-detail-panel {
+    height: auto;
+    max-height: calc(100dvh - 16px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  #clevio-template-root .program-detail-shell {
+    grid-template-rows: auto auto auto;
+    height: auto;
+    padding-bottom: 14px;
+    overflow: visible;
+  }
+
+  #clevio-template-root .program-detail-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    height: 66px;
+    min-height: 0;
+    padding: 11px 10px 11px 16px;
+    border-radius: 17px;
+    overflow: visible;
+  }
+
+  #clevio-template-root .program-detail-actions-heading {
+    align-self: center;
+    text-align: left;
+  }
+
+  #clevio-template-root .program-detail-actions-heading h4 {
+    max-width: none;
+    font-size: 12px;
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+
+  #clevio-template-root .program-detail-action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 154px);
+    gap: 8px;
+    align-self: center;
+  }
+
+  #clevio-template-root .program-detail-action {
+    display: block;
+    height: auto;
+    min-width: 0;
+    padding: 0;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none;
+  }
+
+  #clevio-template-root .program-detail-action small,
+  #clevio-template-root .program-detail-action em,
+  #clevio-template-root .program-detail-quota {
+    display: none;
+  }
+
+  #clevio-template-root .program-detail-action > span {
+    min-height: 36px;
+    padding: 7px 12px;
+    border-radius: 12px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .program-detail-panel {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  #clevio-template-root .program-detail-shell {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom));
+  }
+
+  #clevio-template-root .program-detail-actions {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    overflow: visible;
+  }
+
+  #clevio-template-root .program-detail-actions-heading h4 {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  #clevio-template-root .program-detail-action-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+
+  #clevio-template-root .program-detail-action {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none;
+  }
+
+  #clevio-template-root .program-detail-action small,
+  #clevio-template-root .program-detail-action em,
+  #clevio-template-root .program-detail-quota {
+    display: none;
+  }
+
+  #clevio-template-root .program-detail-action > span {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 14px;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 767px) {
+  #clevio-template-root .program-detail-benefits {
+    align-self: stretch;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  #clevio-template-root .program-detail-benefits {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  #clevio-template-root .program-detail-benefits li {
+    padding: 6px 5px;
+    font-size: 9px;
   }
 }

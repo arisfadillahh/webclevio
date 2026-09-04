@@ -33,17 +33,20 @@ export function bindTemplate(
   bindHeader(root, content);
   bindHero(root, content);
   bindAbout(root, content);
-  bindPrograms(root, content);
-  bindWorkProcess(root, content.benefits.items);
   bindActivities(root, content.activities, content.activitiesDecorations);
+  const programCleanup = bindPrograms(root, content);
+  if (programCleanup) cleanups.push(programCleanup);
+  bindWorkProcess(root, content.benefits);
   bindTestimonials(root, content.testimonials, content);
   bindPartners(root, content.partners);
+  bindEvents(root, content.eventsSection);
+  bindGallery(root, content.gallery);
   bindCta(root, content.callToAction, doc);
   bindNews(root, content.blog);
-  bindNewsletter(root, content.newsletter);
   bindInstructors(root, content.instructors, content);
   bindInstagram(root, content.instagram);
   bindFooter(root, content);
+  reorderLandingSections(root, doc);
 
   const smoothScrollCleanup = enableSmoothScroll ? enableSmoothScrollInternal(root, doc) : undefined;
   if (smoothScrollCleanup) cleanups.push(smoothScrollCleanup);
@@ -79,8 +82,12 @@ function bindPreloader(root: HTMLElement, attachWindowEvents: boolean) {
 function bindHeader(root: HTMLElement, content: SiteContent) {
   const logos = root.querySelectorAll(".header-left .logo img, .header-logo img, .offcanvas__logo img");
   logos.forEach((logo) => {
-    (logo as HTMLImageElement).src = content.branding.logo;
-    (logo as HTMLImageElement).alt = content.branding.name;
+    const image = logo as HTMLImageElement;
+    image.src = content.branding.logo;
+    image.alt = content.branding.name;
+    // The approved Clevio lockup contains a tall transparent canvas. Keep the
+    // same clipped treatment during SSR so the first paint matches hydration.
+    image.closest(".header-logo")?.classList.add("has-padded-logo");
   });
 
   const navList = root.querySelector(".main-menu nav ul");
@@ -218,25 +225,21 @@ function bindAbout(root: HTMLElement, content: SiteContent) {
 
   const listWrapper = section.querySelector(".about-list");
   if (listWrapper) {
-    const columns: string[][] = [[], []];
-    content.about.bullets.forEach((bullet, index) => {
-      columns[index % 2].push(bullet);
-    });
-    listWrapper.innerHTML = columns
+    const benefits = content.about.benefits ?? content.about.bullets.map((title, index) => ({
+      number: String(index + 1).padStart(2, "0"),
+      title,
+      description: "",
+    }));
+    listWrapper.innerHTML = benefits
       .map(
-        (items, columnIndex) => `
-        <ul class="wow fadeInUp" data-wow-delay=".${columnIndex === 0 ? 3 : 5}s">
-          ${items
-            .map(
-              (item) => `
-            <li>
-              <i class="fa-regular fa-circle-check"></i>
-              ${item}
-            </li>
-          `,
-            )
-            .join("")}
-        </ul>
+        (benefit, index) => `
+        <article class="why-benefit-card wow fadeInUp" data-wow-delay=".${3 + index}s">
+          <span class="why-benefit-number">${escapeMarkup(benefit.number)}</span>
+          <div>
+            <h3>${escapeMarkup(benefit.title)}</h3>
+            <p>${escapeMarkup(benefit.description)}</p>
+          </div>
+        </article>
       `,
       )
       .join("");
@@ -288,82 +291,223 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
     .map(
       (program, index) => `
       <div class="col-xl-4 col-lg-6 col-md-6 mb-4 wow fadeInUp" data-wow-delay="${0.15 + index * 0.1}s">
-        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-          <div class="ratio ratio-4x3 bg-light">
-            <img src="${program.image}" alt="${program.title}" class="w-100 h-100 object-fit-cover">
+        <div class="program-box-items">
+          <div class="program-bg ${index === 1 ? "bg-2" : index === 2 ? "bg-3" : ""}"></div>
+          <div class="program-image">
+            <img src="${escapeMarkup(program.image)}" alt="Level ${escapeMarkup(program.title)}">
           </div>
-          <div class="card-body p-4 d-flex flex-column gap-3">
-            <div class="d-flex justify-content-start">
-              <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2">${program.ageRange}</span>
-            </div>
-            <h4 class="mb-1 fs-4">${program.title}</h4>
-            <p class="mb-2 text-muted">${program.description}</p>
-            <div class="mt-auto">
-              <a href="${content.branding.ctaLink || "#contact"}" class="theme-btn d-inline-flex align-items-center gap-2">
-                <span>${content.branding.ctaLabel || "Daftar Sekarang"}</span>
-                <i class="fa-solid fa-arrow-right-long"></i>
-              </a>
-            </div>
+          <div class="program-content text-center ${index === 2 ? "style-2" : ""}">
+            <h4>${escapeMarkup(program.title)}</h4>
+            <span>${escapeMarkup(program.ageRange)}</span>
+            <p>${escapeMarkup(program.summary || program.description)}</p>
+            <button type="button" class="program-detail-trigger" data-program-open="${index}" aria-label="Lihat detail level ${escapeMarkup(program.title)}" aria-haspopup="dialog">
+              <span>Lihat detail level</span>
+              <i class="fa-solid fa-arrow-right-long"></i>
+            </button>
           </div>
         </div>
       </div>
     `,
     )
     .join("");
+
+  return bindProgramDialog(root, programs, content);
 }
 
-function bindWorkProcess(root: HTMLElement, items: SiteContent["benefits"]["items"]) {
-  const wrapper = root.querySelector(".work-process-section .row");
+function bindWorkProcess(root: HTMLElement, benefits: SiteContent["benefits"]) {
+  const section = root.querySelector(".work-process-section");
+  const tagline = section?.querySelector("[data-work-process-tagline]");
+  const title = section?.querySelector("[data-work-process-title]");
+  const description = section?.querySelector("[data-work-process-description]");
+  if (tagline) tagline.textContent = benefits.tagline;
+  if (title) title.textContent = benefits.title;
+  if (description) description.textContent = benefits.description;
+
+  const wrapper = root.querySelector(".work-process-section .work-process-grid");
   if (!wrapper) return;
-  wrapper.innerHTML = items
+  wrapper.innerHTML = benefits.items
     .map(
       (item, index) => {
-        const isLast = index === items.length - 1;
-        const isZigzag = index % 2 === 1;
-        const lineClass = isZigzag ? "line-shape-2" : "line-shape";
-        const lineImg = isZigzag ? "line-2.png" : "line.png";
-        const itemStyle = isZigzag || isLast ? "style-2" : "";
-        const iconClass = item.icon || `icon-icon-${(index % 4) + 1}`;
-        const isImageIcon =
-          !!item.icon &&
-          (item.icon.startsWith("http") ||
-            item.icon.startsWith("/") ||
-            /\.(png|jpe?g|gif|svg|webp)$/i.test(item.icon));
-
-        const lineMarkup = isLast
+        const isLast = index === benefits.items.length - 1;
+        const iconClass = item.icon || `fa-solid fa-code`;
+        const connector = isLast
           ? ""
-          : `
-            <div class="${lineClass}">
-              <img src="/assets/img/process/${lineImg}" alt="shape">
-            </div>`;
-
-        const contentMarkup = `
-          <div class="content">
-            <h4>${item.title}</h4>
-            <p>${item.description}</p>
-          </div>`;
-
-        const iconMarkup = isImageIcon
-          ? `
-          <div class="icon icon-uploaded">
-            <img src="${item.icon}" alt="${item.title} icon" />
-          </div>`
-          : `
-          <div class="icon bg-cover" style="background-image: url('/assets/img/process/icon-bg.png');">
-            <i class="${iconClass}"></i>
-          </div>`;
-
-        const body = `${lineMarkup}${iconMarkup}${contentMarkup}`;
+          : `<div class="work-process-connector" aria-hidden="true"><svg viewBox="0 0 36 18" focusable="false"><path d="M2 9 H30"></path><path d="M23 3 L30 9 L23 15"></path></svg></div>`;
 
         return `
-        <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="${0.3 + index * 0.2}s">
-          <div class="work-process-items text-center ${itemStyle}">
-            ${body}
-          </div>
+        <div class="work-process-step ${index % 2 ? "work-process-tone-accent" : "work-process-tone-primary"} wow fadeInUp" data-wow-delay="${0.2 + index * 0.1}s">
+          <article class="work-process-items text-center">
+            <span class="work-process-number">${String(index + 1).padStart(2, "0")}</span>
+            <div class="icon"><i class="${escapeMarkup(iconClass)}" aria-hidden="true"></i></div>
+            <div class="content">
+              <h4>${escapeMarkup(item.title)}</h4>
+              <span class="work-process-divider" aria-hidden="true"></span>
+              <p>${escapeMarkup(item.description)}</p>
+            </div>
+          </article>
+          ${connector}
         </div>`;
       },
     )
     .join("");
+
+}
+
+function bindProgramDialog(
+  root: HTMLElement,
+  programs: SiteContent["programs"],
+  content: SiteContent,
+) {
+
+  const dialog = root.querySelector<HTMLElement>("[data-program-dialog]");
+  const wrapper = root.querySelector<HTMLElement>(".program-section .row");
+  const panel = dialog?.querySelector<HTMLElement>(".program-detail-panel");
+  if (!dialog || !panel || !wrapper) return;
+
+  // Server-side template binding only needs the generated markup. Event handlers
+  // are attached by the client-side hydration pass where a real window exists.
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+
+  const detailImage = dialog.querySelector<HTMLImageElement>("[data-program-detail-image]");
+  const detailAge = dialog.querySelector<HTMLElement>("[data-program-detail-age]");
+  const detailTitle = dialog.querySelector<HTMLElement>("[data-program-detail-title]");
+  const detailTagline = dialog.querySelector<HTMLElement>("[data-program-detail-tagline]");
+  const detailDescription = dialog.querySelector<HTMLElement>("[data-program-detail-description]");
+  const focusList = dialog.querySelector<HTMLElement>("[data-program-learning]");
+  const projectsList = dialog.querySelector<HTMLElement>("[data-program-projects]");
+  const toolsList = dialog.querySelector<HTMLElement>("[data-program-tools]");
+  const trialLink = dialog.querySelector<HTMLAnchorElement>("[data-program-trial-link]");
+  const classLink = dialog.querySelector<HTMLAnchorElement>("[data-program-class-link]");
+  const openButtons = Array.from(wrapper.querySelectorAll<HTMLButtonElement>("[data-program-open]"));
+  const closeButtons = Array.from(dialog.querySelectorAll<HTMLButtonElement>("[data-program-close]"));
+  let previousFocus: HTMLElement | null = null;
+
+  const toolIcons: Record<string, string> = {
+    scratch: "/assets/img/program/detail/software-scratch.svg",
+    "code.org": "/assets/img/program/detail/software-codeorg.svg",
+    kodu: "/assets/img/program/detail/software-construct3.svg",
+    bebras: "/assets/img/program/detail/software-codeorg.svg",
+    minecraft: "/assets/img/program/detail/software-minecraft.svg",
+    gdevelop: "/assets/img/program/detail/software-construct3.svg",
+    construct: "/assets/img/program/detail/software-construct3.svg",
+    canva: "/assets/img/program/detail/software-canva.svg",
+    "book creator": "/assets/img/program/detail/software-web.svg",
+    "app inventor": "/assets/img/program/detail/software-web.svg",
+    thunkable: "/assets/img/program/detail/software-web.svg",
+    makecode: "/assets/img/program/detail/software-codeorg.svg",
+    trinket: "/assets/img/program/detail/software-python.svg",
+    "visual studio code": "/assets/img/program/detail/software-web.svg",
+    roblox: "/assets/img/program/detail/software-roblox-studio.svg",
+    html: "/assets/img/program/detail/software-web.svg",
+    python: "/assets/img/program/detail/software-python.svg",
+  };
+
+  const findToolIcon = (name: string) => {
+    const normalized = name.toLowerCase();
+    const key = Object.keys(toolIcons).find((term) => normalized.includes(term));
+    return key ? toolIcons[key] : "/assets/img/program/detail/software-codeorg.svg";
+  };
+
+  const renderModalLists = (program: SiteContent["programs"][number]) => {
+    if (projectsList) {
+      projectsList.innerHTML = (program.projectExamples ?? [])
+        .slice(0, 3)
+        .map((item, index) => `<span class="program-detail-project-dot${index === 0 ? " is-active" : ""}" title="${escapeMarkup(item)}" aria-label="${escapeMarkup(item)}"></span>`)
+        .join("");
+    }
+    if (focusList) {
+      focusList.innerHTML = `
+        <h4>Fokus <i class="fa-solid fa-sparkles" aria-hidden="true"></i></h4>
+        <ul>${(program.focus ?? program.learningPoints ?? [])
+          .map((item) => `<li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>${escapeMarkup(item)}</span></li>`)
+          .join("")}</ul>`;
+    }
+    if (toolsList) {
+      const tools = program.tools ?? [];
+      const collapsedToolCount = 6;
+      toolsList.innerHTML = tools
+        .map((tool, index) => `
+          <article class="program-detail-tool"${index >= collapsedToolCount ? " hidden" : ""} data-program-tool-extra>
+            <span class="program-detail-tool-icon"><img src="${findToolIcon(tool)}" alt="" aria-hidden="true"></span>
+            <strong>${escapeMarkup(tool)}</strong>
+          </article>`)
+        .join("") + (tools.length > collapsedToolCount
+          ? `<button class="program-detail-tools-toggle" type="button" aria-expanded="false">Lihat ${tools.length - collapsedToolCount} software lainnya <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>`
+          : "");
+
+      const toolToggle = toolsList.querySelector<HTMLButtonElement>(".program-detail-tools-toggle");
+      const extraTools = Array.from(toolsList.querySelectorAll<HTMLElement>("[data-program-tool-extra][hidden]"));
+      toolToggle?.addEventListener("click", () => {
+        const isExpanded = toolToggle.getAttribute("aria-expanded") === "true";
+        extraTools.forEach((item) => {
+          item.hidden = isExpanded;
+        });
+        toolToggle.setAttribute("aria-expanded", String(!isExpanded));
+        toolToggle.innerHTML = isExpanded
+          ? `Lihat ${extraTools.length} software lainnya <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>`
+          : `Ringkas daftar <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>`;
+      });
+    }
+  };
+
+  const closeDialog = (restoreFocus = true) => {
+    if (dialog.hidden) return;
+    dialog.hidden = true;
+    dialog.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("program-dialog-open");
+    if (restoreFocus) previousFocus?.focus();
+    previousFocus = null;
+  };
+
+  const openDialog = (index: number, trigger: HTMLElement) => {
+    const program = programs[index];
+    if (!program) return;
+    previousFocus = trigger;
+    if (detailImage) {
+      detailImage.src = program.projectImage || program.image;
+      detailImage.alt = `Contoh project level ${program.title}`;
+    }
+    if (detailAge) detailAge.textContent = program.ageRange;
+    if (detailTitle) detailTitle.textContent = program.title;
+    if (detailTagline) detailTagline.textContent = `Belajar melalui project ${program.title.toLowerCase()} yang relevan dan menyenangkan.`;
+    if (detailDescription) detailDescription.textContent = program.description;
+    renderModalLists(program);
+    if (trialLink) trialLink.href = content.freeTrial.ctaLink;
+    if (classLink) classLink.href = content.about.ctaLink || "#contact";
+    dialog.hidden = false;
+    dialog.setAttribute("aria-hidden", "false");
+    document.body.classList.add("program-dialog-open");
+    window.requestAnimationFrame(() => panel.focus());
+  };
+
+  const openHandlers = openButtons.map((button) => {
+    const handler = () => openDialog(Number(button.dataset.programOpen), button);
+    button.addEventListener("click", handler);
+    return { button, handler };
+  });
+  const closeHandlers = closeButtons.map((button) => {
+    const handler = () => closeDialog();
+    button.addEventListener("click", handler);
+    return { button, handler };
+  });
+  const classLinkHandler = () => closeDialog(false);
+  classLink?.addEventListener("click", classLinkHandler);
+  const keyHandler = (event: KeyboardEvent) => {
+    if (dialog.hidden) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeDialog();
+    }
+  };
+  document.addEventListener("keydown", keyHandler);
+
+  return () => {
+    openHandlers.forEach(({ button, handler }) => button.removeEventListener("click", handler));
+    closeHandlers.forEach(({ button, handler }) => button.removeEventListener("click", handler));
+    classLink?.removeEventListener("click", classLinkHandler);
+    document.removeEventListener("keydown", keyHandler);
+    closeDialog(false);
+  };
 }
 
 function bindActivities(
@@ -421,31 +565,39 @@ function bindActivities(
 
 function bindTestimonials(root: HTMLElement, testimonials: Testimonial[], content: SiteContent) {
   const sectionContent = content.testimonialsSection ?? { tagline: "", title: "" };
-  const sectionTitle = root.querySelector(".testimonial-section .section-title");
-  if (sectionTitle) {
-    const eyebrow = sectionTitle.querySelector("span");
-    const title = sectionTitle.querySelector("h2");
+  const section = root.querySelector(".testimonial-clevio-section");
+  const header = section?.querySelector(".testimonial-clevio-header");
+  if (header) {
+    const eyebrow = header.querySelector(".testimonial-clevio-eyebrow span");
+    const title = header.querySelector("h2");
+    const description = header.querySelector(".testimonial-clevio-description");
     if (eyebrow) eyebrow.textContent = sectionContent.tagline;
-    if (title) title.innerHTML = sectionContent.title.replace(/\n/g, "<br>");
+    if (title) {
+      const testimonialTitle = sectionContent.title.replace(/\byang\b/g, "Yang");
+      title.innerHTML = escapeMarkup(testimonialTitle)
+        .replace(/\n/g, "<br>")
+        .replace(/\s+Bersama\s+/i, "<br>Bersama ");
+    }
+    if (description && sectionContent.description) description.textContent = sectionContent.description;
   }
 
-  const slider = root.querySelector(".testimonial-section .swiper-wrapper");
+  const slider = section?.querySelector(".swiper-wrapper");
   if (!slider) return;
   slider.innerHTML = testimonials
     .map(
       (testi, index) => `
       <div class="swiper-slide">
-        <div class="testimonial-items ${index === 1 ? "style-2" : index === 2 ? "style-3" : ""}">
-          <div class="icon">
-            <img src="/assets/img/quote${index === 1 ? "-2" : index === 2 ? "-3" : ""}.png" alt="quote">
-          </div>
-          <div class="testimonial-bg ${index === 1 ? "bg-2" : index === 2 ? "bg-3" : ""}"></div>
+        <article class="testimonial-items testimonial-clevio-card">
+          <span class="testimonial-quote-watermark" aria-hidden="true">“</span>
+          <span class="testimonial-quote-badge" aria-hidden="true">“</span>
           <div class="testimonial-content">
-            <p>${testi.message}</p>
-            <h6>${testi.name}</h6>
-            <span>${testi.role}</span>
+            <p>${escapeMarkup(testi.message)}</p>
+            <div class="testimonial-author">
+              <span class="testimonial-author-icon" aria-hidden="true"><i class="${index === 0 ? "fa-regular fa-lightbulb" : index === 1 ? "fa-regular fa-comment-dots" : "fa-regular fa-file-lines"}"></i></span>
+              <span class="testimonial-author-copy"><h6>${escapeMarkup(testi.name)}</h6><span>${escapeMarkup(testi.role)}</span></span>
+            </div>
           </div>
-        </div>
+        </article>
       </div>
     `,
     )
@@ -465,6 +617,66 @@ function bindPartners(root: HTMLElement, partners: SiteContent["partners"]) {
     )
     .join("");
   marquee.innerHTML = `${logos}${logos}`;
+}
+
+function bindEvents(root: HTMLElement, sectionContent: SiteContent["eventsSection"]) {
+  const section = root.querySelector(".home-events-section");
+  const grid = section?.querySelector(".home-events-grid");
+  if (!section || !grid) return;
+
+  const tagline = section.querySelector(".home-events-tagline");
+  const title = section.querySelector(".home-events-title");
+  const description = section.querySelector(".home-events-description");
+  if (tagline) tagline.textContent = sectionContent.tagline;
+  if (title) title.textContent = sectionContent.title;
+  if (description) description.textContent = sectionContent.description;
+
+  const items = sectionContent.showcaseItems ?? [];
+  grid.innerHTML = items
+    .map(
+      (item, index) => `
+        <article class="showcase-story-card wow fadeInUp" data-wow-delay=".${3 + index}s">
+          <div class="showcase-story-media">
+            <img src="${escapeMarkup(item.image || `/assets/img/instagram/${String((index % 6) + 1).padStart(2, "0")}.jpg`)}" alt="Placeholder dokumentasi ${escapeMarkup(item.title)}">
+            <span class="showcase-story-media-label">Dokumentasi karya</span>
+          </div>
+          <div class="showcase-story-copy">
+            <h3>${escapeMarkup(item.title)}</h3>
+            <p>${escapeMarkup(item.description)}</p>
+            <span class="showcase-story-link">Lihat cerita kegiatan <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i></span>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+
+}
+
+function bindGallery(root: HTMLElement, gallery: SiteContent["gallery"]) {
+  const section = root.querySelector(".gallery-karya-section");
+  const grid = section?.querySelector("[data-gallery-grid]");
+  if (!section || !grid) return;
+
+  const tagline = section.querySelector("[data-gallery-tagline]");
+  const title = section.querySelector("[data-gallery-title]");
+  const description = section.querySelector("[data-gallery-description]");
+  if (tagline) tagline.textContent = gallery.tagline;
+  if (title) title.textContent = gallery.title;
+  if (description) description.textContent = gallery.description ?? "";
+
+  grid.innerHTML = gallery.items
+    .map(
+      (item, index) => `
+        <a class="gallery-karya-item gallery-karya-item-${(index % 4) + 1}" href="#social-media" aria-label="Lihat karya ${escapeMarkup(item.title)}">
+          <img src="${escapeMarkup(item.image)}" alt="Karya anak: ${escapeMarkup(item.title)}">
+          <span class="gallery-karya-overlay">
+            <small>${String(index + 1).padStart(2, "0")}</small>
+            <strong>${escapeMarkup(item.title)}</strong>
+          </span>
+        </a>
+      `,
+    )
+    .join("");
 }
 
 function bindCta(root: HTMLElement, cta: SiteContent["callToAction"], doc?: Document) {
@@ -491,12 +703,19 @@ function bindCta(root: HTMLElement, cta: SiteContent["callToAction"], doc?: Docu
   const ctaImage = root.querySelector(".cta-section .cta-image img") as HTMLImageElement | null;
   if (ctaImage) ctaImage.src = cta.image;
 
-  const mainCta = root.querySelector(".main-cta-section .section-title");
+  const mainCta = root.querySelector(".closing-cta-section");
   if (mainCta) {
-    const mainEyebrow = mainCta.querySelector("span");
-    const mainTitle = mainCta.querySelector("h2");
+    const mainEyebrow = mainCta.querySelector("[data-closing-eyebrow]");
+    const mainTitle = mainCta.querySelector("[data-closing-title]");
+    const mainText = mainCta.querySelector("[data-closing-text]");
+    const mainButton = mainCta.querySelector("[data-closing-button]") as HTMLAnchorElement | null;
     if (mainEyebrow) mainEyebrow.textContent = cta.eyebrow;
     if (mainTitle) mainTitle.textContent = cta.title;
+    if (mainText) mainText.textContent = cta.text;
+    if (mainButton) {
+      mainButton.href = cta.button.href;
+      mainButton.innerHTML = `${escapeMarkup(cta.button.label)} <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>`;
+    }
   }
 }
 
@@ -508,6 +727,9 @@ function bindNews(root: HTMLElement, blog: SiteContent["blog"]) {
     if (eyebrow) eyebrow.textContent = blog.tagline;
     if (title) title.innerHTML = blog.title;
   }
+
+  const sectionDescription = root.querySelector(".news-section-description");
+  if (sectionDescription) sectionDescription.textContent = blog.description ?? "";
 
   const posts: BlogPost[] = blog.posts;
   if (posts.length === 0) return;
@@ -564,18 +786,6 @@ function bindNews(root: HTMLElement, blog: SiteContent["blog"]) {
   }
 }
 
-function bindNewsletter(root: HTMLElement, newsletter: SiteContent["newsletter"]) {
-  const section = root.querySelector(".main-cta-section .section-title");
-  if (section) {
-    const eyebrow = section.querySelector("span");
-    const title = section.querySelector("h2");
-    if (eyebrow) eyebrow.textContent = newsletter.eyebrow;
-    if (title) title.textContent = newsletter.title;
-  }
-  const button = root.querySelector(".main-cta-section .theme-btn span");
-  if (button) button.textContent = newsletter.buttonLabel;
-}
-
 function bindInstructors(root: HTMLElement, instructors: SiteContent["instructors"], content: SiteContent) {
   const wrapper = root.querySelector(".team-grid[data-team-grid]");
   if (!wrapper) return;
@@ -614,6 +824,15 @@ function bindInstructors(root: HTMLElement, instructors: SiteContent["instructor
 }
 
 function bindInstagram(root: HTMLElement, items: SiteContent["instagram"]) {
+  const socialSection = root.querySelector(".instagram-banner");
+  const socialTitle = socialSection?.querySelector("[data-social-title]");
+  const socialDescription = socialSection?.querySelector("[data-social-description]");
+  if (socialTitle) socialTitle.textContent = "Ikuti Perjalanan Kami";
+  if (socialDescription) {
+    socialDescription.textContent =
+      "Lihat karya anak, aktivitas kelas, event, dan berbagai cerita dari komunitas Clevio.";
+  }
+
   const wrapper = root.querySelector(".instagram-grid[data-instagram-grid]");
   if (!wrapper) return;
   wrapper.innerHTML = items
@@ -621,7 +840,7 @@ function bindInstagram(root: HTMLElement, items: SiteContent["instagram"]) {
       (item) => `
       <div class="instagram-banner-items">
         <div class="banner-image">
-          <img src="${item.image}" alt="instagram">
+          <img src="${item.image}" alt="Dokumentasi kegiatan Clevio">
           <a href="${item.link}" target="_blank" rel="noreferrer" class="icon">
             <i class="fa-brands fa-instagram"></i>
           </a>
@@ -765,4 +984,44 @@ function enableSmoothScrollInternal(root: HTMLElement, doc?: Document) {
   anchors.forEach((a) => a.addEventListener("click", handler));
 
   return () => anchors.forEach((a) => a.removeEventListener("click", handler));
+}
+
+function reorderLandingSections(root: HTMLElement, doc?: Document) {
+  const sectionOrder = [
+    "hero",
+    "partners",
+    "about",
+    "activities",
+    "programs",
+    "work-process",
+    "free-trial",
+    "events",
+    "gallery",
+    "news",
+    "testimonials",
+    "cta",
+    "instagram",
+  ];
+  const sections = sectionOrder
+    .map((preview) => root.querySelector<HTMLElement>(`[data-preview="${preview}"]`))
+    .filter((section): section is HTMLElement => Boolean(section));
+  const firstSection = root.querySelector<HTMLElement>("[data-preview=\"hero\"]");
+  if (!firstSection || sections.length === 0) return;
+
+  const ownerDocument = doc ?? root.ownerDocument;
+  const anchor = ownerDocument.createComment("clevio-landing-order");
+  firstSection.parentNode?.insertBefore(anchor, firstSection);
+  const fragment = ownerDocument.createDocumentFragment();
+  sections.forEach((section) => fragment.appendChild(section));
+  anchor.parentNode?.insertBefore(fragment, anchor.nextSibling);
+  anchor.remove();
+}
+
+function escapeMarkup(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }

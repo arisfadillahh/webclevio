@@ -9,7 +9,7 @@
   },
   "testimonialsSection": {
     "tagline": "Testimoni Orang Tua",
-    "title": "Mereka yang Bertumbuh Bersama Clevio",
+    "title": "Mereka Yang Bertumbuh\nBersama Clevio",
     "description": "Cerita dari orang tua dan siswa yang belajar, bertumbuh, dan semakin percaya diri bersama Clevio."
   },
   "partners": [
@@ -174,6 +174,7 @@
       "id": "art",
       "title": "Explorer",
       "description": "Saatnya mengeksplorasi dunia digital dengan cara yang menyenangkan. Anak mulai mengenal coding, game, storytelling, desain, dan berbagai tools digital melalui project sederhana.",
+      "summary": "Saatnya mengeksplorasi dunia digital dengan cara yang menyenangkan.",
       "ageRange": "Usia 6–9 tahun | Kelas 1–3 SD",
       "image": "/assets/img/program/level-explorer.webp",
       "learningPoints": [
@@ -181,15 +182,25 @@
         "Animasi dan storytelling",
         "Dasar desain digital"
       ],
+      "focus": [
+        "Explore",
+        "Create",
+        "Creativity",
+        "Confidence"
+      ],
       "projectExamples": [
         "Maze game",
         "Cerita interaktif",
         "Poster digital"
       ],
       "tools": [
-        "Scratch",
         "Code.org",
-        "Minecraft Education"
+        "Kodu Game Lab",
+        "Scratch 3 Online",
+        "Scratch Jr Online",
+        "Bebras Online",
+        "Canva",
+        "Book Creator Online"
       ],
       "projectImage": "/assets/img/program/detail/explorer-project.webp"
     },
@@ -197,6 +208,7 @@
       "id": "science",
       "title": "Creator",
       "description": "Anak mulai mengembangkan ide menjadi karya digital yang lebih kompleks. Mereka belajar coding, game development, digital storytelling, desain, dan pembuatan aplikasi melalui project.",
+      "summary": "Anak mulai mengembangkan ide menjadi karya digital yang lebih kompleks.",
       "ageRange": "Usia 10–12 tahun | Kelas 4–6 SD",
       "image": "/assets/img/program/level-creator.webp",
       "learningPoints": [
@@ -204,16 +216,27 @@
         "Logika aplikasi",
         "Video dan digital storytelling"
       ],
+      "focus": [
+        "Create",
+        "Problem Solving",
+        "Collaboration",
+        "Communication"
+      ],
       "projectExamples": [
         "Platformer game",
         "Prototype aplikasi",
         "Komik digital"
       ],
       "tools": [
-        "Scratch",
-        "Construct 3",
+        "Scratch 3 Online",
+        "Scratch Jr Online",
+        "Code.org",
+        "Kodu Game Lab",
+        "GDevelop Online",
+        "MIT App Inventor",
         "Canva",
-        "CapCut"
+        "Book Creator Online",
+        "Bebras Online"
       ],
       "projectImage": "/assets/img/program/detail/creator-project.webp"
     },
@@ -221,6 +244,7 @@
       "id": "19f1d310-160b-4347-b72e-88efefd0ff9e",
       "title": "Innovator",
       "description": "Saatnya teknologi digunakan untuk menciptakan solusi nyata. Anak mengembangkan kemampuan dalam app development, game development, web development, AI dan machine learning, serta project yang semakin kompleks.",
+      "summary": "Saatnya teknologi digunakan untuk menciptakan solusi nyata.",
       "ageRange": "Usia 13–18 tahun | SMP & SMA",
       "image": "/assets/img/program/level-innovator.webp",
       "learningPoints": [
@@ -228,17 +252,26 @@
         "Dasar AI dan data",
         "Product design"
       ],
+      "focus": [
+        "Innovate",
+        "Solve",
+        "Lead",
+        "Create Impact"
+      ],
       "projectExamples": [
         "AI chatbot",
         "Portfolio website",
         "Roblox experience"
       ],
       "tools": [
-        "Roblox Studio",
-        "HTML, CSS & JavaScript",
-        "Python",
-        "Figma",
-        "AI Tools"
+        "Trinket.io",
+        "Visual Studio Code",
+        "Scratch 3 Online",
+        "GDevelop Online",
+        "GDevelop Install",
+        "Thunkable X",
+        "MakeCode",
+        "Canva"
       ],
       "projectImage": "/assets/img/program/detail/innovator-project.webp"
     }
@@ -274,6 +307,28 @@
       "Profil Pelajar Pancasila",
       "Technology and Entrepreneurship"
     ],
+    "benefits": [
+      {
+        "number": "01",
+        "title": "21st Century Skills",
+        "description": "Kreativitas dan Inovasi, Berpikir Kritis dan Pemecahan Masalah, Komunikasi dan Kolaborasi. Kemampuan beradaptasi, memiliki inisatif, kepemimpinan dan bertanggung jawab."
+      },
+      {
+        "number": "02",
+        "title": "Positive Characters",
+        "description": "Leadership, Social Intelligence, Self-control, GRIT, Love of learning, Teamwork, Kindness, Empathy, Growth Mindset"
+      },
+      {
+        "number": "03",
+        "title": "Profil Pelajar Pancasila",
+        "description": "Bertakwa, Berakhlak mulia, Kebhinekaan global, Mandiri, Gotong royong, Bernalar kritis dan Kreatif."
+      },
+      {
+        "number": "04",
+        "title": "Technology and Entrepreneurship",
+        "description": "Literasi Teknologi, kepedulian sosial, inovasi, dan business planning."
+      }
+    ],
     "stats": [
       {
         "label": "Tahun Pengalaman",
@@ -295,7 +350,7 @@
   "benefits": {
     "tagline": "Learning Journey",
     "title": "Dari Ide Menjadi Karya Berdampak",
-    "description": "Setiap blok pembelajaran dirancang sebagai sebuah perjalanan. Anak belajar melalui project, coaching, feedback, dan refleksi untuk berkembang menjadi pembelajar mandiri.",
+    "description": "Setiap blok pembelajaran dirancang sebagai sebuah perjalanan. Anak belajar melalui project, coaching, feedback, dan refleksi untuk berkembang menjadi pembelajar mandiri. Dari belajar membuat karya → memecahkan masalah → menciptakan solusi → memberikan manfaat. Clevio menerapkan continuous learning agar anak terbiasa menjadi lifelong learner yang terus berkembang mengikuti perubahan teknologi dan dunia.",
     "items": [
       {
         "title": "Explore",
@@ -332,7 +387,7 @@
   "activities": {
     "tagline": "Cara Belajar Clevio",
     "title": "Belajar dengan Mencipta. Berkembang dengan Coaching.",
-    "description": "Anak belajar melalui project nyata, didampingi Coach untuk mengeksplorasi ide, membangun solusi, dan merefleksikan proses belajarnya.",
+    "description": "Kami percaya bahwa anak belajar paling baik ketika mereka mengalami, mencoba, membuat, dan merefleksikan prosesnya. Karena itu, Clevio menggabungkan dua pendekatan utama:",
     "image": "/uploads/1764754390561-09671912a963d.png",
     "items": [
       {
@@ -344,42 +399,43 @@
         "title": "Coaching",
         "description": "Coach membantu anak menemukan jawabannya sendiri melalui pertanyaan, arahan, feedback, dan dukungan.",
         "icon": "fa-solid fa-people-arrows"
-      },
-      {
-        "title": "Berpikir Mandiri",
-        "description": "Anak didorong untuk berani mencoba, belajar dari kesalahan, dan menyelesaikan project.",
-        "icon": "fa-solid fa-brain"
-      },
-      {
-        "title": "Tumbuh melalui Refleksi",
-        "description": "Setiap proses membantu anak mengembangkan kemampuan teknis, soft skills, dan kebiasaan belajar mandiri.",
-        "icon": "fa-solid fa-seedling"
       }
     ]
   },
   "gallery": {
     "tagline": "Galeri Karya",
     "title": "Ideas Become Real.",
+    "description": "Lihat apa yang terjadi ketika anak diberi kesempatan untuk berimajinasi, bereksperimen, dan menciptakan. Setiap karya memiliki cerita.",
     "items": [
       {
         "id": "gal-1",
-        "image": "/assets/img/gallery/01.jpg",
+        "image": "/assets/img/instagram/01.jpg",
         "title": "Game"
       },
       {
         "id": "gal-2",
-        "image": "/assets/img/gallery/02.jpg",
+        "image": "/assets/img/instagram/02.jpg",
         "title": "Apps"
       },
       {
         "id": "gal-3",
-        "image": "/assets/img/gallery/03.jpg",
+        "image": "/assets/img/instagram/03.jpg",
         "title": "Websites"
       },
       {
         "id": "gal-4",
-        "image": "/assets/img/gallery/04.jpg",
+        "image": "/assets/img/instagram/04.jpg",
         "title": "Animation"
+      },
+      {
+        "id": "gal-5",
+        "image": "/assets/img/instagram/05.jpg",
+        "title": "Digital Storytelling"
+      },
+      {
+        "id": "gal-6",
+        "image": "/assets/img/instagram/06.jpg",
+        "title": "AI & Digital Projects"
       }
     ]
   },
@@ -426,7 +482,27 @@
   "eventsSection": {
     "tagline": "Student Showcase",
     "title": "Karya Anak Layak untuk Dilihat Dunia",
-    "description": "Belajar tidak berhenti ketika project selesai. Anak mendapatkan kesempatan untuk mempresentasikan dan memamerkan karya mereka kepada orang lain, melatih public speaking, dan membangun kepercayaan diri."
+    "description": "Belajar tidak berhenti ketika project selesai. Anak diberi kesempatan untuk mempresentasikan dan memamerkan karya mereka kepada orang lain, sehingga mereka mendapatkan feedback nyata sekaligus melatih public speaking dan kepercayaan diri.",
+    "showcaseItems": [
+      {
+        "number": "01",
+        "title": "Pitching Day",
+        "description": "Di akhir setiap block, anak mempresentasikan Big Project mereka di depan kelas dan orang tua. Di kesempatan ini orang tua dapat memberikan apresiasi sekaligus umpan balik kepada anak atas karyanya.",
+        "image": "/assets/img/instagram/01.jpg"
+      },
+      {
+        "number": "02",
+        "title": "Festival Technopreneur Clevio",
+        "description": "Dua kali setahun, ratusan karya murid Clevio dipamerkan kepada publik. Pengunjung dapat mencoba karya dan mendengarkan langsung cerita dari para teknopreneur muda mempresentasikan karyanya.",
+        "image": "/assets/img/instagram/02.jpg"
+      },
+      {
+        "number": "03",
+        "title": "Lomba Cipta Game Nasional",
+        "description": "Diadakan setiap tahun, ajang adu keterampilan membuat game ini diikuti dengan antusias oleh pelajar tingkat SMP, SMA/SMK, dan guru di seluruh Indonesia. Dengan mengangkat berbagai isu menarik dari berbagai masalah sosial, karya para peserta memberi dampak sebagai kontribusi nyata bagi masyarakat.",
+        "image": "/assets/img/instagram/03.jpg"
+      }
+    ]
   },
   "events": [
     {
@@ -469,6 +545,7 @@
   "blog": {
     "tagline": "Clevio Stories",
     "title": "Cerita dari Ruang Belajar Clevio",
+    "description": "Temukan cerita dari ruang belajar Clevio, karya anak, kegiatan komunitas, serta berbagai insight tentang teknologi, pendidikan, kreativitas, dan masa depan anak.",
     "posts": [
       {
         "id": "blog-1",
@@ -513,8 +590,8 @@
   },
   "callToAction": {
     "eyebrow": "The Future Needs Innovators and Changemakers.",
-    "title": "Mari Tumbuh Bersama Clevio",
-    "text": "Teknologi akan terus berubah. Tantangan masa depan membutuhkan solusi dari inovator muda yang dibentuk hari ini. Clevio membantu anak membangun cara berpikir, karakter, dan keberanian untuk terus belajar, mencipta, dan memberikan dampak.",
+    "title": "Mari tumbuh bersama Clevio.",
+    "text": "Teknologi akan terus berubah. Tantangan masa depan butuh solusi dari inovator muda yang dibentuk hari ini. Karena itu, kami tidak hanya ingin anak belajar teknologi yang digunakan saat ini. Kami ingin membantu mereka membangun cara berpikir, karakter, dan keberanian untuk terus belajar, mencipta, dan memberikan dampak.",
     "button": {
       "label": "Coba Free Trial",
       "href": "https://lms.clev.io/free-trial"
