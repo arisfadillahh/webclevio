@@ -13192,3 +13192,37 @@ body .admin-shell .admin-action-bar.floating {
     line-height: 1.3;
   }
 }
+
+/* Header logo fit pass: keep the full Clevio lockup inside the navbar with a
+   little breathing room so none of the mark or tagline is clipped. */
+#clevio-template-root .clevio-navbar .header-logo.has-padded-logo,
+#clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo {
+  width: clamp(148px, 9.6vw, 180px);
+  height: 56px;
+}
+
+#clevio-template-root .clevio-navbar .header-logo.has-padded-logo img,
+#clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo img {
+  top: -56% !important;
+}
+
+@media (max-width: 991px) {
+  #clevio-template-root .clevio-navbar .header-logo.has-padded-logo,
+  #clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo {
+    width: 138px;
+    height: 44px !important;
+  }
+
+  #clevio-template-root .clevio-navbar .header-logo.has-padded-logo img,
+  #clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo img {
+    top: -56% !important;
+  }
+}
+
+@media (max-width: 575px) {
+  #clevio-template-root .clevio-navbar .header-logo.has-padded-logo,
+  #clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo {
+    width: 124px;
+    height: 38px !important;
+  }
+}
