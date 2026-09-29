@@ -13200,6 +13200,7 @@ body .admin-shell .admin-action-bar.floating {
   width: clamp(150px, 10vw, 170px);
   max-height: 58px;
   object-fit: contain;
+  transform: translateY(5px);
 }
 
 @media (max-width: 991px) {
@@ -13207,6 +13208,7 @@ body .admin-shell .admin-action-bar.floating {
   #clevio-template-root .clevio-navbar.sticky .header-logo img {
     width: 150px;
     max-height: 51px;
+    transform: translateY(4px);
   }
 }
 
@@ -13215,5 +13217,6 @@ body .admin-shell .admin-action-bar.floating {
   #clevio-template-root .clevio-navbar.sticky .header-logo img {
     width: 140px;
     max-height: 48px;
+    transform: translateY(4px);
   }
 }
