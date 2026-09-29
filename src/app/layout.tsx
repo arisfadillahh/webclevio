@@ -8,8 +8,8 @@ export const metadata: Metadata = {
   description:
     "Website Clevio Innovator Camp versi Next.js lengkap dengan admin dashboard dan kontrol konten dinamis.",
   icons: {
-    icon: [{ url: "/favicon-custom.svg", type: "image/svg+xml" }],
-    shortcut: "/favicon-custom.svg",
+    icon: [{ url: "/favicon-clevio.png", type: "image/png" }],
+    shortcut: "/favicon-clevio.png",
   },
 };
 
