@@ -104,7 +104,7 @@ function bindHeader(root: HTMLElement, content: SiteContent) {
 
   const headerBtnSpans = root.querySelectorAll(".header-main .header-button .theme-btn span");
   headerBtnSpans.forEach((btn) => {
-    btn.innerHTML = `${content.branding.ctaLabel}<i class="fa-solid fa-arrow-right-long"></i>`;
+    btn.innerHTML = `<i class="fa-solid fa-graduation-cap" aria-hidden="true"></i><b>${content.branding.ctaLabel}</b><i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>`;
   });
   const headerLinks = root.querySelectorAll(".header-main .header-button .theme-btn");
   headerLinks.forEach((link) => {

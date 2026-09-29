@@ -13220,3 +13220,91 @@ body .admin-shell .admin-action-bar.floating {
     transform: translateY(4px);
   }
 }
+
+/* Keep the LMS entry point visible when the desktop navigation collapses. */
+@media (max-width: 1199px) {
+  #clevio-template-root .clevio-navbar .header-right {
+    gap: 10px;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button {
+    display: block !important;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn {
+    min-width: 158px;
+    min-height: 46px;
+    padding-inline: 15px !important;
+    border-radius: 13px !important;
+    box-shadow: 0 9px 20px rgba(34, 54, 123, 0.18);
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn > span {
+    gap: 8px;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn b {
+    font-size: 13px;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn i:first-child {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 575px) {
+  #clevio-template-root .clevio-navbar .header-right {
+    gap: 7px;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn {
+    min-width: 96px;
+    min-height: 42px;
+    padding-inline: 11px !important;
+    border-radius: 12px !important;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn i:first-child {
+    display: none;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn b {
+    flex: none;
+    font-size: 0;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn b::after {
+    content: "Masuk LMS";
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn i:last-child {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  #clevio-template-root .clevio-navbar .header-logo img,
+  #clevio-template-root .clevio-navbar.sticky .header-logo img {
+    width: 110px;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn {
+    min-width: 84px;
+    padding-inline: 8px !important;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right > .header-button .theme-btn b::after {
+    font-size: 11px;
+  }
+
+  #clevio-template-root .clevio-navbar .header-right {
+    gap: 5px;
+  }
+
+  #clevio-template-root .clevio-navbar .sidebar__toggle {
+    width: 40px;
+    height: 40px;
+  }
+}
