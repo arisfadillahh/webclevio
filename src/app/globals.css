@@ -13193,36 +13193,27 @@ body .admin-shell .admin-action-bar.floating {
   }
 }
 
-/* Header logo fit pass: keep the full Clevio lockup inside the navbar with a
-   little breathing room so none of the mark or tagline is clipped. */
-#clevio-template-root .clevio-navbar .header-logo.has-padded-logo,
-#clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo {
-  width: clamp(148px, 9.6vw, 180px);
-  height: 56px;
-}
-
-#clevio-template-root .clevio-navbar .header-logo.has-padded-logo img,
-#clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo img {
-  top: -56% !important;
+/* Use the clean lockup at its native aspect ratio. The CMS logo has an
+   oversized transparent canvas, so cropping it risks cutting off the tagline. */
+#clevio-template-root .clevio-navbar .header-logo img,
+#clevio-template-root .clevio-navbar.sticky .header-logo img {
+  width: clamp(132px, 8.7vw, 148px);
+  max-height: 50px;
+  object-fit: contain;
 }
 
 @media (max-width: 991px) {
-  #clevio-template-root .clevio-navbar .header-logo.has-padded-logo,
-  #clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo {
-    width: 138px;
-    height: 44px !important;
-  }
-
-  #clevio-template-root .clevio-navbar .header-logo.has-padded-logo img,
-  #clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo img {
-    top: -56% !important;
+  #clevio-template-root .clevio-navbar .header-logo img,
+  #clevio-template-root .clevio-navbar.sticky .header-logo img {
+    width: 126px;
+    max-height: 43px;
   }
 }
 
 @media (max-width: 575px) {
-  #clevio-template-root .clevio-navbar .header-logo.has-padded-logo,
-  #clevio-template-root .clevio-navbar.sticky .header-logo.has-padded-logo {
-    width: 124px;
-    height: 38px !important;
+  #clevio-template-root .clevio-navbar .header-logo img,
+  #clevio-template-root .clevio-navbar.sticky .header-logo img {
+    width: 114px;
+    max-height: 39px;
   }
 }

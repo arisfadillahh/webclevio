@@ -83,11 +83,10 @@ function bindHeader(root: HTMLElement, content: SiteContent) {
   const logos = root.querySelectorAll(".header-left .logo img, .header-logo img, .offcanvas__logo img");
   logos.forEach((logo) => {
     const image = logo as HTMLImageElement;
-    image.src = content.branding.logo;
+    const isNavigationLogo = Boolean(image.closest(".header-logo, .offcanvas__logo"));
+    image.src = isNavigationLogo ? "/assets/img/logo/clevio-header.png" : content.branding.logo;
     image.alt = content.branding.name;
-    // The approved Clevio lockup contains a tall transparent canvas. Keep the
-    // same clipped treatment during SSR so the first paint matches hydration.
-    image.closest(".header-logo")?.classList.add("has-padded-logo");
+    image.closest(".header-logo")?.classList.remove("has-padded-logo");
   });
 
   const navList = root.querySelector(".main-menu nav ul");

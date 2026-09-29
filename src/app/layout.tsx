@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   title: "Clevio Innovator Camp",
   description:
     "Website Clevio Innovator Camp versi Next.js lengkap dengan admin dashboard dan kontrol konten dinamis.",
+  icons: {
+    icon: [{ url: "/favicon-custom.svg", type: "image/svg+xml" }],
+    shortcut: "/favicon-custom.svg",
+  },
 };
 
 export default function RootLayout({

@@ -74,20 +74,13 @@ function bindPreloader(root: HTMLElement, attachWindowEvents: boolean) {
 }
 
 function bindHeader(root: HTMLElement, content: SiteContent) {
-  const logoLoadCleanups: Array<() => void> = [];
   const logos = root.querySelectorAll(".header-left .logo img, .header-logo img, .offcanvas__logo img");
   logos.forEach((logo) => {
     const image = logo as HTMLImageElement;
-    image.src = content.branding.logo;
+    const isNavigationLogo = Boolean(image.closest(".header-logo, .offcanvas__logo"));
+    image.src = isNavigationLogo ? "/assets/img/logo/clevio-header.png" : content.branding.logo;
     image.alt = content.branding.name;
-    const syncLogoCanvas = () => {
-      const holder = image.closest(".header-logo");
-      if (!holder || !image.naturalWidth || !image.naturalHeight) return;
-      holder.classList.toggle("has-padded-logo", image.naturalWidth / image.naturalHeight < 2.4);
-    };
-    image.addEventListener("load", syncLogoCanvas);
-    logoLoadCleanups.push(() => image.removeEventListener("load", syncLogoCanvas));
-    if (image.complete) syncLogoCanvas();
+    image.closest(".header-logo")?.classList.remove("has-padded-logo");
   });
 
   const navList = root.querySelector(".main-menu nav ul");
@@ -209,7 +202,6 @@ function bindHeader(root: HTMLElement, content: SiteContent) {
   observedLinks.forEach(({ section }) => observer?.observe(section));
 
   return () => {
-      logoLoadCleanups.forEach((cleanup) => cleanup());
       clickHandlers.forEach(({ link, handler }) => link.removeEventListener("click", handler));
       root.removeEventListener("click", mobileMenuClickHandler);
       observer?.disconnect();
