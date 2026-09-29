@@ -13197,23 +13197,23 @@ body .admin-shell .admin-action-bar.floating {
    oversized transparent canvas, so cropping it risks cutting off the tagline. */
 #clevio-template-root .clevio-navbar .header-logo img,
 #clevio-template-root .clevio-navbar.sticky .header-logo img {
-  width: clamp(132px, 8.7vw, 148px);
-  max-height: 50px;
+  width: clamp(150px, 10vw, 170px);
+  max-height: 58px;
   object-fit: contain;
 }
 
 @media (max-width: 991px) {
   #clevio-template-root .clevio-navbar .header-logo img,
   #clevio-template-root .clevio-navbar.sticky .header-logo img {
-    width: 126px;
-    max-height: 43px;
+    width: 150px;
+    max-height: 51px;
   }
 }
 
 @media (max-width: 575px) {
   #clevio-template-root .clevio-navbar .header-logo img,
   #clevio-template-root .clevio-navbar.sticky .header-logo img {
-    width: 114px;
-    max-height: 39px;
+    width: 140px;
+    max-height: 48px;
   }
 }
