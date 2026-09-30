@@ -48,6 +48,11 @@ export interface HeroDecoration {
   image: string;
 }
 
+export interface ProgramTool {
+  name: string;
+  logo: string;
+}
+
 export interface Program {
   id: string;
   title: string;
@@ -58,7 +63,7 @@ export interface Program {
   learningPoints: string[];
   focus?: string[];
   projectExamples: string[];
-  tools: string[];
+  tools: ProgramTool[];
   projectImage: string;
 }
 

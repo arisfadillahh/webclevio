@@ -1,3 +1,4 @@
+import { normalizeProgramTools } from "@/lib/program-tools";
 import type {
   SiteContent,
   Testimonial,
@@ -381,32 +382,6 @@ function bindProgramDialog(
   const closeButtons = Array.from(dialog.querySelectorAll<HTMLButtonElement>("[data-program-close]"));
   let previousFocus: HTMLElement | null = null;
 
-  const toolIcons: Record<string, string> = {
-    scratch: "/assets/img/program/detail/software-scratch.svg",
-    "code.org": "/assets/img/program/detail/software-codeorg.svg",
-    kodu: "/assets/img/program/detail/software-construct3.svg",
-    bebras: "/assets/img/program/detail/software-codeorg.svg",
-    minecraft: "/assets/img/program/detail/software-minecraft.svg",
-    gdevelop: "/assets/img/program/detail/software-construct3.svg",
-    construct: "/assets/img/program/detail/software-construct3.svg",
-    canva: "/assets/img/program/detail/software-canva.svg",
-    "book creator": "/assets/img/program/detail/software-web.svg",
-    "app inventor": "/assets/img/program/detail/software-web.svg",
-    thunkable: "/assets/img/program/detail/software-web.svg",
-    makecode: "/assets/img/program/detail/software-codeorg.svg",
-    trinket: "/assets/img/program/detail/software-python.svg",
-    "visual studio code": "/assets/img/program/detail/software-web.svg",
-    roblox: "/assets/img/program/detail/software-roblox-studio.svg",
-    html: "/assets/img/program/detail/software-web.svg",
-    python: "/assets/img/program/detail/software-python.svg",
-  };
-
-  const findToolIcon = (name: string) => {
-    const normalized = name.toLowerCase();
-    const key = Object.keys(toolIcons).find((term) => normalized.includes(term));
-    return key ? toolIcons[key] : "/assets/img/program/detail/software-codeorg.svg";
-  };
-
   const renderModalLists = (program: SiteContent["programs"][number]) => {
     if (projectsList) {
       projectsList.innerHTML = (program.projectExamples ?? [])
@@ -422,13 +397,13 @@ function bindProgramDialog(
           .join("")}</ul>`;
     }
     if (toolsList) {
-      const tools = program.tools ?? [];
+      const tools = normalizeProgramTools(program.tools ?? []);
       const collapsedToolCount = 6;
       toolsList.innerHTML = tools
         .map((tool, index) => `
           <article class="program-detail-tool"${index >= collapsedToolCount ? " hidden" : ""} data-program-tool-extra>
-            <span class="program-detail-tool-icon"><img src="${findToolIcon(tool)}" alt="" aria-hidden="true"></span>
-            <strong>${escapeMarkup(tool)}</strong>
+            <span class="program-detail-tool-icon"><img src="${escapeMarkup(tool.logo)}" alt="" aria-hidden="true"></span>
+            <strong>${escapeMarkup(tool.name)}</strong>
           </article>`)
         .join("") + (tools.length > collapsedToolCount
           ? `<button class="program-detail-tools-toggle" type="button" aria-expanded="false">Lihat ${tools.length - collapsedToolCount} software lainnya <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>`

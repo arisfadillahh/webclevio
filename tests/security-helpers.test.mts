@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { validateAuthConfig } from "../src/lib/auth.ts";
+import { selectClientAddress } from "../src/lib/client-address.ts";
+import { defaultToolLogo, normalizeProgramTools } from "../src/lib/program-tools.ts";
 import { getPostgresSslConfig } from "../src/lib/postgres-ssl.ts";
 import { readBoundedJson, RequestBodyTooLargeError } from "../src/lib/request-body.ts";
 import { getSafeLocalPath } from "../src/lib/safe-local-path.ts";
@@ -69,6 +71,38 @@ test("validateAuthConfig fails closed on defaults and enforces production streng
     password: "a-strong-random-password",
     secret: "a".repeat(64),
   });
+});
+
+test("selectClientAddress ignores the internal proxy hop", () => {
+  assert.equal(
+    selectClientAddress("203.0.113.9, 172.18.0.3", "172.18.0.3"),
+    "203.0.113.9",
+  );
+  assert.equal(
+    selectClientAddress("1.2.3.4, 203.0.113.9, 172.18.0.3", "172.18.0.3"),
+    "203.0.113.9",
+  );
+  assert.equal(
+    selectClientAddress("2001:db8::10, ::ffff:172.18.0.3", null),
+    "2001:db8::10",
+  );
+  assert.equal(selectClientAddress(null, "198.51.100.20"), "198.51.100.20");
+  assert.equal(selectClientAddress("172.18.0.3", "172.18.0.3"), "172.18.0.3");
+  assert.equal(selectClientAddress(null, null), "unknown");
+});
+
+test("normalizeProgramTools keeps custom logos and fills known app logos", () => {
+  assert.equal(defaultToolLogo("Scratch 3 Online"), "/assets/img/program/detail/software-scratch.svg");
+  assert.deepEqual(normalizeProgramTools([
+    "Canva",
+    { name: "Scratch Jr Online", logo: "/uploads/scratch-jr.png" },
+    { name: "  ", logo: "/uploads/blank.png" },
+    { name: "Aplikasi baru", logo: "javascript:alert(1)" },
+  ]), [
+    { name: "Canva", logo: "/assets/img/program/detail/software-canva.svg" },
+    { name: "Scratch Jr Online", logo: "/uploads/scratch-jr.png" },
+    { name: "Aplikasi baru", logo: "/assets/img/program/detail/software-codeorg.svg" },
+  ]);
 });
 
 test("getPostgresSslConfig verifies peers and supports explicit CA material", () => {

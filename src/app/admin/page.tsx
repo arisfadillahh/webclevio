@@ -48,14 +48,14 @@ export default async function AdminPage() {
         <section className="production-stat-grid">
           <article><span><PiArticleBold /></span><div><small>Artikel tayang</small><strong>{publishedArticles}</strong><p>{content.blog.posts.length - publishedArticles} draft</p></div></article>
           <article><span><PiCalendarBold /></span><div><small>Event tayang</small><strong>{publishedEvents}</strong><p>{content.events.length - publishedEvents} draft</p></div></article>
-          <article><span><PiCheckCircleBold /></span><div><small>Program aktif</small><strong>{content.programs.length}</strong><p>Dikelola dari konten website</p></div></article>
+          <article><span><PiCheckCircleBold /></span><div><small>Level</small><strong>{content.programs.length}</strong><p>Software dan logo diatur di konten website</p></div></article>
         </section>
 
         <section className="production-dashboard-grid">
           <div className="production-dashboard-panel">
             <div className="production-panel-heading"><div><span>Akses cepat</span><h2>Pilih area kerja</h2></div></div>
             <div className="production-quick-links">
-              <Link href="/admin/content"><PiPencilSimpleBold /><span><strong>Konten website</strong><small>Hero, program, aktivitas, dan footer</small></span></Link>
+              <Link href="/admin/content"><PiPencilSimpleBold /><span><strong>Konten website</strong><small>Bagian atas, level, dan footer</small></span></Link>
               <Link href="/admin/articles"><PiArticleBold /><span><strong>Artikel</strong><small>Tulis, simpan draft, lalu publikasikan</small></span></Link>
               <Link href="/admin/events"><PiCalendarBold /><span><strong>Event</strong><small>Atur kartu dan link landing page</small></span></Link>
             </div>

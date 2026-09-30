@@ -2746,6 +2746,23 @@
 .production-content-savebar > div.is-error { color: #9b3c3c; }
 .production-content-save-actions { display: flex; gap: 8px; }
 
+.level-switcher { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.level-switcher button { display: grid; gap: 2px; min-width: 140px; padding: 10px 12px; border: 1px solid #d5e0e2; border-radius: 12px; color: #31485a; background: #fff; text-align: left; cursor: pointer; }
+.level-switcher button strong { font-size: 14px; }
+.level-switcher button small { color: #738590; font-size: 11px; }
+.level-switcher button.is-active { color: #fff; background: #273f82; border-color: #273f82; }
+.level-switcher button.is-active small { color: rgba(255, 255, 255, 0.78); }
+.level-switcher button.is-add { display: flex; align-items: center; gap: 6px; color: #273f82; background: #f4f7fb; }
+.level-software-list { display: grid; gap: 12px; }
+.level-software-card { display: grid; gap: 10px; padding: 12px; border: 1px solid #e0e8e9; border-radius: 12px; background: #f8faf9; }
+.level-software-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.level-software-card-top button { display: inline-flex; align-items: center; gap: 6px; border: 0; color: #9b3c3c; background: transparent; cursor: pointer; font: inherit; }
+.level-advanced { margin-top: 16px; }
+.level-advanced summary { padding: 12px 14px; border: 1px solid #d5e0e2; border-radius: 12px; background: #fff; color: #31485a; font-weight: 650; cursor: pointer; }
+.level-advanced[open] summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.level-advanced .admin-card { margin-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+.level-advanced .admin-card + .admin-card { margin-top: 0; border-top: 0; }
+
 .production-admin-menu-button,
 .production-admin-backdrop { display: none; }
 
