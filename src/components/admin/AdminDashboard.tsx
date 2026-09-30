@@ -4,7 +4,8 @@ import { useMemo, useState, ChangeEvent, useId, useEffect, useRef } from "react"
 import type { ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import type { NavItem, SiteContent } from "@/types/content";
+import { defaultToolLogo, normalizeProgramTools } from "@/lib/program-tools";
+import type { NavItem, ProgramTool, SiteContent } from "@/types/content";
 import ThemeBinder from "@/components/home/ThemeBinder";
 import PreviewAssets, { fixAssetPaths } from "@/components/admin/PreviewAssets";
 import { getPreviewKeys } from "@/lib/preview";
@@ -362,6 +363,7 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
   const [status, setStatus] = useState<Status>("idle");
   const [saveError, setSaveError] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<ActiveSection>(embedded ? "hero" : "overview");
+  const [activeLevelIndex, setActiveLevelIndex] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [navigationSearch, setNavigationSearch] = useState("");
@@ -426,7 +428,7 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
 
   const statCards = useMemo(
     () => [
-      { label: "Program Aktif", value: content.programs.length, icon: PiChalkboardTeacherBold },
+      { label: "Level", value: content.programs.length, icon: PiChalkboardTeacherBold },
       { label: "Event Tayang", value: content.events.filter((event) => event.status === "published").length, icon: PiCalendarBold },
       { label: "Artikel Tayang", value: content.blog.posts.filter((post) => post.status === "published").length, icon: PiNewspaperBold },
     ],
@@ -443,22 +445,22 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
 
   const navigationItems = useMemo(() => [
     { id: "overview" as ActiveSection, group: "Ringkasan", label: "Dashboard", icon: PiHouseBold, description: "Status dan akses cepat" },
-    { id: "navigation" as ActiveSection, group: "Tampilan Utama", label: "Menu Utama", icon: PiListBold, description: "Navigasi header" },
-    { id: "branding" as ActiveSection, group: "Tampilan Utama", label: "Branding", icon: PiPaletteBold, description: "Logo dan identitas" },
-    { id: "hero" as ActiveSection, group: "Tampilan Utama", label: "Hero", icon: PiImageBold, description: "Bagian pembuka" },
-    { id: "partners" as ActiveSection, group: "Tampilan Utama", label: "Partner", icon: PiImageBold, description: "Logo partner" },
-    { id: "about" as ActiveSection, group: "Tampilan Utama", label: "Tentang Kami", icon: PiInfoBold, description: "Profil Clevio" },
-    { id: "programs" as ActiveSection, group: "Konten Website", label: "Program", icon: PiChalkboardTeacherBold, description: "Program pembelajaran" },
-    { id: "freeTrial" as ActiveSection, group: "Konten Website", label: "Free Trial", icon: PiRocketLaunchBold, description: "Ajakan daftar kelas percobaan" },
-    { id: "activities" as ActiveSection, group: "Konten Website", label: "Aktivitas", icon: PiArticleBold, description: "Kegiatan mingguan" },
-    { id: "workProcess" as ActiveSection, group: "Konten Website", label: "Alur Belajar", icon: PiListBold, description: "Langkah proses" },
-    { id: "testimonials" as ActiveSection, group: "Konten Website", label: "Testimonial", icon: PiArticleBold, description: "Kata orang tua" },
+    { id: "hero" as ActiveSection, group: "Halaman depan", label: "Bagian atas", icon: PiImageBold, description: "Judul dan gambar pembuka" },
+    { id: "navigation" as ActiveSection, group: "Halaman depan", label: "Menu", icon: PiListBold, description: "Tautan di header" },
+    { id: "branding" as ActiveSection, group: "Halaman depan", label: "Logo Clevio", icon: PiPaletteBold, description: "Logo dan nama sekolah" },
+    { id: "programs" as ActiveSection, group: "Level", label: "Level belajar", icon: PiChalkboardTeacherBold, description: "Software dan logo tiap level" },
+    { id: "freeTrial" as ActiveSection, group: "Isi halaman", label: "Free Trial", icon: PiRocketLaunchBold, description: "Ajakan daftar setelah level" },
+    { id: "about" as ActiveSection, group: "Isi halaman", label: "Tentang", icon: PiInfoBold, description: "Profil Clevio" },
+    { id: "activities" as ActiveSection, group: "Isi halaman", label: "Aktivitas", icon: PiArticleBold, description: "Kegiatan yang ditampilkan" },
+    { id: "workProcess" as ActiveSection, group: "Isi halaman", label: "Alur belajar", icon: PiListBold, description: "Langkah proses" },
+    { id: "testimonials" as ActiveSection, group: "Isi halaman", label: "Testimoni", icon: PiArticleBold, description: "Kata orang tua" },
+    { id: "partners" as ActiveSection, group: "Isi halaman", label: "Partner", icon: PiImageBold, description: "Logo partner" },
     { id: "eventLinks" as ActiveSection, group: "Publikasi", label: "Event & Link", icon: PiRocketLaunchBold, description: "Kartu menuju landing page" },
     { id: "blog" as ActiveSection, group: "Publikasi", label: "Artikel", icon: PiNewspaperBold, description: "Artikel dan berita" },
-    { id: "newsletter" as ActiveSection, group: "Publikasi", label: "Newsletter", icon: PiBellBold, description: "Berlangganan" },
-    { id: "instagram" as ActiveSection, group: "Publikasi", label: "Instagram", icon: PiInstagramLogoBold, description: "Feed Instagram" },
-    { id: "contact" as ActiveSection, group: "Pengaturan", label: "Kontak & Footer", icon: PiPhoneBold, description: "Informasi kontak" },
-    { id: "advanced" as ActiveSection, group: "Pengaturan", label: "Data Lanjutan", icon: PiCodeBold, description: "Editor data lengkap" },
+    { id: "instagram" as ActiveSection, group: "Bawah halaman", label: "Instagram", icon: PiInstagramLogoBold, description: "Foto Instagram" },
+    { id: "newsletter" as ActiveSection, group: "Bawah halaman", label: "Newsletter", icon: PiBellBold, description: "Kotak berlangganan" },
+    { id: "contact" as ActiveSection, group: "Bawah halaman", label: "Kontak & footer", icon: PiPhoneBold, description: "Telepon, email, dan footer" },
+    { id: "advanced" as ActiveSection, group: "Pengaturan", label: "Data lanjutan", icon: PiCodeBold, description: "Editor data lengkap" },
   ], []);
 
   const navigationGroups = useMemo(() => {
@@ -466,7 +468,7 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
     const filteredItems = query
       ? navigationItems.filter((item) => `${item.label} ${item.description}`.toLowerCase().includes(query))
       : navigationItems;
-    return ["Ringkasan", "Tampilan Utama", "Konten Website", "Publikasi", "Pengaturan"]
+    return ["Ringkasan", "Halaman depan", "Level", "Isi halaman", "Publikasi", "Bawah halaman", "Pengaturan"]
       .map((group) => ({ group, items: filteredItems.filter((item) => item.group === group) }))
       .filter((section) => section.items.length > 0);
   }, [navigationItems, navigationSearch]);
@@ -583,12 +585,35 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
 
   const updateProgramList = (
     index: number,
-    field: "learningPoints" | "projectExamples" | "tools",
+    field: "learningPoints" | "projectExamples",
     value: string,
   ) => {
     setContent((prev) => {
       const programs = [...prev.programs];
       programs[index] = { ...programs[index], [field]: value.split(/\r?\n/).slice(0, 6) };
+      return { ...prev, programs };
+    });
+  };
+
+  const updateProgramTools = (index: number, tools: ProgramTool[]) => {
+    setContent((prev) => {
+      const programs = [...prev.programs];
+      programs[index] = { ...programs[index], tools };
+      return { ...prev, programs };
+    });
+  };
+
+  const updateProgramTool = (index: number, toolIndex: number, patch: Partial<ProgramTool>) => {
+    setContent((prev) => {
+      const programs = [...prev.programs];
+      const tools = normalizeProgramTools(programs[index].tools);
+      const current = tools[toolIndex];
+      if (!current) return prev;
+      const nextName = patch.name ?? current.name;
+      const logoWasDefault = current.logo === defaultToolLogo(current.name);
+      const nextLogo = patch.logo ?? (patch.name !== undefined && logoWasDefault ? defaultToolLogo(nextName) : current.logo);
+      tools[toolIndex] = { name: nextName, logo: nextLogo };
+      programs[index] = { ...programs[index], tools };
       return { ...prev, programs };
     });
   };
@@ -606,7 +631,10 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
           image: prev.programs[0]?.image ?? "/assets/img/program/01.jpg",
           learningPoints: ["Logika coding", "Kreativitas digital", "Problem solving"],
           projectExamples: ["Game sederhana", "Animasi interaktif"],
-          tools: ["Scratch", "Canva"],
+          tools: [
+            { name: "Scratch", logo: defaultToolLogo("Scratch") },
+            { name: "Canva", logo: defaultToolLogo("Canva") },
+          ],
           projectImage: prev.programs[0]?.projectImage ?? prev.programs[0]?.image ?? "/assets/img/program/01.jpg",
         },
       ],
@@ -1728,190 +1756,217 @@ const updateFooterContact = (
           </>
         );
 
-      case "programs":
+      case "programs": {
+        const levelIndex = Math.min(activeLevelIndex, Math.max(content.programs.length - 1, 0));
+        const level = content.programs[levelIndex];
+        const levelTools = level ? normalizeProgramTools(level.tools) : [];
         return (
           <>
             <div className="section-context">
-              <h2>📚 Program Pembelajaran</h2>
-              <p>Program-program ini akan ditampilkan sebagai card di halaman utama. Setiap program memiliki gambar, judul, deskripsi, dan rentang usia.</p>
+              <h2>Level belajar</h2>
+              <p>Pilih satu level, lalu ubah software yang dipakai. Logo bisa diganti, ditambah, atau dihapus. Teks dan gambar level ada di bawahnya.</p>
             </div>
+
+            <div className="level-switcher" role="tablist" aria-label="Pilih level">
+              {content.programs.map((program, index) => (
+                <button
+                  key={program.id}
+                  type="button"
+                  className={index === levelIndex ? "is-active" : ""}
+                  onClick={() => setActiveLevelIndex(index)}
+                >
+                  <strong>{program.title || `Level ${index + 1}`}</strong>
+                  <small>{program.ageRange || "Usia belum diisi"}</small>
+                </button>
+              ))}
+              <button type="button" className="is-add" onClick={addProgram}>
+                <PiPlusBold /> Tambah level
+              </button>
+            </div>
+
+            {level ? (
+              <>
+                <AdminCard
+                  title={`Software ${level.title || "level"}`}
+                  description="Ini daftar aplikasi yang muncul di popup level. Setiap kartu punya nama dan logo."
+                >
+                  <div className="level-software-list">
+                    {levelTools.map((tool, toolIndex) => (
+                      <article key={`${level.id}-tool-${toolIndex}`} className="level-software-card">
+                        <div className="level-software-card-top">
+                          <strong>Aplikasi {toolIndex + 1}</strong>
+                          <button type="button" onClick={() => updateProgramTools(levelIndex, levelTools.filter((_, index) => index !== toolIndex))}>
+                            <PiTrashBold /> Hapus
+                          </button>
+                        </div>
+                        <label>
+                          Nama software
+                          <input
+                            value={tool.name}
+                            onChange={(event) => updateProgramTool(levelIndex, toolIndex, { name: event.target.value })}
+                            placeholder="Contoh: Scratch"
+                          />
+                        </label>
+                        <ImageInput
+                          label="Logo"
+                          value={tool.logo}
+                          onChange={(value) => updateProgramTool(levelIndex, toolIndex, { logo: value })}
+                          helperText="PNG atau WebP dengan latar transparan paling rapi."
+                          previewMode="logo"
+                        />
+                      </article>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className="ghost-btn small"
+                    onClick={() => updateProgramTools(levelIndex, [...levelTools, { name: "Software baru", logo: defaultToolLogo("Software baru") }])}
+                  >
+                    <PiPlusBold /> Tambah software
+                  </button>
+                </AdminCard>
+
+                <AdminCard
+                  title="Teks level"
+                  description="Nama, usia, dan penjelasan singkat yang tampil di kartu serta popup."
+                >
+                  <div className="form-grid">
+                    <label>
+                      Nama level
+                      <input
+                        value={level.title}
+                        onChange={(event) => updateProgram(levelIndex, "title", event.target.value)}
+                        placeholder="Explorer"
+                      />
+                    </label>
+                    <label>
+                      Rentang usia
+                      <input
+                        value={level.ageRange}
+                        onChange={(event) => updateProgram(levelIndex, "ageRange", event.target.value)}
+                        placeholder="Usia 6–9 tahun | Kelas 1–3 SD"
+                      />
+                    </label>
+                    <label className="full-width-field">
+                      Penjelasan
+                      <textarea
+                        value={level.description}
+                        onChange={(event) => updateProgram(levelIndex, "description", event.target.value)}
+                        placeholder="Apa yang dipelajari anak di level ini"
+                        style={{ minHeight: "110px" }}
+                      />
+                    </label>
+                  </div>
+                  <button type="button" className="ghost-btn small" onClick={() => removeProgram(levelIndex)}>
+                    <PiTrashBold /> Hapus level ini
+                  </button>
+                </AdminCard>
+
+                <AdminCard
+                  title="Gambar level"
+                  description="Gambar kartu di halaman utama, dan screenshot yang tampil saat popup dibuka."
+                >
+                  <div className="form-grid">
+                    <ImageInput
+                      label="Gambar kartu"
+                      value={level.image}
+                      onChange={(value) => updateProgram(levelIndex, "image", value)}
+                      helperText="Rekomendasi 560 × 360 px."
+                    />
+                    <ImageInput
+                      label="Screenshot project"
+                      value={level.projectImage ?? level.image}
+                      onChange={(value) => updateProgram(levelIndex, "projectImage", value)}
+                      helperText="Rekomendasi 1200 × 800 px."
+                    />
+                  </div>
+                </AdminCard>
+
+                <AdminCard
+                  title="Materi dan contoh project"
+                  description="Satu poin per baris. Maksimal 6 baris."
+                >
+                  <div className="form-grid">
+                    <label>
+                      Materi inti
+                      <textarea
+                        value={(level.learningPoints ?? []).join("\n")}
+                        onChange={(event) => updateProgramList(levelIndex, "learningPoints", event.target.value)}
+                        placeholder={"Logika coding dasar\nAnimasi dan storytelling"}
+                        style={{ minHeight: "120px" }}
+                      />
+                    </label>
+                    <label>
+                      Contoh project
+                      <textarea
+                        value={(level.projectExamples ?? []).join("\n")}
+                        onChange={(event) => updateProgramList(levelIndex, "projectExamples", event.target.value)}
+                        placeholder={"Maze game\nCerita interaktif"}
+                        style={{ minHeight: "120px" }}
+                      />
+                    </label>
+                  </div>
+                </AdminCard>
+              </>
+            ) : (
+              <AdminCard title="Belum ada level" description="Tambahkan level pertama untuk mulai mengisi software dan gambar.">
+                <button type="button" className="ghost-btn small" onClick={addProgram}>
+                  <PiPlusBold /> Tambah level
+                </button>
+              </AdminCard>
+            )}
+
+            <details className="level-advanced">
+              <summary>Pengaturan tampilan section</summary>
+              <AdminCard
+                title="Judul di halaman"
+                description="Teks di atas ketiga kartu level."
+              >
+                <div className="form-grid">
+                  <label>
+                    Label kecil
+                    <input
+                      value={content.programsSection.tagline}
+                      onChange={(event) => handleProgramsSectionChange("tagline", event.target.value)}
+                      placeholder="Level belajar"
+                    />
+                  </label>
+                  <label>
+                    Judul besar
+                    <textarea
+                      value={content.programsSection.title}
+                      onChange={(event) => handleProgramsSectionChange("title", event.target.value)}
+                      placeholder={"Belajar sesuai level anak"}
+                      style={{ minHeight: "90px" }}
+                    />
+                  </label>
+                </div>
+              </AdminCard>
+              <AdminCard
+                title="Hiasan di sekitar section"
+                description="Ikon kecil di sekeliling kartu. Biasanya tidak perlu diubah."
+              >
+                <div className="form-grid">
+                  <ImageInput label="Shape atas" value={content.programDecorations.topShape} onChange={(value) => handleProgramDecorationChange("topShape", value)} />
+                  <ImageInput label="Shape bawah" value={content.programDecorations.bottomShape} onChange={(value) => handleProgramDecorationChange("bottomShape", value)} />
+                  <ImageInput label="Ikon kiri" value={content.programDecorations.mask} onChange={(value) => handleProgramDecorationChange("mask", value)} />
+                  <ImageInput label="Ikon kanan" value={content.programDecorations.mask2} onChange={(value) => handleProgramDecorationChange("mask2", value)} />
+                  <ImageInput label="Ikon pensil" value={content.programDecorations.pencil} onChange={(value) => handleProgramDecorationChange("pencil", value)} />
+                  <ImageInput label="Ikon kompas" value={content.programDecorations.compass} onChange={(value) => handleProgramDecorationChange("compass", value)} />
+                </div>
+              </AdminCard>
+            </details>
 
             <PreviewFrame
               section="programs"
-              title="Program Pembelajaran"
-              description="Grid program lengkap sesuai tampilan website"
+              title="Pratinjau level"
+              description="Begitu tampil di halaman utama"
               content={content}
               templateMarkup={templateMarkup}
             />
-
-            <AdminCard
-              title="Dekorasi Program"
-              description="Atur ikon/shape yang tampil di sekitar section program"
-            >
-              <div className="form-grid">
-                <ImageInput
-                  label="Shape Atas"
-                  value={content.programDecorations.topShape}
-                  onChange={(value) => handleProgramDecorationChange("topShape", value)}
-                  helperText="Default: /assets/img/section-top-shape.png"
-                />
-                <ImageInput
-                  label="Shape Bawah"
-                  value={content.programDecorations.bottomShape}
-                  onChange={(value) => handleProgramDecorationChange("bottomShape", value)}
-                  helperText="Default: /assets/img/section-bottom-shape.png"
-                />
-                <ImageInput
-                  label="Ikon Code Cloud"
-                  value={content.programDecorations.mask}
-                  onChange={(value) => handleProgramDecorationChange("mask", value)}
-                  helperText="Default: /assets/img/tech/code-cloud.svg"
-                />
-                <ImageInput
-                  label="Ikon Circuit Plus"
-                  value={content.programDecorations.mask2}
-                  onChange={(value) => handleProgramDecorationChange("mask2", value)}
-                  helperText="Default: /assets/img/tech/circuit-plus.svg"
-                />
-                <ImageInput
-                  label="Ikon Code Pencil"
-                  value={content.programDecorations.pencil}
-                  onChange={(value) => handleProgramDecorationChange("pencil", value)}
-                  helperText="Default: /assets/img/tech/code-pencil.svg"
-                />
-                <ImageInput
-                  label="Ikon Chip Ruler"
-                  value={content.programDecorations.compass}
-                  onChange={(value) => handleProgramDecorationChange("compass", value)}
-                  helperText="Default: /assets/img/tech/chip-ruler.svg"
-                />
-              </div>
-            </AdminCard>
-
-            <AdminCard
-              title="Judul & Tagline Section Program"
-              description="Atur teks di bagian atas section program pada halaman utama."
-            >
-              <div className="form-grid">
-                <label>
-                  Tagline
-                  <input
-                    value={content.programsSection.tagline}
-                    onChange={(e) => handleProgramsSectionChange("tagline", e.target.value)}
-                    placeholder="Our Programs"
-                  />
-                </label>
-                <label>
-                  Judul Besar
-                  <textarea
-                    value={content.programsSection.title}
-                    onChange={(e) => handleProgramsSectionChange("title", e.target.value)}
-                    placeholder={"We Meet Kids At Their Level\nRegardless Of Their Age"}
-                    style={{ minHeight: "90px" }}
-                  />
-                  <span className="field-hint">
-                    Gunakan baris baru untuk mengganti baris judul. Baris baru akan otomatis dikonversi ke line break.
-                  </span>
-                </label>
-              </div>
-            </AdminCard>
-
-            <AdminCard
-              title="Daftar Program"
-              description="Kelola program-program yang ditawarkan sekolah"
-            >
-            <div className="list-header">
-              <p>{content.programs.length} Program Aktif</p>
-              <button className="ghost-btn small" onClick={addProgram}>
-                <PiPlusBold /> Tambah Program
-              </button>
-            </div>
-            <div className="admin-list">
-              {content.programs.map((program, index) => (
-                <div key={program.id} className="list-card">
-                  <div className="list-card-header">
-                    <strong>{program.title}</strong>
-                    <button onClick={() => removeProgram(index)}>
-                      <PiTrashBold />
-                    </button>
-                  </div>
-                  <div className="form-grid">
-                    <label>
-                      Nama Program
-                      <input
-                        value={program.title}
-                        onChange={(e) => updateProgram(index, "title", e.target.value)}
-                        placeholder="Program Creative Play"
-                      />
-                    </label>
-                    <label>
-                      Rentang Usia
-                      <input
-                        value={program.ageRange}
-                        onChange={(e) => updateProgram(index, "ageRange", e.target.value)}
-                        placeholder="3-5 Tahun"
-                      />
-                    </label>
-                    <label>
-                      Deskripsi Program
-                      <textarea
-                        value={program.description}
-                        onChange={(e) => updateProgram(index, "description", e.target.value)}
-                        placeholder="Program dirancang untuk mengembangkan..."
-                        style={{ minHeight: "100px" }}
-                      />
-                    </label>
-                    <ImageInput
-                      label="Gambar Card Level"
-                      value={program.image}
-                      onChange={(value) => updateProgram(index, "image", value)}
-                    />
-                    <p className="image-note">
-                      <strong>Rekomendasi:</strong> 560 × 360 px (rasio 14:9)
-                    </p>
-                    <label>
-                      Materi Inti
-                      <textarea
-                        value={(program.learningPoints ?? []).join("\n")}
-                        onChange={(e) => updateProgramList(index, "learningPoints", e.target.value)}
-                        placeholder={"Logika coding dasar\nAnimasi dan storytelling\nProblem solving"}
-                        style={{ minHeight: "110px" }}
-                      />
-                      <span className="field-hint">Satu poin per baris, maksimal 6 poin.</span>
-                    </label>
-                    <label>
-                      Contoh Project
-                      <textarea
-                        value={(program.projectExamples ?? []).join("\n")}
-                        onChange={(e) => updateProgramList(index, "projectExamples", e.target.value)}
-                        placeholder={"Maze game\nCerita interaktif\nPoster digital"}
-                        style={{ minHeight: "110px" }}
-                      />
-                      <span className="field-hint">Satu project per baris, maksimal 6 project.</span>
-                    </label>
-                    <label>
-                      Software & Tools
-                      <textarea
-                        value={(program.tools ?? []).join("\n")}
-                        onChange={(e) => updateProgramList(index, "tools", e.target.value)}
-                        placeholder={"Scratch\nCode.org\nCanva"}
-                        style={{ minHeight: "110px" }}
-                      />
-                      <span className="field-hint">Satu nama software per baris, maksimal 6 tools.</span>
-                    </label>
-                    <ImageInput
-                      label="Screenshot Showcase Project"
-                      value={program.projectImage ?? program.image}
-                      onChange={(value) => updateProgram(index, "projectImage", value)}
-                      helperText="Rekomendasi 1200 × 800 px. Tampil saat detail Level dibuka."
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </AdminCard>
-        </>
+          </>
         );
+      }
 
       case "freeTrial":
         return (

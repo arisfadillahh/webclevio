@@ -10,6 +10,7 @@ import type {
   BlogPost,
   HeroDecoration,
 } from "@/types/content";
+import { normalizeProgramTools } from "@/lib/program-tools";
 import { bindTemplate, DEFAULT_ROOT_ID } from "@/lib/themeBinding";
 
 const HERO_DECOR_SELECTORS: Record<string, string> = {
@@ -403,49 +404,6 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
     innovator: ["Siap membangun portfolio", "Tertarik software & AI", "Belajar mandiri & kolaboratif"],
   };
 
-  const toolMeta = [
-    {
-      match: ["scratch"],
-      icon: "/assets/img/program/detail/software-scratch.svg",
-      description: "Membuat game dan animasi dengan blok interaktif.",
-    },
-    {
-      match: ["code.org", "game lab"],
-      icon: "/assets/img/program/detail/software-codeorg.svg",
-      description: "Belajar logika game lewat blok dan JavaScript.",
-    },
-    {
-      match: ["minecraft"],
-      icon: "/assets/img/program/detail/software-minecraft.svg",
-      description: "Membangun dunia 3D sambil belajar coding.",
-    },
-    {
-      match: ["construct"],
-      icon: "/assets/img/program/detail/software-construct3.svg",
-      description: "Memahami game mechanics lewat project 2D.",
-    },
-    {
-      match: ["canva"],
-      icon: "/assets/img/program/detail/software-canva.svg",
-      description: "Mendesain visual, poster, dan presentasi digital.",
-    },
-    {
-      match: ["roblox"],
-      icon: "/assets/img/program/detail/software-roblox-studio.svg",
-      description: "Membangun dunia dan game 3D dengan Luau.",
-    },
-    {
-      match: ["html", "javascript", "css"],
-      icon: "/assets/img/program/detail/software-web.svg",
-      description: "Membuat website interaktif yang bisa dipublikasikan.",
-    },
-    {
-      match: ["python"],
-      icon: "/assets/img/program/detail/software-python.svg",
-      description: "Membangun otomasi, data, dan project AI dasar.",
-    },
-  ];
-
   const renderProjects = (items: string[]) => {
     if (!projectsList) return;
     projectsList.innerHTML = items
@@ -472,28 +430,32 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
     `;
   };
 
-  const renderTools = (items: string[]) => {
+  const renderTools = (items: SiteContent["programs"][number]["tools"]) => {
     if (!toolsList) return;
-    toolsList.innerHTML = items
-      .filter((item) => item.trim())
-      .slice(0, 3)
-      .map((item) => {
-        const cleanItem = item.trim();
-        const normalized = cleanItem.toLowerCase();
-        const meta = toolMeta.find((entry) => entry.match.some((term) => normalized.includes(term)));
-        const icon = meta?.icon ?? "/assets/img/program/detail/software-codeorg.svg";
-        const description = meta?.description ?? "Membantu anak mengubah ide menjadi karya digital.";
-        return `
-          <article class="program-detail-tool">
-            <span class="program-detail-tool-icon"><img src="${icon}" alt="" aria-hidden="true"></span>
-            <span>
-              <strong>${escapeMarkup(cleanItem)}</strong>
-              <small>${escapeMarkup(description)}</small>
-            </span>
-          </article>
-        `;
-      })
-      .join("");
+    const tools = normalizeProgramTools(items);
+    const collapsedToolCount = 6;
+    toolsList.innerHTML = tools
+      .map((tool, index) => `
+        <article class="program-detail-tool"${index >= collapsedToolCount ? " hidden" : ""} data-program-tool-extra>
+          <span class="program-detail-tool-icon"><img src="${escapeMarkup(tool.logo)}" alt="" aria-hidden="true"></span>
+          <strong>${escapeMarkup(tool.name)}</strong>
+        </article>`)
+      .join("") + (tools.length > collapsedToolCount
+        ? `<button class="program-detail-tools-toggle" type="button" aria-expanded="false">Lihat ${tools.length - collapsedToolCount} software lainnya <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>`
+        : "");
+
+    const toolToggle = toolsList.querySelector<HTMLButtonElement>(".program-detail-tools-toggle");
+    const extraTools = Array.from(toolsList.querySelectorAll<HTMLElement>("[data-program-tool-extra][hidden]"));
+    toolToggle?.addEventListener("click", () => {
+      const isExpanded = toolToggle.getAttribute("aria-expanded") === "true";
+      extraTools.forEach((item) => {
+        item.hidden = isExpanded;
+      });
+      toolToggle.setAttribute("aria-expanded", String(!isExpanded));
+      toolToggle.innerHTML = isExpanded
+        ? `Lihat ${extraTools.length} software lainnya <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>`
+        : `Ringkas daftar <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>`;
+    });
   };
 
   const closeDialog = (restoreFocus = true) => {

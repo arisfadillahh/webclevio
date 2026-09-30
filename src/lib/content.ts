@@ -5,6 +5,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { getDatabasePool, isDatabaseConfigured } from "@/lib/db";
+import { normalizeProgramTools } from "@/lib/program-tools";
 import type { BlogPost, EventItem, Program, SiteContent } from "@/types/content";
 
 const CONTENT_PATH = path.join(process.cwd(), "data", "content.json");
@@ -62,9 +63,11 @@ const DEFAULT_BENEFITS: SiteContent["benefits"] = {
   ],
 };
 
-const DEFAULT_PROGRAM_DETAILS: Array<
-  Pick<Program, "learningPoints" | "projectExamples" | "tools">
-> = [
+const DEFAULT_PROGRAM_DETAILS: Array<{
+  learningPoints: string[];
+  projectExamples: string[];
+  tools: string[];
+}> = [
   {
     learningPoints: ["Logika coding dasar", "Animasi dan storytelling", "Dasar desain digital"],
     projectExamples: ["Maze game", "Cerita interaktif", "Poster digital"],
@@ -93,7 +96,7 @@ function normalizePrograms(programs: Program[] | undefined): Program[] {
       projectExamples: Array.isArray(program.projectExamples)
         ? program.projectExamples
         : defaults.projectExamples,
-      tools: Array.isArray(program.tools) ? program.tools : defaults.tools,
+      tools: normalizeProgramTools(Array.isArray(program.tools) ? program.tools : defaults.tools),
       projectImage: program.projectImage || program.image,
     };
   });
