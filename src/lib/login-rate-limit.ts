@@ -2,6 +2,7 @@ import "server-only";
 
 import crypto from "node:crypto";
 
+import { selectClientAddress } from "@/lib/client-address";
 import { getDatabasePool, isDatabaseConfigured } from "@/lib/db";
 
 const WINDOW_MS = 15 * 60 * 1000;
@@ -33,21 +34,13 @@ function hashKey(value: string) {
   return crypto.createHash("sha256").update(value).digest("hex");
 }
 
-function getClientAddress(request: Request) {
-  const forwarded = request.headers.get("x-forwarded-for")
-    ?.split(",")
-    .map((value) => value.trim())
-    .filter(Boolean)
-    .at(-1);
-  return forwarded
-    || request.headers.get("x-real-ip")?.trim()
-    || "unknown";
-}
-
 export function getLoginRateLimitKeys(request: Request, identifier: string) {
   const account = identifier.trim().toLowerCase() || "<empty>";
-  const clientAddress = getClientAddress(request);
-  return [hashKey(`ip:${clientAddress}`), hashKey(`account:${account}`)];
+  const clientAddress = selectClientAddress(
+    request.headers.get("x-forwarded-for"),
+    request.headers.get("x-real-ip"),
+  );
+  return [hashKey(`ip:${clientAddress}|account:${account}`)];
 }
 
 function secondsUntil(timestamp: number | null, now = Date.now()) {
