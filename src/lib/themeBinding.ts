@@ -636,7 +636,7 @@ function bindEvents(root: HTMLElement, sectionContent: SiteContent["eventsSectio
       (item, index) => `
         <article class="showcase-story-card wow fadeInUp" data-wow-delay=".${3 + index}s">
           <div class="showcase-story-media">
-            <img src="${escapeMarkup(item.image || `/assets/img/instagram/${String((index % 6) + 1).padStart(2, "0")}.jpg`)}" alt="Placeholder dokumentasi ${escapeMarkup(item.title)}">
+            <img src="${escapeMarkup(item.image || `/assets/img/instagram/${String((index % 6) + 1).padStart(2, "0")}.jpg`)}" alt="Dokumentasi ${escapeMarkup(item.title)}">
             <span class="showcase-story-media-label">Dokumentasi karya</span>
           </div>
           <div class="showcase-story-copy">
