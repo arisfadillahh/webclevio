@@ -10795,6 +10795,41 @@ body .admin-shell .admin-action-bar.floating {
   }
 }
 
+/* The theme stylesheet hides .header-button at 1399px and below.
+   Laptops around 1280–1366px still use the desktop nav, so the LMS
+   button has to stay on screen in that range. */
+@media (max-width: 1399px) and (min-width: 1200px) {
+  #clevio-template-root .clevio-navbar .header-right > .header-button {
+    display: block !important;
+  }
+
+  #clevio-template-root .clevio-navbar .header-main,
+  #clevio-template-root .clevio-navbar .header-main.style-2 {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  #clevio-template-root .clevio-navbar .header-button .theme-btn {
+    min-width: 0;
+    min-height: 48px;
+    padding-inline: 14px !important;
+  }
+
+  #clevio-template-root .clevio-navbar .header-button .theme-btn b {
+    font-size: 14px;
+  }
+
+  #clevio-template-root .clevio-navbar .main-menu nav > ul {
+    gap: 2px;
+  }
+
+  #clevio-template-root .clevio-navbar .main-menu nav > ul > li > a {
+    min-height: 44px;
+    padding-inline: 10px;
+    font-size: 14px;
+  }
+}
+
 @media (max-width: 1199px) {
   #clevio-template-root header.clevio-navbar,
   #clevio-template-root header.clevio-navbar.sticky {
