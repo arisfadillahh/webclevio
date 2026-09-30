@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { validateAuthConfig } from "../src/lib/auth.ts";
+import { selectClientAddress } from "../src/lib/client-address.ts";
 import { getPostgresSslConfig } from "../src/lib/postgres-ssl.ts";
 import { readBoundedJson, RequestBodyTooLargeError } from "../src/lib/request-body.ts";
 import { getSafeLocalPath } from "../src/lib/safe-local-path.ts";
@@ -69,6 +70,24 @@ test("validateAuthConfig fails closed on defaults and enforces production streng
     password: "a-strong-random-password",
     secret: "a".repeat(64),
   });
+});
+
+test("selectClientAddress ignores the internal proxy hop", () => {
+  assert.equal(
+    selectClientAddress("203.0.113.9, 172.18.0.3", "172.18.0.3"),
+    "203.0.113.9",
+  );
+  assert.equal(
+    selectClientAddress("1.2.3.4, 203.0.113.9, 172.18.0.3", "172.18.0.3"),
+    "203.0.113.9",
+  );
+  assert.equal(
+    selectClientAddress("2001:db8::10, ::ffff:172.18.0.3", null),
+    "2001:db8::10",
+  );
+  assert.equal(selectClientAddress(null, "198.51.100.20"), "198.51.100.20");
+  assert.equal(selectClientAddress("172.18.0.3", "172.18.0.3"), "172.18.0.3");
+  assert.equal(selectClientAddress(null, null), "unknown");
 });
 
 test("getPostgresSslConfig verifies peers and supports explicit CA material", () => {
