@@ -2309,7 +2309,7 @@ const updateFooterContact = (
                     onChange={(e) => handleWorkProcessFieldChange("description", e.target.value)}
                     placeholder="Jelaskan singkat manfaat rangkaian tahap belajar."
                     style={{ minHeight: "90px" }}
-                    maxLength={180}
+                    maxLength={480}
                   />
                 </label>
               </div>

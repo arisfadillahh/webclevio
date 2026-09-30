@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSiteContent, updateSiteContent } from "@/lib/content";
-import { validateContentTextLimits } from "@/lib/content-limits";
+import { formatLimitError, validateContentTextLimits } from "@/lib/content-limits";
 import type { SiteContent } from "@/types/content";
 import { isAuthorizedAdminRequest } from "@/lib/admin-session";
 
@@ -41,7 +41,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         {
           ok: false,
-          message: "Beberapa teks melebihi batas karakter.",
+          message: formatLimitError(limitIssues),
           issues: limitIssues.slice(0, 20),
         },
         { status: 400 },
