@@ -6,7 +6,7 @@ export interface ContentLimitIssue {
 
 const MEDIA_KEY_PATTERN = /(image|gambar|logo|avatar|shape|icon|href|link|tautan|url|video|media)/i;
 const BODY_KEY_PATTERN = /(^|\.)(body)$/i;
-const LONG_TEXT_KEY_PATTERN = /(description|excerpt|message|text|blurb|content)/i;
+const LONG_TEXT_KEY_PATTERN = /(description|deskripsi|excerpt|message|text|blurb|content)/i;
 const TITLE_KEY_PATTERN = /(title|heading|headline)/i;
 const SHORT_TEXT_KEY_PATTERN = /(label|tagline|eyebrow|name|role|author|days|time|date|age|highlight)/i;
 const CONTACT_KEY_PATTERN = /(phone|whatsapp)/i;
@@ -19,10 +19,19 @@ export function getContentTextLimit(key: string, multiline = false) {
   if (EMAIL_KEY_PATTERN.test(key)) return 160;
   if (CONTACT_KEY_PATTERN.test(key)) return 40;
   if (ADDRESS_KEY_PATTERN.test(key)) return multiline ? 220 : 140;
-  if (LONG_TEXT_KEY_PATTERN.test(key)) return multiline ? 360 : 220;
+  if (LONG_TEXT_KEY_PATTERN.test(key)) return multiline ? 480 : 220;
   if (TITLE_KEY_PATTERN.test(key)) return multiline ? 140 : 100;
   if (SHORT_TEXT_KEY_PATTERN.test(key)) return 80;
   return multiline ? 300 : 120;
+}
+
+export function formatLimitError(issues: ContentLimitIssue[]) {
+  const details = issues
+    .slice(0, 3)
+    .map((issue) => `${issue.path} (${issue.length}/${issue.limit})`)
+    .join(", ");
+  const extra = issues.length > 3 ? ` dan ${issues.length - 3} lainnya` : "";
+  return `Beberapa teks melebihi batas karakter: ${details}${extra}.`;
 }
 
 export function validateContentTextLimits(value: unknown) {
