@@ -231,6 +231,7 @@ export interface BlogPost {
   body: string;
   gallery: string[];
   galleryMode: "carousel" | "grid";
+  publishedAt?: string;
 }
 
 export interface BlogSection {

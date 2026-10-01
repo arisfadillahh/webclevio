@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { PiCaretLeftBold, PiCaretRightBold, PiImagesBold } from "react-icons/pi";
 
+import { usePublicBase } from "@/components/PublicBase";
+import { withBase } from "@/lib/camp-path";
 import type { BlogPost } from "@/types/content";
 
 type Props = {
@@ -13,8 +15,10 @@ type Props = {
 };
 
 export default function ArticleMediaGallery({ title, images, mode }: Props) {
+  const base = usePublicBase();
+  const sources = images.map((image) => withBase(base, image));
   const [activeIndex, setActiveIndex] = useState(0);
-  if (images.length === 0) return null;
+  if (sources.length === 0) return null;
 
   if (mode === "grid") {
     return (
@@ -24,7 +28,7 @@ export default function ArticleMediaGallery({ title, images, mode }: Props) {
           <div><small>Dokumentasi</small><h2 id="article-gallery-title">Galeri kegiatan</h2></div>
         </div>
         <div className="article-media-grid">
-          {images.map((image, index) => (
+          {sources.map((image, index) => (
             <figure key={`${image}-${index}`}>
               <Image src={image} alt={`${title} — dokumentasi ${index + 1}`} fill sizes="(max-width: 700px) 100vw, 50vw" unoptimized />
             </figure>
@@ -34,29 +38,29 @@ export default function ArticleMediaGallery({ title, images, mode }: Props) {
     );
   }
 
-  const showPrevious = () => setActiveIndex((current) => (current - 1 + images.length) % images.length);
-  const showNext = () => setActiveIndex((current) => (current + 1) % images.length);
+  const showPrevious = () => setActiveIndex((current) => (current - 1 + sources.length) % sources.length);
+  const showNext = () => setActiveIndex((current) => (current + 1) % sources.length);
 
   return (
     <section className="article-media-section" aria-labelledby="article-carousel-title">
       <div className="article-media-heading">
         <span><PiImagesBold /></span>
         <div><small>Dokumentasi</small><h2 id="article-carousel-title">Galeri kegiatan</h2></div>
-        <div className="article-carousel-count" aria-live="polite">{activeIndex + 1} / {images.length}</div>
+        <div className="article-carousel-count" aria-live="polite">{activeIndex + 1} / {sources.length}</div>
       </div>
       <div className="article-carousel">
         <div className="article-carousel-stage">
-          <Image src={images[activeIndex]} alt={`${title} — dokumentasi ${activeIndex + 1}`} fill sizes="(max-width: 900px) 100vw, 820px" unoptimized />
-          {images.length > 1 ? (
+          <Image src={sources[activeIndex]} alt={`${title} — dokumentasi ${activeIndex + 1}`} fill sizes="(max-width: 900px) 100vw, 820px" unoptimized />
+          {sources.length > 1 ? (
             <>
               <button type="button" className="is-previous" onClick={showPrevious} aria-label="Gambar sebelumnya"><PiCaretLeftBold /></button>
               <button type="button" className="is-next" onClick={showNext} aria-label="Gambar berikutnya"><PiCaretRightBold /></button>
             </>
           ) : null}
         </div>
-        {images.length > 1 ? (
+        {sources.length > 1 ? (
           <div className="article-carousel-thumbnails" aria-label="Pilih gambar dokumentasi">
-            {images.map((image, index) => (
+            {sources.map((image, index) => (
               <button key={`${image}-${index}`} type="button" className={index === activeIndex ? "is-active" : ""} onClick={() => setActiveIndex(index)} aria-label={`Tampilkan gambar ${index + 1}`} aria-current={index === activeIndex ? "true" : undefined}>
                 <Image src={image} alt="" fill sizes="110px" unoptimized />
               </button>

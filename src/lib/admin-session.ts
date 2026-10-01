@@ -3,7 +3,9 @@ import "server-only";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { withBase } from "@/lib/camp-path";
 import { ADMIN_SESSION_COOKIE, isValidToken } from "@/lib/auth";
+import { getRequestBasePath } from "@/lib/request-base";
 
 export async function hasAdminSession() {
   const cookieStore = await cookies();
@@ -12,7 +14,9 @@ export async function hasAdminSession() {
 
 export async function requireAdminSession(returnTo: string) {
   if (!(await hasAdminSession())) {
-    redirect(`/login?from=${encodeURIComponent(returnTo)}`);
+    const base = await getRequestBasePath();
+    const destination = withBase(base, returnTo);
+    redirect(`${withBase(base, "/login")}?from=${encodeURIComponent(destination)}`);
   }
 }
 

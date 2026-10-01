@@ -3,7 +3,9 @@ import Image from "next/image";
 import { PiArrowRightBold, PiCalendarBlankBold, PiMapPinBold } from "react-icons/pi";
 
 import ContentSiteShell from "@/components/content/ContentSiteShell";
+import { withBase } from "@/lib/camp-path";
 import { getSiteContent } from "@/lib/content";
+import { getRequestBasePath } from "@/lib/request-base";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,8 @@ function eventHref(href: string) {
 }
 
 export default async function EventsPage() {
-  const content = await getSiteContent();
+  const [content, base] = await Promise.all([getSiteContent(), getRequestBasePath()]);
+  const href = (path: string) => withBase(base, path);
   const events = content.events.filter((event) => event.status === "published");
 
   return (
@@ -34,16 +37,16 @@ export default async function EventsPage() {
         <div className="content-site-container event-list-grid">
           {events.map((event) => (
             <article key={event.id} className="event-list-card">
-              <a href={eventHref(event.landingPageUrl)} className="event-list-media">
-                <Image src={event.image} alt={event.title} fill sizes="(max-width: 900px) 100vw, 42vw" unoptimized />
+              <a href={href(eventHref(event.landingPageUrl))} className="event-list-media">
+                <Image src={withBase(base, event.image)} alt={event.title} fill sizes="(max-width: 900px) 100vw, 42vw" unoptimized />
                 <span>{event.date}</span>
               </a>
               <div className="event-list-content">
                 <p className="event-list-eyebrow">{event.audience}</p>
-                <h2><a href={eventHref(event.landingPageUrl)}>{event.title}</a></h2>
+                <h2><a href={href(eventHref(event.landingPageUrl))}>{event.title}</a></h2>
                 <p>{event.description}</p>
                 <div className="event-list-details"><span><PiCalendarBlankBold /> {event.time}</span><span><PiMapPinBold /> {event.location}</span></div>
-                <a href={eventHref(event.landingPageUrl)} className="content-text-link">Buka landing page <PiArrowRightBold /></a>
+                <a href={href(eventHref(event.landingPageUrl))} className="content-text-link">Buka landing page <PiArrowRightBold /></a>
               </div>
             </article>
           ))}

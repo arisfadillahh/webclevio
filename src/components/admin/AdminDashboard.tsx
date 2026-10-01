@@ -4,6 +4,8 @@ import { useMemo, useState, ChangeEvent, useId, useEffect, useRef } from "react"
 import type { ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { usePublicBase, usePublicPath } from "@/components/PublicBase";
+import { browserPublicPath } from "@/lib/camp-path";
 import { programScreenshots } from "@/lib/program-screenshots";
 import { defaultToolLogo, normalizeProgramTools } from "@/lib/program-tools";
 import type { NavItem, ProgramTool, SiteContent } from "@/types/content";
@@ -86,7 +88,7 @@ function ImageInput({
         formData.append("previousPath", value);
       }
 
-      const res = await fetch("/api/upload", {
+      const res = await fetch(browserPublicPath("/api/upload"), {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -267,6 +269,7 @@ const SAFE_CONTENT_SECTIONS = new Set<ActiveSection>([
 
 export default function AdminDashboard({ initialContent, templateMarkup, embedded = false }: Props) {
   const router = useRouter();
+  const publicPath = usePublicPath();
   const [content, setContent] = useState<SiteContent>({
     ...initialContent,
     about: {
@@ -1160,7 +1163,7 @@ const updateFooterContact = (
     setStatus("saving");
     setSaveError(null);
     try {
-      const response = await fetch("/api/content", {
+      const response = await fetch(browserPublicPath("/api/content"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -1191,8 +1194,8 @@ const updateFooterContact = (
   };
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.replace("/login");
+    await fetch(browserPublicPath("/api/auth/logout"), { method: "POST" });
+    router.replace(publicPath("/login"));
     router.refresh();
   };
 
@@ -1301,7 +1304,7 @@ const updateFooterContact = (
                   <li>Buka pratinjau atau halaman publik.</li>
                   <li>Simpan setelah hasilnya sesuai.</li>
                 </ol>
-                <a href="/" target="_blank" rel="noreferrer">Buka website <PiArrowSquareOutBold /></a>
+                <a href={publicPath("/")} target="_blank" rel="noreferrer">Buka website <PiArrowSquareOutBold /></a>
               </section>
             </div>
           </div>
@@ -2471,7 +2474,7 @@ const updateFooterContact = (
                 <h2>Event & Link Landing Page</h2>
                 <p>Atur kartu event yang tampil di website. Setiap kartu langsung membuka landing page yang sudah Anda siapkan.</p>
               </div>
-              <a href="/events" target="_blank" rel="noreferrer" className="context-action-link">
+              <a href={publicPath("/events")} target="_blank" rel="noreferrer" className="context-action-link">
                 Lihat halaman event <PiArrowSquareOutBold />
               </a>
             </div>
@@ -2566,7 +2569,7 @@ const updateFooterContact = (
                 <h2>Artikel & Berita</h2>
                 <p>Kelola kartu artikel sekaligus isi halaman artikelnya. Artikel draft tidak akan terlihat oleh pengunjung.</p>
               </div>
-              <a href="/articles" target="_blank" rel="noreferrer" className="context-action-link">
+              <a href={publicPath("/articles")} target="_blank" rel="noreferrer" className="context-action-link">
                 Lihat semua artikel <PiArrowSquareOutBold />
               </a>
             </div>
@@ -3172,7 +3175,7 @@ const updateFooterContact = (
             <h1>Atur tampilan website</h1>
             <p>Pilih bagian di sebelah kiri, periksa preview, lalu simpan saat kontennya sudah sesuai.</p>
           </div>
-          <a href="/" target="_blank" rel="noreferrer" className="production-secondary-button">Lihat website <PiArrowSquareOutBold /></a>
+          <a href={publicPath("/")} target="_blank" rel="noreferrer" className="production-secondary-button">Lihat website <PiArrowSquareOutBold /></a>
         </header>
 
         <div className="production-content-guidance">
@@ -3352,7 +3355,7 @@ const updateFooterContact = (
               <h1>{navigationItems.find((item) => item.id === activeSection)?.label ?? "Dashboard"}</h1>
               <p className="admin-subtitle">{navigationItems.find((item) => item.id === activeSection)?.description ?? "Kelola konten website."}</p>
             </div>
-            <a href="/" target="_blank" rel="noreferrer" className="admin-open-site">Buka Website <PiArrowSquareOutBold /></a>
+            <a href={publicPath("/")} target="_blank" rel="noreferrer" className="admin-open-site">Buka Website <PiArrowSquareOutBold /></a>
           </div>
           {renderMainContent()}
         </main>
@@ -3470,6 +3473,7 @@ function SectionPreviewCanvas({
   initialHeight = 180,
   activeProgramIndex = 0,
 }: SectionPreviewCanvasProps) {
+  const publicBase = usePublicBase();
   const uniqueId = useId().replace(/:/g, "");
   const previewRootId = `preview-source-${uniqueId}`;
   const previewFrameRef = useRef<HTMLIFrameElement>(null);
@@ -3547,7 +3551,7 @@ function SectionPreviewCanvas({
       previewFrame.srcdoc = `<!doctype html>
         <html lang="id">
           <head>
-            <base href="${window.location.origin}/">
+            <base href="${window.location.origin}${publicBase}/">
             <meta name="viewport" content="width=${PREVIEW_CANVAS_WIDTH}">
             ${stylesheetLinks}
             <style>
@@ -3618,7 +3622,7 @@ function SectionPreviewCanvas({
       resizeObserver.disconnect();
       previewFrame.removeEventListener("load", measureFrame);
     };
-  }, [activeProgramIndex, allowedKeys, initialHeight, markup, previewRootId]);
+  }, [activeProgramIndex, allowedKeys, initialHeight, markup, previewRootId, publicBase]);
 
   return (
     <div

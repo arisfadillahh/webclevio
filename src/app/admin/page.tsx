@@ -11,13 +11,17 @@ import {
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminSession } from "@/lib/admin-session";
+import { withBase } from "@/lib/camp-path";
 import { getSiteContent } from "@/lib/content";
 import { getContentStorageMode } from "@/lib/db";
+import { getRequestBasePath } from "@/lib/request-base";
 
 export const metadata = { title: "Dashboard | Clevio CMS" };
 
 export default async function AdminPage() {
   await requireAdminSession("/admin");
+  const base = await getRequestBasePath();
+  const href = (path: string) => withBase(base, path);
   const [content, storageMode] = await Promise.all([
     getSiteContent(),
     Promise.resolve(getContentStorageMode()),
@@ -32,7 +36,7 @@ export default async function AdminPage() {
           eyebrow="Workspace"
           title="Ringkasan website"
           description="Kelola konten yang boleh berubah tanpa menyentuh kode, layout, atau konfigurasi internal website."
-          actions={<Link className="production-secondary-button" href="/" target="_blank">Lihat website</Link>}
+          actions={<Link className="production-secondary-button" href={href("/")} target="_blank">Lihat website</Link>}
         />
 
         {storageMode === "json-development" ? (
@@ -55,9 +59,9 @@ export default async function AdminPage() {
           <div className="production-dashboard-panel">
             <div className="production-panel-heading"><div><span>Akses cepat</span><h2>Pilih area kerja</h2></div></div>
             <div className="production-quick-links">
-              <Link href="/admin/content"><PiPencilSimpleBold /><span><strong>Konten website</strong><small>Bagian atas, level, dan footer</small></span></Link>
-              <Link href="/admin/articles"><PiArticleBold /><span><strong>Artikel</strong><small>Tulis, simpan draft, lalu publikasikan</small></span></Link>
-              <Link href="/admin/events"><PiCalendarBold /><span><strong>Event</strong><small>Atur kartu dan link landing page</small></span></Link>
+              <Link href={href("/admin/content")}><PiPencilSimpleBold /><span><strong>Konten website</strong><small>Bagian atas, level, dan footer</small></span></Link>
+              <Link href={href("/admin/articles")}><PiArticleBold /><span><strong>Artikel</strong><small>Tulis, simpan draft, lalu publikasikan</small></span></Link>
+              <Link href={href("/admin/events")}><PiCalendarBold /><span><strong>Event</strong><small>Atur kartu dan link landing page</small></span></Link>
             </div>
           </div>
 

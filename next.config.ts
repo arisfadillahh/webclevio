@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  assetPrefix: "/camp",
   async rewrites() {
     return {
       beforeFiles: [

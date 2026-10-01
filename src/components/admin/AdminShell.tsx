@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { usePublicPath } from "@/components/PublicBase";
+import { browserPublicPath, stripCampPrefix } from "@/lib/camp-path";
 import { useState, type ReactNode } from "react";
 import {
   PiArticleBold,
@@ -28,15 +30,16 @@ const navigation = [
 ];
 
 export default function AdminShell({ children, storageMode }: Props) {
-  const pathname = usePathname();
+  const pathname = stripCampPrefix(usePathname() || "/");
+  const publicPath = usePublicPath();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
   const logout = async () => {
     setLoggingOut(true);
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.replace("/login");
+    await fetch(browserPublicPath("/api/auth/logout"), { method: "POST" });
+    router.replace(publicPath("/login"));
     router.refresh();
   };
 
@@ -76,7 +79,7 @@ export default function AdminShell({ children, storageMode }: Props) {
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={publicPath(item.href)}
                 className={active ? "is-active" : ""}
                 onClick={() => setMobileOpen(false)}
               >
@@ -91,7 +94,7 @@ export default function AdminShell({ children, storageMode }: Props) {
         </nav>
 
         <div className="production-admin-sidebar-footer">
-          <Link href="/" target="_blank">
+          <Link href={publicPath("/")} target="_blank">
             <PiArrowSquareOutBold /> Lihat website
           </Link>
           <button type="button" onClick={logout} disabled={loggingOut}>

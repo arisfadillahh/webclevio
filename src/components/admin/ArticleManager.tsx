@@ -4,6 +4,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import { PiArticleBold, PiCheckBold, PiMagnifyingGlassBold, PiPlusBold, PiTrashBold } from "react-icons/pi";
 
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import { browserPublicPath } from "@/lib/camp-path";
 import ArticleGalleryEditor from "@/components/admin/ArticleGalleryEditor";
 import ImageUploadField from "@/components/admin/ImageUploadField";
 import type { BlogPost } from "@/types/content";
@@ -59,7 +60,7 @@ export default function ArticleManager({ initialItems }: Props) {
     setMessage(null);
     setIssues([]);
     const isNew = !draft.id;
-    const response = await fetch(isNew ? "/api/admin/articles" : `/api/admin/articles/${encodeURIComponent(draft.id)}`, {
+    const response = await fetch(browserPublicPath(isNew ? "/api/admin/articles" : `/api/admin/articles/${encodeURIComponent(draft.id)}`), {
       method: isNew ? "POST" : "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(draft),
@@ -79,7 +80,7 @@ export default function ArticleManager({ initialItems }: Props) {
   const remove = async () => {
     if (!draft?.id) return;
     setRequestState("deleting");
-    const response = await fetch(`/api/admin/articles/${encodeURIComponent(draft.id)}`, { method: "DELETE" });
+    const response = await fetch(browserPublicPath(`/api/admin/articles/${encodeURIComponent(draft.id)}`), { method: "DELETE" });
     const result = await response.json() as { ok: boolean; message?: string };
     setRequestState("idle");
     if (!response.ok) {

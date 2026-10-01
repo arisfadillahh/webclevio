@@ -28,6 +28,7 @@ export async function getTemplateMarkup(initialLogo?: string): Promise<string> {
 export async function getBoundTemplateMarkup(
   content: SiteContent,
   rootId: string = DEFAULT_ROOT_ID,
+  publicBase = "",
 ): Promise<string> {
   const markup = await getTemplateMarkup();
   const { document } = parseHTML(`<div id="${rootId}">${markup}</div>`);
@@ -39,6 +40,7 @@ export async function getBoundTemplateMarkup(
     enableSmoothScroll: false,
     rootId,
     documentRef: document,
+    publicBase,
   });
 
   return root.innerHTML;

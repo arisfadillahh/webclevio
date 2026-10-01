@@ -11,6 +11,7 @@ import type {
   HeroDecoration,
 } from "@/types/content";
 import { normalizeProgramTools } from "@/lib/program-tools";
+import { usePublicBase } from "@/components/PublicBase";
 import { bindTemplate, DEFAULT_ROOT_ID } from "@/lib/themeBinding";
 
 const HERO_DECOR_SELECTORS: Record<string, string> = {
@@ -29,9 +30,13 @@ interface Props {
   content: SiteContent;
   rootId?: string;
   activeProgramIndex?: number;
+  publicBase?: string;
 }
 
-export default function ThemeBinder({ content, rootId = DEFAULT_ROOT_ID, activeProgramIndex = 0 }: Props) {
+export default function ThemeBinder({ content, rootId = DEFAULT_ROOT_ID, activeProgramIndex = 0, publicBase }: Props) {
+  const contextBase = usePublicBase();
+  const base = publicBase ?? contextBase;
+
   useEffect(() => {
     const root = document.getElementById(rootId);
     if (!root) return;
@@ -41,13 +46,14 @@ export default function ThemeBinder({ content, rootId = DEFAULT_ROOT_ID, activeP
       enableSmoothScroll: true,
       rootId,
       documentRef: document,
+      publicBase: base,
       activeProgramIndex,
     });
 
     return () => {
       cleanups.forEach((cleanup) => cleanup());
     };
-  }, [activeProgramIndex, content, rootId]);
+  }, [activeProgramIndex, base, content, rootId]);
 
   return null;
 }

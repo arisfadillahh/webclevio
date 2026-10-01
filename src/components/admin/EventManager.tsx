@@ -5,6 +5,7 @@ import Image from "next/image";
 import { PiCalendarBold, PiCheckBold, PiLinkBold, PiMagnifyingGlassBold, PiPlusBold, PiTrashBold } from "react-icons/pi";
 
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import { browserPublicPath } from "@/lib/camp-path";
 import ImageUploadField from "@/components/admin/ImageUploadField";
 import type { EventItem } from "@/types/content";
 
@@ -56,7 +57,7 @@ export default function EventManager({ initialItems }: Props) {
     setMessage(null);
     setIssues([]);
     const isNew = !draft.id;
-    const response = await fetch(isNew ? "/api/admin/events" : `/api/admin/events/${encodeURIComponent(draft.id)}`, {
+    const response = await fetch(browserPublicPath(isNew ? "/api/admin/events" : `/api/admin/events/${encodeURIComponent(draft.id)}`), {
       method: isNew ? "POST" : "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(draft),
@@ -76,7 +77,7 @@ export default function EventManager({ initialItems }: Props) {
   const remove = async () => {
     if (!draft?.id) return;
     setRequestState("deleting");
-    const response = await fetch(`/api/admin/events/${encodeURIComponent(draft.id)}`, { method: "DELETE" });
+    const response = await fetch(browserPublicPath(`/api/admin/events/${encodeURIComponent(draft.id)}`), { method: "DELETE" });
     const result = await response.json() as { ok: boolean; message?: string };
     setRequestState("idle");
     if (!response.ok) {

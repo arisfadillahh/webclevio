@@ -1,4 +1,6 @@
+import { withBase } from "@/lib/camp-path";
 import { isHomeSectionVisible, isKnownHomeSection } from "@/lib/home-sections";
+import { applyRecentFooterPosts } from "@/lib/latest-posts";
 import { programScreenshots } from "@/lib/program-screenshots";
 import { normalizeProgramTools } from "@/lib/program-tools";
 import type {
@@ -16,6 +18,7 @@ interface BindOptions {
   rootId?: string;
   documentRef?: Document;
   activeProgramIndex?: number;
+  publicBase?: string;
 }
 
 export function bindTemplate(
@@ -27,6 +30,7 @@ export function bindTemplate(
     rootId = DEFAULT_ROOT_ID,
     documentRef,
     activeProgramIndex = 0,
+    publicBase = "",
   }: BindOptions = {},
 ): Array<() => void> {
   const doc = documentRef ?? (typeof document !== "undefined" ? document : undefined);
@@ -53,6 +57,7 @@ export function bindTemplate(
   bindFooter(root, content);
   reorderLandingSections(root, doc);
   if (rootId === DEFAULT_ROOT_ID) applySectionVisibility(root, content);
+  applyPublicBase(root, publicBase);
 
   const smoothScrollCleanup = enableSmoothScroll ? enableSmoothScrollInternal(root, doc) : undefined;
   if (smoothScrollCleanup) cleanups.push(smoothScrollCleanup);
@@ -965,8 +970,22 @@ function bindFooter(root: HTMLElement, content: SiteContent) {
     }
   });
 
+  applyRecentFooterPosts(root, content.blog.posts);
+
   const footerText = root.querySelector(".footer-bottom p");
   if (footerText) footerText.textContent = content.footer.text;
+}
+
+function applyPublicBase(root: HTMLElement, base: string) {
+  if (!base) return;
+  root.querySelectorAll<HTMLElement>("[href], [src], [action]").forEach((element) => {
+    for (const attribute of ["href", "src", "action"] as const) {
+      const value = element.getAttribute(attribute);
+      if (!value) continue;
+      const next = withBase(base, value);
+      if (next !== value) element.setAttribute(attribute, next);
+    }
+  });
 }
 
 function enableSmoothScrollInternal(root: HTMLElement, doc?: Document) {

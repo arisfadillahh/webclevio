@@ -219,6 +219,8 @@ type ArticleRow = {
   status: "draft" | "published";
   gallery_images: unknown;
   gallery_mode: "carousel" | "grid";
+  published_at?: Date | string | null;
+  created_at?: Date | string | null;
 };
 
 type EventRow = {
@@ -233,6 +235,12 @@ type EventRow = {
   audience: string;
   landing_page_url: string;
 };
+
+function isoTimestamp(value: Date | string | null | undefined) {
+  if (!value) return undefined;
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
 
 function mapArticle(row: ArticleRow): BlogPost {
   return {
@@ -251,6 +259,7 @@ function mapArticle(row: ArticleRow): BlogPost {
       ? row.gallery_images.filter((image): image is string => typeof image === "string" && image.length > 0).slice(0, 8)
       : [],
     galleryMode: row.gallery_mode === "grid" ? "grid" : "carousel",
+    publishedAt: isoTimestamp(row.published_at) ?? isoTimestamp(row.created_at),
   };
 }
 
@@ -276,7 +285,8 @@ export async function getSiteContent(): Promise<SiteContent> {
   const [websiteResult, articleResult, eventResult] = await Promise.all([
     pool.query<{ payload: SiteContent }>("SELECT payload FROM site_content WHERE id = 'main'"),
     pool.query<ArticleRow>(
-      `SELECT id, slug, title, excerpt, body, image_url, date_label, author, category, reading_time, status, gallery_images, gallery_mode
+      `SELECT id, slug, title, excerpt, body, image_url, date_label, author, category, reading_time, status, gallery_images, gallery_mode,
+              published_at, created_at
        FROM articles
        ORDER BY COALESCE(published_at, created_at) DESC, created_at DESC`,
     ),

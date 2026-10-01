@@ -6,7 +6,9 @@ import { PiArrowLeftBold, PiArrowRightBold, PiClockBold } from "react-icons/pi";
 
 import ContentSiteShell from "@/components/content/ContentSiteShell";
 import ArticleMediaGallery from "@/components/content/ArticleMediaGallery";
+import { withBase } from "@/lib/camp-path";
 import { getSiteContent } from "@/lib/content";
+import { getRequestBasePath } from "@/lib/request-base";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +23,8 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 }
 
 export default async function ArticleDetailPage({ params }: ArticlePageProps) {
-  const [{ slug }, content] = await Promise.all([params, getSiteContent()]);
+  const [{ slug }, content, base] = await Promise.all([params, getSiteContent(), getRequestBasePath()]);
+  const href = (path: string) => withBase(base, path);
   const post = content.blog.posts.find((item) => item.slug === slug && item.status === "published");
   if (!post) notFound();
 
@@ -34,7 +37,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
       <article className="article-detail">
         <header className="article-detail-header">
           <div className="content-site-container article-detail-heading">
-            <Link href="/articles" className="content-back-link"><PiArrowLeftBold /> Semua artikel</Link>
+            <Link href={href("/articles")} className="content-back-link"><PiArrowLeftBold /> Semua artikel</Link>
             <span className="content-status-badge">{post.category}</span>
             <h1>{post.title}</h1>
             <p className="article-detail-lead">{post.excerpt}</p>
@@ -45,7 +48,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
         <div className="content-site-container article-detail-layout">
           <div className="article-detail-main">
             <div className="article-detail-cover">
-              <Image src={post.image} alt={post.title} fill sizes="(max-width: 900px) 100vw, 820px" priority unoptimized />
+              <Image src={withBase(base, post.image)} alt={post.title} fill sizes="(max-width: 900px) 100vw, 820px" priority unoptimized />
             </div>
             <div className="article-prose">
               {post.body.split(/\n{2,}/).filter(Boolean).map((paragraph, index) => <p key={`${post.id}-${index}`}>{paragraph}</p>)}
@@ -56,17 +59,17 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
             <span>Ditulis oleh</span>
             <strong>{post.author}</strong>
             <p>Dapatkan insight dan informasi kegiatan terbaru dari Clevio Innovator Camp.</p>
-            <Link href="/events" className="content-primary-button">Lihat event Clevio <PiArrowRightBold /></Link>
+            <Link href={href("/events")} className="content-primary-button">Lihat event Clevio <PiArrowRightBold /></Link>
           </aside>
         </div>
 
         {related.length > 0 && (
           <section className="related-content-section">
             <div className="content-site-container">
-              <div className="content-section-heading"><div><span>Artikel lainnya</span><h2>Lanjutkan membaca</h2></div><Link href="/articles">Lihat semua <PiArrowRightBold /></Link></div>
+              <div className="content-section-heading"><div><span>Artikel lainnya</span><h2>Lanjutkan membaca</h2></div><Link href={href("/articles")}>Lihat semua <PiArrowRightBold /></Link></div>
               <div className="related-content-grid">
                 {related.map((item) => (
-                  <Link key={item.id} href={`/articles/${item.slug}`} className="related-content-card">
+                  <Link key={item.id} href={href(`/articles/${item.slug}`)} className="related-content-card">
                     <span>{item.category}</span><h3>{item.title}</h3><p>{item.excerpt}</p>
                   </Link>
                 ))}

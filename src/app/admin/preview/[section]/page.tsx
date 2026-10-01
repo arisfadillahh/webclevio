@@ -5,7 +5,9 @@ import { getSiteContent } from "@/lib/content";
 import PreviewVisibility from "@/components/admin/PreviewVisibility";
 import PreviewAssets from "@/components/admin/PreviewAssets";
 import { ADMIN_SESSION_COOKIE, isValidToken } from "@/lib/auth";
+import { withBase } from "@/lib/camp-path";
 import { getPreviewKeys } from "@/lib/preview";
+import { getRequestBasePath } from "@/lib/request-base";
 
 interface Props {
   params: Promise<{ section: string }>;
@@ -28,7 +30,8 @@ export default async function PreviewSectionPage({ params }: Props) {
   }
 
   if (!isValidToken(token)) {
-    redirect("/login?from=/admin");
+    const base = await getRequestBasePath();
+    redirect(`${withBase(base, "/login")}?from=${encodeURIComponent(withBase(base, "/admin"))}`);
   }
 
   const content = await getSiteContent();

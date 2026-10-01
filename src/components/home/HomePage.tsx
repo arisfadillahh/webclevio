@@ -1,5 +1,6 @@
 import type { SiteContent } from "@/types/content";
 import ThemeBinder from "@/components/home/ThemeBinder";
+import { getRequestBasePath } from "@/lib/request-base";
 import { getBoundTemplateMarkup } from "@/lib/template";
 import { DEFAULT_ROOT_ID } from "@/lib/themeBinding";
 
@@ -9,7 +10,8 @@ interface Props {
 }
 
 export default async function HomePage({ content, rootId = DEFAULT_ROOT_ID }: Props) {
-  const markup = await getBoundTemplateMarkup(content, rootId);
+  const publicBase = await getRequestBasePath();
+  const markup = await getBoundTemplateMarkup(content, rootId, publicBase);
 
   return (
     <>
@@ -18,7 +20,7 @@ export default async function HomePage({ content, rootId = DEFAULT_ROOT_ID }: Pr
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: markup }}
       />
-      <ThemeBinder content={content} rootId={rootId} />
+      <ThemeBinder content={content} rootId={rootId} publicBase={publicBase} />
     </>
   );
 }
