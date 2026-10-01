@@ -4,12 +4,15 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
+import { usePublicPath } from "@/components/PublicBase";
+import { browserPublicPath } from "@/lib/camp-path";
 import { getSafeLocalPath } from "@/lib/safe-local-path";
 
 function LoginContent() {
   const router = useRouter();
   const search = useSearchParams();
-  const redirectTo = getSafeLocalPath(search.get("from"));
+  const publicPath = usePublicPath();
+  const redirectTo = getSafeLocalPath(search.get("from"), publicPath("/admin"));
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
@@ -20,7 +23,7 @@ function LoginContent() {
     setStatus("loading");
     setMessage("");
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(browserPublicPath("/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -82,7 +85,7 @@ function LoginContent() {
         >
           {status === "loading" ? "Memproses..." : "Masuk"}
         </button>
-        <Link href="/" className="login-back">
+        <Link href={publicPath("/")} className="login-back">
           {"<"} Kembali ke website
         </Link>
       </form>

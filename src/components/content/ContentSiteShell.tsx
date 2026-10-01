@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { PiArrowUpRightBold, PiCodeBold } from "react-icons/pi";
 
+import { withBase } from "@/lib/camp-path";
+import { getRequestBasePath } from "@/lib/request-base";
 import type { SiteContent } from "@/types/content";
 
 interface ContentSiteShellProps {
@@ -14,14 +16,16 @@ function publicHref(href: string) {
   return href.startsWith("#") ? `/${href}` : href;
 }
 
-export default function ContentSiteShell({ content, children }: ContentSiteShellProps) {
+export default async function ContentSiteShell({ content, children }: ContentSiteShellProps) {
+  const base = await getRequestBasePath();
+  const href = (path: string) => withBase(base, path);
   return (
     <div className="content-site-shell">
       <header className="content-site-header">
         <div className="content-site-container content-site-header-inner">
-          <Link href="/" className="content-site-logo" aria-label="Kembali ke beranda Clevio">
+          <Link href={href("/")} className="content-site-logo" aria-label="Kembali ke beranda Clevio">
             <Image
-              src={content.branding.logo}
+              src={withBase(base, content.branding.logo)}
               alt={content.branding.name}
               width={190}
               height={64}
@@ -30,12 +34,12 @@ export default function ContentSiteShell({ content, children }: ContentSiteShell
             />
           </Link>
           <nav className="content-site-nav" aria-label="Navigasi halaman konten">
-            <Link href="/">Beranda</Link>
-            <Link href="/events">Event</Link>
-            <Link href="/articles">Artikel</Link>
-            <Link href="/#about">Tentang Kami</Link>
+            <Link href={href("/")}>Beranda</Link>
+            <Link href={href("/events")}>Event</Link>
+            <Link href={href("/articles")}>Artikel</Link>
+            <Link href={href("/#about")}>Tentang Kami</Link>
           </nav>
-          <a className="content-site-header-cta" href={publicHref(content.branding.ctaLink)}>
+          <a className="content-site-header-cta" href={href(publicHref(content.branding.ctaLink))}>
             {content.branding.ctaLabel}
             <PiArrowUpRightBold aria-hidden="true" />
           </a>
@@ -49,8 +53,8 @@ export default function ContentSiteShell({ content, children }: ContentSiteShell
             <p>{content.footer.blurb}</p>
           </div>
           <div className="content-site-footer-links">
-            <Link href="/events">Event</Link>
-            <Link href="/articles">Artikel</Link>
+            <Link href={href("/events")}>Event</Link>
+            <Link href={href("/articles")}>Artikel</Link>
             <a href={`mailto:${content.branding.email}`}>{content.branding.email}</a>
           </div>
           <p className="content-site-copyright">{content.footer.text}</p>

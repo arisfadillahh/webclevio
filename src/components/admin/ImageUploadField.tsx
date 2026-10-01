@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { browserPublicPath } from "@/lib/camp-path";
 import { useId, useState, type ChangeEvent } from "react";
 import {
   PiImageBold,
@@ -29,7 +30,7 @@ export async function uploadImageFile(file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await fetch("/api/upload", {
+  const response = await fetch(browserPublicPath("/api/upload"), {
     method: "POST",
     body: formData,
     credentials: "include",

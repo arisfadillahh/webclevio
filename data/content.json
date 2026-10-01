@@ -488,19 +488,19 @@
         "number": "01",
         "title": "Pitching Day",
         "description": "Di akhir setiap block, anak mempresentasikan Big Project mereka di depan kelas dan orang tua. Di kesempatan ini orang tua dapat memberikan apresiasi sekaligus umpan balik kepada anak atas karyanya.",
-        "image": "/assets/img/instagram/01.jpg"
+        "image": "/assets/img/showcase/pitching-day.jpg"
       },
       {
         "number": "02",
         "title": "Festival Technopreneur Clevio",
         "description": "Dua kali setahun, ratusan karya murid Clevio dipamerkan kepada publik. Pengunjung dapat mencoba karya dan mendengarkan langsung cerita dari para teknopreneur muda mempresentasikan karyanya.",
-        "image": "/assets/img/instagram/02.jpg"
+        "image": "/assets/img/showcase/festival-technopreneur.jpg"
       },
       {
         "number": "03",
         "title": "Lomba Cipta Game Nasional",
         "description": "Diadakan setiap tahun, ajang adu keterampilan membuat game ini diikuti dengan antusias oleh pelajar tingkat SMP, SMA/SMK, dan guru di seluruh Indonesia. Dengan mengangkat berbagai isu menarik dari berbagai masalah sosial, karya para peserta memberi dampak sebagai kontribusi nyata bagi masyarakat.",
-        "image": "/assets/img/instagram/03.jpg"
+        "image": "/assets/img/showcase/lomba-cipta-game.jpg"
       }
     ]
   },

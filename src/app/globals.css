@@ -788,6 +788,129 @@
   color: var(--admin-ink);
 }
 
+.level-screenshot-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.level-screenshot-item {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #dfe6ee;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.level-screenshot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.section-visibility-editor .section-context {
+  margin-bottom: 8px;
+}
+
+.section-visibility-summary {
+  margin: 0 0 14px;
+  color: #6f7f91;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.section-visibility-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.section-visibility-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 68px;
+  padding: 12px 14px;
+  border: 1px solid #dfe6ee;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.section-visibility-list li div {
+  min-width: 0;
+}
+
+.section-visibility-list strong,
+.section-visibility-list small {
+  display: block;
+}
+
+.section-visibility-list strong {
+  color: #223b7b;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.section-visibility-list small {
+  margin-top: 2px;
+  color: #6f7f91;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.section-visibility-switch {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 154px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #6f7f91;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.section-visibility-switch i {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: #d5deea;
+}
+
+.section-visibility-switch i::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(34, 59, 123, 0.25);
+  transition: transform 160ms ease;
+}
+
+.section-visibility-switch.is-on {
+  color: #223b7b;
+}
+
+.section-visibility-switch.is-on i {
+  background: #9dc83b;
+}
+
+.section-visibility-switch.is-on i::after {
+  transform: translateX(18px);
+}
+
 .admin-shell .admin-layout {
   min-height: 100vh;
 }
@@ -2391,6 +2514,24 @@
 }
 
 /* Production admin workspace */
+.production-admin-shell input,
+.production-admin-shell textarea,
+.production-admin-shell select,
+.production-admin-shell input:focus,
+.production-admin-shell textarea:focus,
+.production-admin-shell select:focus {
+  color: #18324a;
+  -webkit-text-fill-color: #18324a;
+  caret-color: #18324a;
+}
+
+.production-admin-shell input::placeholder,
+.production-admin-shell textarea::placeholder {
+  color: #8b9aa6;
+  -webkit-text-fill-color: #8b9aa6;
+  opacity: 1;
+}
+
 .production-admin-shell {
   --admin-ink: #18324a;
   --admin-muted: #64788b;
@@ -2710,9 +2851,11 @@
 .production-content-guidance strong { font-size: 11px; }
 .production-content-guidance small { color: inherit; font-size: 10px; line-height: 1.5; opacity: 0.82; }
 .production-content-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); align-items: start; gap: 18px; }
-.production-content-nav { position: sticky; top: 18px; display: grid; max-height: calc(100dvh - 36px); gap: 18px; overflow-y: auto; padding: 14px; border: 1px solid #dde6e7; border-radius: 15px; background: #fff; }
-.production-content-nav > label { display: flex; align-items: center; gap: 8px; height: 39px; padding: 0 10px; border: 1px solid #d7e1e2; border-radius: 9px; background: #f8faf9; }
-.production-content-nav > label input { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; font: inherit; font-size: 11px; }
+.production-content-nav { position: sticky; top: 18px; z-index: 40; display: grid; max-height: calc(100dvh - 128px); gap: 18px; overflow-y: auto; padding: 14px; border: 1px solid #dde6e7; border-radius: 15px; background: #fff; }
+.production-content-nav > label { display: flex; align-items: center; gap: 8px; height: 39px; padding: 0 10px; border: 1px solid #d7e1e2; border-radius: 9px; background: #f8faf9; color: #18324a; }
+.production-content-nav > label input,
+.production-content-nav > label input:focus { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; color: #18324a; -webkit-text-fill-color: #18324a; caret-color: #18324a; font: inherit; font-size: 11px; }
+.production-content-nav > label input::placeholder { color: #8b9aa6; -webkit-text-fill-color: #8b9aa6; opacity: 1; }
 .production-content-nav > div { display: grid; gap: 4px; }
 .production-content-nav > div > span { padding: 0 7px 4px; color: #8798a4; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
 .production-content-nav button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: 0; border-radius: 9px; color: #506678; background: transparent; text-align: left; cursor: pointer; }
@@ -8071,13 +8214,21 @@ body .admin-shell .admin-action-bar.floating {
   height: 38px;
   align-items: center;
   justify-content: center;
+  padding: 0;
   border: 1px solid rgba(34, 54, 123, 0.08);
   border-radius: 50%;
   background: #ffffff;
   color: #22367b;
   box-shadow: 0 8px 20px rgba(34, 54, 123, 0.16);
   font-size: 12px;
+  cursor: pointer;
   transform: translateY(-50%);
+}
+
+.program-detail-media-nav[hidden],
+.program-detail-projects[hidden],
+.program-detail-media[hidden] {
+  display: none !important;
 }
 
 .program-detail-media-nav.is-prev {
@@ -8102,8 +8253,10 @@ body .admin-shell .admin-action-bar.floating {
   height: 8px;
   min-height: 0;
   padding: 0;
+  border: 0;
   border-radius: 50%;
   background: #dce6f1;
+  cursor: pointer;
 }
 
 .program-detail-projects .program-detail-project-dot.is-active {
@@ -11766,21 +11919,6 @@ body .admin-shell .admin-action-bar.floating {
   transform: scale(1.05);
 }
 
-#clevio-template-root .showcase-story-media-label {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  padding: 7px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 9px;
-  background: rgba(34, 54, 123, 0.9);
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
 #clevio-template-root .showcase-story-copy {
   display: flex;
   flex: 1;
@@ -11825,6 +11963,10 @@ body .admin-shell .admin-action-bar.floating {
 #clevio-template-root .home-events-footer {
   margin-top: 30px;
   text-align: center;
+}
+
+#clevio-template-root [data-preview].is-section-hidden {
+  display: none !important;
 }
 
 #clevio-template-root .gallery-karya-section {
@@ -11983,11 +12125,7 @@ body .admin-shell .admin-action-bar.floating {
   }
 }
 
-/* Final polish: keep documentation overlays readable on every image. */
-#clevio-template-root .showcase-story-media-label {
-  color: #ffffff !important;
-}
-
+/* Final polish: keep gallery overlays readable on every image. */
 #clevio-template-root .gallery-karya-overlay,
 #clevio-template-root .gallery-karya-overlay strong {
   color: #ffffff !important;
@@ -12668,16 +12806,17 @@ body .admin-shell .admin-action-bar.floating {
 /* Final modal polish: restore readable logo scale and keep the CTA cards fully
    inside the available viewport instead of clipping their lower content. */
 #clevio-template-root .program-detail-tool {
-  grid-template-columns: 42px minmax(0, 1fr);
-  min-height: 58px;
+  grid-template-columns: 52px minmax(0, 1fr);
+  min-height: 66px;
   gap: 8px;
   padding: 6px 8px;
 }
 
 #clevio-template-root .program-detail-tool-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 11px;
+  width: 48px;
+  height: 48px;
+  padding: 5px;
+  border-radius: 12px;
 }
 
 #clevio-template-root .program-detail-tool strong {
@@ -12726,13 +12865,13 @@ body .admin-shell .admin-action-bar.floating {
 
 @media (max-width: 767px) {
   #clevio-template-root .program-detail-tool {
-    grid-template-columns: 36px minmax(0, 1fr);
-    min-height: 52px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    min-height: 60px;
   }
 
   #clevio-template-root .program-detail-tool-icon {
-    width: 34px;
-    height: 34px;
+    width: 42px;
+    height: 42px;
   }
 
   #clevio-template-root .program-detail-tool strong {
@@ -12756,14 +12895,14 @@ body .admin-shell .admin-action-bar.floating {
   }
 
   #clevio-template-root .program-detail-tool {
-    grid-template-columns: 36px minmax(0, 1fr);
-    min-height: 52px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    min-height: 60px;
     padding-inline: 6px;
   }
 
   #clevio-template-root .program-detail-tool-icon {
-    width: 34px;
-    height: 34px;
+    width: 42px;
+    height: 42px;
   }
 
   #clevio-template-root .program-detail-tool strong {
@@ -12825,16 +12964,16 @@ body .admin-shell .admin-action-bar.floating {
   }
 
   #clevio-template-root .program-detail-tool {
-    grid-template-columns: 31px minmax(0, 1fr);
-    min-height: 46px;
-    gap: 5px;
+    grid-template-columns: 40px minmax(0, 1fr);
+    min-height: 54px;
+    gap: 6px;
     padding: 5px;
   }
 
   #clevio-template-root .program-detail-tool-icon {
-    width: 29px;
-    height: 29px;
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
   }
 
   #clevio-template-root .program-detail-tool strong {
@@ -12899,15 +13038,15 @@ body .admin-shell .admin-action-bar.floating {
   }
 
   #clevio-template-root .program-detail-tool {
-    grid-template-columns: 35px minmax(0, 1fr);
-    min-height: 48px;
-    gap: 6px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    min-height: 58px;
+    gap: 7px;
     padding: 4px 6px;
   }
 
   #clevio-template-root .program-detail-tool-icon {
-    width: 33px;
-    height: 33px;
+    width: 42px;
+    height: 42px;
   }
 
   #clevio-template-root .program-detail-tool strong {

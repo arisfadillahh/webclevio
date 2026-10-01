@@ -1,3 +1,7 @@
+import { withBase } from "@/lib/camp-path";
+import { isHomeSectionVisible, isKnownHomeSection } from "@/lib/home-sections";
+import { applyRecentFooterPosts } from "@/lib/latest-posts";
+import { programScreenshots } from "@/lib/program-screenshots";
 import { normalizeProgramTools } from "@/lib/program-tools";
 import type {
   SiteContent,
@@ -13,6 +17,8 @@ interface BindOptions {
   enableSmoothScroll?: boolean;
   rootId?: string;
   documentRef?: Document;
+  activeProgramIndex?: number;
+  publicBase?: string;
 }
 
 export function bindTemplate(
@@ -23,6 +29,8 @@ export function bindTemplate(
     enableSmoothScroll = true,
     rootId = DEFAULT_ROOT_ID,
     documentRef,
+    activeProgramIndex = 0,
+    publicBase = "",
   }: BindOptions = {},
 ): Array<() => void> {
   const doc = documentRef ?? (typeof document !== "undefined" ? document : undefined);
@@ -35,7 +43,7 @@ export function bindTemplate(
   bindHero(root, content);
   bindAbout(root, content);
   bindActivities(root, content.activities, content.activitiesDecorations);
-  const programCleanup = bindPrograms(root, content);
+  const programCleanup = bindPrograms(root, content, activeProgramIndex);
   if (programCleanup) cleanups.push(programCleanup);
   bindWorkProcess(root, content.benefits);
   bindTestimonials(root, content.testimonials, content);
@@ -48,6 +56,8 @@ export function bindTemplate(
   bindInstagram(root, content.instagram);
   bindFooter(root, content);
   reorderLandingSections(root, doc);
+  if (rootId === DEFAULT_ROOT_ID) applySectionVisibility(root, content);
+  applyPublicBase(root, publicBase);
 
   const smoothScrollCleanup = enableSmoothScroll ? enableSmoothScrollInternal(root, doc) : undefined;
   if (smoothScrollCleanup) cleanups.push(smoothScrollCleanup);
@@ -93,6 +103,10 @@ function bindHeader(root: HTMLElement, content: SiteContent) {
   const navList = root.querySelector(".main-menu nav ul");
   if (navList) {
     navList.innerHTML = content.navigation.menu
+      .filter((item) => {
+        const target = item.href.match(/^#([\w-]+)$/)?.[1];
+        return !target || isHomeSectionVisible(content, target);
+      })
       .map(
         (item) => `
         <li>
@@ -261,7 +275,7 @@ function bindAbout(root: HTMLElement, content: SiteContent) {
   }
 }
 
-function bindPrograms(root: HTMLElement, content: SiteContent) {
+function bindPrograms(root: HTMLElement, content: SiteContent, activeProgramIndex = 0) {
   // Hide busy decorative shapes for a cleaner program grid
   [
     ".program-section .top-shape",
@@ -311,7 +325,7 @@ function bindPrograms(root: HTMLElement, content: SiteContent) {
     )
     .join("");
 
-  return bindProgramDialog(root, programs, content);
+  return bindProgramDialog(root, programs, content, activeProgramIndex);
 }
 
 function bindWorkProcess(root: HTMLElement, benefits: SiteContent["benefits"]) {
@@ -357,6 +371,7 @@ function bindProgramDialog(
   root: HTMLElement,
   programs: SiteContent["programs"],
   content: SiteContent,
+  activeProgramIndex = 0,
 ) {
 
   const dialog = root.querySelector<HTMLElement>("[data-program-dialog]");
@@ -383,12 +398,37 @@ function bindProgramDialog(
   let previousFocus: HTMLElement | null = null;
 
   const renderModalLists = (program: SiteContent["programs"][number]) => {
-    if (projectsList) {
-      projectsList.innerHTML = (program.projectExamples ?? [])
-        .slice(0, 3)
-        .map((item, index) => `<span class="program-detail-project-dot${index === 0 ? " is-active" : ""}" title="${escapeMarkup(item)}" aria-label="${escapeMarkup(item)}"></span>`)
-        .join("");
-    }
+    const shots = programScreenshots(program);
+    let shotIndex = 0;
+    const showShot = (index: number) => {
+      if (!detailImage || shots.length === 0) {
+        detailImage?.closest(".program-detail-media")?.setAttribute("hidden", "");
+        if (projectsList) projectsList.innerHTML = "";
+        return;
+      }
+      detailImage.closest(".program-detail-media")?.removeAttribute("hidden");
+      shotIndex = (index + shots.length) % shots.length;
+      detailImage.src = shots[shotIndex];
+      detailImage.alt = `Screenshot project ${program.title}`;
+      const media = detailImage.closest(".program-detail-media");
+      media?.querySelectorAll<HTMLElement>("[data-program-shot-prev], [data-program-shot-next]").forEach((button) => {
+        button.hidden = shots.length < 2;
+      });
+      if (projectsList) {
+        projectsList.hidden = shots.length < 2;
+        projectsList.innerHTML = shots
+          .map((_, dotIndex) => `<button type="button" class="program-detail-project-dot${dotIndex === shotIndex ? " is-active" : ""}" data-program-shot="${dotIndex}" aria-label="Screenshot ${dotIndex + 1}"></button>`)
+          .join("");
+        projectsList.querySelectorAll<HTMLButtonElement>("[data-program-shot]").forEach((button) => {
+          button.onclick = () => showShot(Number(button.dataset.programShot));
+        });
+      }
+    };
+    showShot(0);
+    const previous = detailImage?.parentElement?.querySelector<HTMLButtonElement>("[data-program-shot-prev]");
+    const next = detailImage?.parentElement?.querySelector<HTMLButtonElement>("[data-program-shot-next]");
+    if (previous) previous.onclick = () => showShot(shotIndex - 1);
+    if (next) next.onclick = () => showShot(shotIndex + 1);
     if (focusList) {
       focusList.innerHTML = `
         <h4>Fokus <i class="fa-solid fa-sparkles" aria-hidden="true"></i></h4>
@@ -438,8 +478,9 @@ function bindProgramDialog(
     if (!program) return;
     previousFocus = trigger;
     if (detailImage) {
-      detailImage.src = program.projectImage || program.image;
-      detailImage.alt = `Contoh project level ${program.title}`;
+      const shots = programScreenshots(program);
+      detailImage.src = shots[0] || program.image;
+      detailImage.alt = `Screenshot project ${program.title}`;
     }
     if (detailAge) detailAge.textContent = program.ageRange;
     if (detailTitle) detailTitle.textContent = program.title;
@@ -474,6 +515,8 @@ function bindProgramDialog(
     }
   };
   document.addEventListener("keydown", keyHandler);
+  const initialProgram = programs[Math.min(Math.max(activeProgramIndex, 0), Math.max(programs.length - 1, 0))];
+  if (initialProgram) renderModalLists(initialProgram);
 
   return () => {
     openHandlers.forEach(({ button, handler }) => button.removeEventListener("click", handler));
@@ -611,8 +654,7 @@ function bindEvents(root: HTMLElement, sectionContent: SiteContent["eventsSectio
       (item, index) => `
         <article class="showcase-story-card wow fadeInUp" data-wow-delay=".${3 + index}s">
           <div class="showcase-story-media">
-            <img src="${escapeMarkup(item.image || `/assets/img/instagram/${String((index % 6) + 1).padStart(2, "0")}.jpg`)}" alt="Placeholder dokumentasi ${escapeMarkup(item.title)}">
-            <span class="showcase-story-media-label">Dokumentasi karya</span>
+            <img src="${escapeMarkup(item.image || `/assets/img/instagram/${String((index % 6) + 1).padStart(2, "0")}.jpg`)}" alt="${escapeMarkup(item.title)}">
           </div>
           <div class="showcase-story-copy">
             <h3>${escapeMarkup(item.title)}</h3>
@@ -928,8 +970,22 @@ function bindFooter(root: HTMLElement, content: SiteContent) {
     }
   });
 
+  applyRecentFooterPosts(root, content.blog.posts);
+
   const footerText = root.querySelector(".footer-bottom p");
   if (footerText) footerText.textContent = content.footer.text;
+}
+
+function applyPublicBase(root: HTMLElement, base: string) {
+  if (!base) return;
+  root.querySelectorAll<HTMLElement>("[href], [src], [action]").forEach((element) => {
+    for (const attribute of ["href", "src", "action"] as const) {
+      const value = element.getAttribute(attribute);
+      if (!value) continue;
+      const next = withBase(base, value);
+      if (next !== value) element.setAttribute(attribute, next);
+    }
+  });
 }
 
 function enableSmoothScrollInternal(root: HTMLElement, doc?: Document) {
@@ -958,6 +1014,17 @@ function enableSmoothScrollInternal(root: HTMLElement, doc?: Document) {
   anchors.forEach((a) => a.addEventListener("click", handler));
 
   return () => anchors.forEach((a) => a.removeEventListener("click", handler));
+}
+
+function applySectionVisibility(root: HTMLElement, content: SiteContent) {
+  root.querySelectorAll<HTMLElement>("[data-preview]").forEach((section) => {
+    const id = section.dataset.preview ?? "";
+    if (!isKnownHomeSection(id)) return;
+    const hidden = !isHomeSectionVisible(content, id);
+    section.classList.toggle("is-section-hidden", hidden);
+    if (hidden) section.setAttribute("hidden", "");
+    else section.removeAttribute("hidden");
+  });
 }
 
 function reorderLandingSections(root: HTMLElement, doc?: Document) {

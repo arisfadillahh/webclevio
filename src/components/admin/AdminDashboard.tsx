@@ -4,12 +4,16 @@ import { useMemo, useState, ChangeEvent, useId, useEffect, useRef } from "react"
 import type { ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { usePublicBase, usePublicPath } from "@/components/PublicBase";
+import { browserPublicPath } from "@/lib/camp-path";
+import { programScreenshots } from "@/lib/program-screenshots";
 import { defaultToolLogo, normalizeProgramTools } from "@/lib/program-tools";
 import type { NavItem, ProgramTool, SiteContent } from "@/types/content";
 import ThemeBinder from "@/components/home/ThemeBinder";
 import PreviewAssets, { fixAssetPaths } from "@/components/admin/PreviewAssets";
 import { getPreviewKeys } from "@/lib/preview";
 import { getContentTextLimit } from "@/lib/content-limits";
+import { HOME_PAGE_SECTIONS, resolveSectionVisibility } from "@/lib/home-sections";
 import {
   PiCheckCircleBold,
   PiCircleNotchBold,
@@ -35,6 +39,7 @@ import {
   PiRocketLaunchBold,
   PiArrowRightBold,
   PiLockKeyBold,
+  PiEyeBold,
 } from "react-icons/pi";
 
 interface Props {
@@ -83,7 +88,7 @@ function ImageInput({
         formData.append("previousPath", value);
       }
 
-      const res = await fetch("/api/upload", {
+      const res = await fetch(browserPublicPath("/api/upload"), {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -242,6 +247,7 @@ type ActiveSection =
   | "instagram"
   | "testimonials"
   | "contact"
+  | "sections"
   | "advanced";
 
 const SAFE_CONTENT_SECTIONS = new Set<ActiveSection>([
@@ -258,10 +264,12 @@ const SAFE_CONTENT_SECTIONS = new Set<ActiveSection>([
   "newsletter",
   "instagram",
   "contact",
+  "sections",
 ]);
 
 export default function AdminDashboard({ initialContent, templateMarkup, embedded = false }: Props) {
   const router = useRouter();
+  const publicPath = usePublicPath();
   const [content, setContent] = useState<SiteContent>({
     ...initialContent,
     about: {
@@ -351,6 +359,7 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
       title: "Apa Kata Orang Tua Tentang Clevio",
       description: "Cerita nyata tentang anak yang belajar, bertumbuh, dan makin percaya diri bersama Clevio.",
     },
+    sectionVisibility: resolveSectionVisibility(initialContent.sectionVisibility),
     partners: initialContent.partners ?? [
       { id: "pencilbox", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='60' viewBox='0 0 180 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' text-anchor='middle' dominant-baseline='middle'>PencilBox</text></svg>" },
       { id: "udemy", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='22' font-family='Arial, sans-serif' font-weight='600' text-anchor='middle' dominant-baseline='middle'>udemy</text></svg>" },
@@ -444,6 +453,7 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
   );
 
   const navigationItems = useMemo(() => [
+    { id: "sections" as ActiveSection, group: "Tampilan", label: "Tampilan bagian", icon: PiEyeBold, description: "Tampilkan atau sembunyikan bagian" },
     { id: "overview" as ActiveSection, group: "Ringkasan", label: "Dashboard", icon: PiHouseBold, description: "Status dan akses cepat" },
     { id: "hero" as ActiveSection, group: "Halaman depan", label: "Bagian atas", icon: PiImageBold, description: "Judul dan gambar pembuka" },
     { id: "navigation" as ActiveSection, group: "Halaman depan", label: "Menu", icon: PiListBold, description: "Tautan di header" },
@@ -468,7 +478,7 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
     const filteredItems = query
       ? navigationItems.filter((item) => `${item.label} ${item.description}`.toLowerCase().includes(query))
       : navigationItems;
-    return ["Ringkasan", "Halaman depan", "Level", "Isi halaman", "Publikasi", "Bawah halaman", "Pengaturan"]
+    return ["Tampilan", "Ringkasan", "Halaman depan", "Level", "Isi halaman", "Publikasi", "Bawah halaman", "Pengaturan"]
       .map((group) => ({ group, items: filteredItems.filter((item) => item.group === group) }))
       .filter((section) => section.items.length > 0);
   }, [navigationItems, navigationSearch]);
@@ -563,14 +573,18 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
     }));
   };
 
-  const updateHeroDecoration = (index: number, value: string) => {
+  const updateProgramScreenshots = (index: number, images: string[]) => {
     setContent((prev) => {
-      const decorations = [...prev.hero.decorations];
-      decorations[index] = { ...decorations[index], image: value };
-      return { ...prev, hero: { ...prev.hero, decorations } };
+      const programs = [...prev.programs];
+      const stored = images.map((image) => image.trim()).filter(Boolean);
+      programs[index] = {
+        ...programs[index],
+        projectImages: images,
+        projectImage: stored[0] || programs[index].image,
+      };
+      return { ...prev, programs };
     });
   };
-
   const updateProgram = (
     index: number,
     field: "title" | "description" | "ageRange" | "image" | "projectImage",
@@ -635,7 +649,8 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
             { name: "Scratch", logo: defaultToolLogo("Scratch") },
             { name: "Canva", logo: defaultToolLogo("Canva") },
           ],
-          projectImage: prev.programs[0]?.projectImage ?? prev.programs[0]?.image ?? "/assets/img/program/01.jpg",
+          projectImage: prev.programs[0]?.projectImage ?? prev.programs[0]?.image ?? "",
+          projectImages: programScreenshots(prev.programs[0] ?? { projectImage: "", projectImages: [], image: "" }),
         },
       ],
     }));
@@ -884,16 +899,6 @@ const updateFooterContact = (
     });
   };
 
-  const handleProgramDecorationChange = (
-    field: keyof SiteContent["programDecorations"],
-    value: string,
-  ) => {
-    setContent((prev) => ({
-      ...prev,
-      programDecorations: { ...prev.programDecorations, [field]: value },
-    }));
-  };
-
   const handleActivitiesDecorationChange = (
     field: keyof SiteContent["activitiesDecorations"],
     value: string,
@@ -1140,7 +1145,7 @@ const updateFooterContact = (
     setStatus("saving");
     setSaveError(null);
     try {
-      const response = await fetch("/api/content", {
+      const response = await fetch(browserPublicPath("/api/content"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -1171,13 +1176,57 @@ const updateFooterContact = (
   };
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.replace("/login");
+    await fetch(browserPublicPath("/api/auth/logout"), { method: "POST" });
+    router.replace(publicPath("/login"));
     router.refresh();
   };
 
   const renderMainContent = () => {
     switch (activeSection) {
+      case "sections": {
+        const visibility = resolveSectionVisibility(content.sectionVisibility);
+        const hiddenCount = HOME_PAGE_SECTIONS.filter((section) => !visibility[section.id]).length;
+        return (
+          <div className="section-visibility-editor">
+            <div className="section-context">
+              <h2>Tampilan bagian halaman</h2>
+              <p>Setiap bagian bisa ditampilkan atau disembunyikan. Galeri Karya dan Clevio Stories disembunyikan sampai kontennya siap. Menu dan logo tetap tampil.</p>
+            </div>
+            <p className="section-visibility-summary">{hiddenCount === 0 ? "Semua bagian sedang tayang." : `${hiddenCount} bagian disembunyikan.`}</p>
+            <ul className="section-visibility-list">
+              {HOME_PAGE_SECTIONS.map((section) => {
+                const visible = visibility[section.id];
+                return (
+                  <li key={section.id}>
+                    <div>
+                      <strong>{section.label}</strong>
+                      <small>{section.detail}</small>
+                    </div>
+                    <button
+                      type="button"
+                      className={`section-visibility-switch ${visible ? "is-on" : ""}`}
+                      aria-pressed={visible}
+                      onClick={() => {
+                        setContent((prev) => ({
+                          ...prev,
+                          sectionVisibility: {
+                            ...resolveSectionVisibility(prev.sectionVisibility),
+                            [section.id]: !visible,
+                          },
+                        }));
+                      }}
+                    >
+                      <i aria-hidden="true" />
+                      <span>{visible ? "Tayang" : "Disembunyikan"}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      }
+
       case "overview":
         return (
           <div className="admin-overview">
@@ -1237,7 +1286,7 @@ const updateFooterContact = (
                   <li>Buka pratinjau atau halaman publik.</li>
                   <li>Simpan setelah hasilnya sesuai.</li>
                 </ol>
-                <a href="/" target="_blank" rel="noreferrer">Buka website <PiArrowSquareOutBold /></a>
+                <a href={publicPath("/")} target="_blank" rel="noreferrer">Buka website <PiArrowSquareOutBold /></a>
               </section>
             </div>
           </div>
@@ -1590,45 +1639,13 @@ const updateFooterContact = (
 
             <AdminCard
               title="Hero Media"
-              description="Gambar dan dekorasi halaman depan"
+              description="Gambar utama di bagian atas halaman"
             >
               <ImageInput
                 label="Gambar Hero Utama"
                 value={content.hero.media.image}
                 onChange={(value) => handleHeroMediaChange("image", value)}
               />
-              <ImageInput
-                label="Background Shape"
-                value={content.hero.media.shape}
-                onChange={(value) => handleHeroMediaChange("shape", value)}
-              />
-            </AdminCard>
-
-            <AdminCard
-              title="Dekorasi Hero"
-              description="Icon dekorasi di halaman depan"
-            >
-              <div className="admin-list">
-                {content.hero.decorations.map((decor, index) => (
-                  <div key={decor.id} className="list-card">
-                    <div className="list-card-header">
-                      <strong>{decor.label}</strong>
-                    </div>
-                    <div className="image-preview">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={decor.image} alt={decor.label} />
-                    </div>
-                    <ImageInput
-                      label="Icon Dekorasi"
-                      value={decor.image}
-                      onChange={(value) => updateHeroDecoration(index, value)}
-                    />
-                    <p className="image-note">
-                      <strong>Rekomendasi:</strong> 160 × 160 px (PNG transparan)
-                    </p>
-                  </div>
-                ))}
-              </div>
             </AdminCard>
           </>
         );
@@ -1864,22 +1881,53 @@ const updateFooterContact = (
 
                 <AdminCard
                   title="Gambar level"
-                  description="Gambar kartu di halaman utama, dan screenshot yang tampil saat popup dibuka."
+                  description="Gambar kartu di halaman utama, dan screenshot yang tampil di popup detail."
                 >
-                  <div className="form-grid">
-                    <ImageInput
-                      label="Gambar kartu"
-                      value={level.image}
-                      onChange={(value) => updateProgram(levelIndex, "image", value)}
-                      helperText="Rekomendasi 560 × 360 px."
-                    />
-                    <ImageInput
-                      label="Screenshot project"
-                      value={level.projectImage ?? level.image}
-                      onChange={(value) => updateProgram(levelIndex, "projectImage", value)}
-                      helperText="Rekomendasi 1200 × 800 px."
-                    />
+                  <ImageInput
+                    label="Gambar kartu"
+                    value={level.image}
+                    onChange={(value) => updateProgram(levelIndex, "image", value)}
+                    helperText="Rekomendasi 560 × 360 px."
+                  />
+                  <div className="level-screenshot-list">
+                    {(level.projectImages?.length ? level.projectImages : [""]).map((image, shotIndex, images) => (
+                      <article key={`${level.id}-shot-${shotIndex}`} className="level-screenshot-item">
+                        <ImageInput
+                          label={`Screenshot ${shotIndex + 1}`}
+                          value={image}
+                          onChange={(value) => {
+                            const next = [...images];
+                            next[shotIndex] = value;
+                            updateProgramScreenshots(levelIndex, next);
+                          }}
+                          helperText="Rekomendasi 1200 × 800 px."
+                        />
+                        <div className="level-screenshot-actions">
+                          <button type="button" className="ghost-btn small" disabled={shotIndex === 0} onClick={() => {
+                            const next = [...images];
+                            [next[shotIndex - 1], next[shotIndex]] = [next[shotIndex], next[shotIndex - 1]];
+                            updateProgramScreenshots(levelIndex, next);
+                          }}>Naik</button>
+                          <button type="button" className="ghost-btn small" disabled={shotIndex === images.length - 1} onClick={() => {
+                            const next = [...images];
+                            [next[shotIndex + 1], next[shotIndex]] = [next[shotIndex], next[shotIndex + 1]];
+                            updateProgramScreenshots(levelIndex, next);
+                          }}>Turun</button>
+                          <button type="button" className="ghost-btn small" onClick={() => updateProgramScreenshots(levelIndex, images.filter((_, index) => index !== shotIndex))}>
+                            <PiTrashBold /> Hapus
+                          </button>
+                        </div>
+                      </article>
+                    ))}
                   </div>
+                  <button
+                    type="button"
+                    className="ghost-btn small"
+                    disabled={(level.projectImages?.filter(Boolean).length ?? 0) >= 6}
+                    onClick={() => updateProgramScreenshots(levelIndex, [...(level.projectImages ?? []), ""])}
+                  >
+                    <PiPlusBold /> Tambah screenshot
+                  </button>
                 </AdminCard>
 
                 <AdminCard
@@ -1942,27 +1990,15 @@ const updateFooterContact = (
                   </label>
                 </div>
               </AdminCard>
-              <AdminCard
-                title="Hiasan di sekitar section"
-                description="Ikon kecil di sekeliling kartu. Biasanya tidak perlu diubah."
-              >
-                <div className="form-grid">
-                  <ImageInput label="Shape atas" value={content.programDecorations.topShape} onChange={(value) => handleProgramDecorationChange("topShape", value)} />
-                  <ImageInput label="Shape bawah" value={content.programDecorations.bottomShape} onChange={(value) => handleProgramDecorationChange("bottomShape", value)} />
-                  <ImageInput label="Ikon kiri" value={content.programDecorations.mask} onChange={(value) => handleProgramDecorationChange("mask", value)} />
-                  <ImageInput label="Ikon kanan" value={content.programDecorations.mask2} onChange={(value) => handleProgramDecorationChange("mask2", value)} />
-                  <ImageInput label="Ikon pensil" value={content.programDecorations.pencil} onChange={(value) => handleProgramDecorationChange("pencil", value)} />
-                  <ImageInput label="Ikon kompas" value={content.programDecorations.compass} onChange={(value) => handleProgramDecorationChange("compass", value)} />
-                </div>
-              </AdminCard>
             </details>
 
             <PreviewFrame
               section="programs"
               title="Pratinjau level"
-              description="Begitu tampil di halaman utama"
+              description="Kartu dan popup detail memakai data level yang sedang dipilih."
               content={content}
               templateMarkup={templateMarkup}
+              activeProgramIndex={levelIndex}
             />
           </>
         );
@@ -2190,29 +2226,15 @@ const updateFooterContact = (
             </div>
 
             <AdminCard
-              title="Dekorasi Aktivitas"
-              description="Atur ikon pendukung di sekitar section aktivitas"
+              title="Ikon di foto aktivitas"
+              description="Badge kecil di pojok gambar kegiatan. Ikon lain di sekitar section tidak ditampilkan."
             >
-              <div className="form-grid">
-                <ImageInput
-                  label="Ikon Code Pencil"
-                  value={content.activitiesDecorations.pencil}
-                  onChange={(value) => handleActivitiesDecorationChange("pencil", value)}
-                  helperText="Default: /assets/img/tech/code-pencil.svg"
-                />
-                <ImageInput
-                  label="Ikon AI Bot"
-                  value={content.activitiesDecorations.giraffe}
-                  onChange={(value) => handleActivitiesDecorationChange("giraffe", value)}
-                  helperText="Default: /assets/img/tech/ai-bot.svg"
-                />
-                <ImageInput
-                  label="Ikon Neural Network"
-                  value={content.activitiesDecorations.radius}
-                  onChange={(value) => handleActivitiesDecorationChange("radius", value)}
-                  helperText="Default: /assets/img/tech/neural-network.svg"
-                />
-              </div>
+              <ImageInput
+                label="Ikon Neural Network"
+                value={content.activitiesDecorations.radius}
+                onChange={(value) => handleActivitiesDecorationChange("radius", value)}
+                helperText="Tampil di pojok kanan atas foto kegiatan."
+              />
             </AdminCard>
 
             <div className="list-header" style={{ marginTop: "1.5rem" }}>
@@ -2309,7 +2331,7 @@ const updateFooterContact = (
                     onChange={(e) => handleWorkProcessFieldChange("description", e.target.value)}
                     placeholder="Jelaskan singkat manfaat rangkaian tahap belajar."
                     style={{ minHeight: "90px" }}
-                    maxLength={180}
+                    maxLength={480}
                   />
                 </label>
               </div>
@@ -2375,7 +2397,7 @@ const updateFooterContact = (
                 <h2>Event & Link Landing Page</h2>
                 <p>Atur kartu event yang tampil di website. Setiap kartu langsung membuka landing page yang sudah Anda siapkan.</p>
               </div>
-              <a href="/events" target="_blank" rel="noreferrer" className="context-action-link">
+              <a href={publicPath("/events")} target="_blank" rel="noreferrer" className="context-action-link">
                 Lihat halaman event <PiArrowSquareOutBold />
               </a>
             </div>
@@ -2470,7 +2492,7 @@ const updateFooterContact = (
                 <h2>Artikel & Berita</h2>
                 <p>Kelola kartu artikel sekaligus isi halaman artikelnya. Artikel draft tidak akan terlihat oleh pengunjung.</p>
               </div>
-              <a href="/articles" target="_blank" rel="noreferrer" className="context-action-link">
+              <a href={publicPath("/articles")} target="_blank" rel="noreferrer" className="context-action-link">
                 Lihat semua artikel <PiArrowSquareOutBold />
               </a>
             </div>
@@ -3076,7 +3098,7 @@ const updateFooterContact = (
             <h1>Atur tampilan website</h1>
             <p>Pilih bagian di sebelah kiri, periksa preview, lalu simpan saat kontennya sudah sesuai.</p>
           </div>
-          <a href="/" target="_blank" rel="noreferrer" className="production-secondary-button">Lihat website <PiArrowSquareOutBold /></a>
+          <a href={publicPath("/")} target="_blank" rel="noreferrer" className="production-secondary-button">Lihat website <PiArrowSquareOutBold /></a>
         </header>
 
         <div className="production-content-guidance">
@@ -3102,7 +3124,7 @@ const updateFooterContact = (
                 {section.items.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <button key={item.id} className={activeSection === item.id ? "is-active" : ""} onClick={() => setActiveSection(item.id)}>
+                    <button type="button" key={item.id} className={activeSection === item.id ? "is-active" : ""} onClick={() => setActiveSection(item.id)}>
                       <Icon />
                       <span><strong>{item.label}</strong><small>{item.description}</small></span>
                     </button>
@@ -3256,7 +3278,7 @@ const updateFooterContact = (
               <h1>{navigationItems.find((item) => item.id === activeSection)?.label ?? "Dashboard"}</h1>
               <p className="admin-subtitle">{navigationItems.find((item) => item.id === activeSection)?.description ?? "Kelola konten website."}</p>
             </div>
-            <a href="/" target="_blank" rel="noreferrer" className="admin-open-site">Buka Website <PiArrowSquareOutBold /></a>
+            <a href={publicPath("/")} target="_blank" rel="noreferrer" className="admin-open-site">Buka Website <PiArrowSquareOutBold /></a>
           </div>
           {renderMainContent()}
         </main>
@@ -3320,6 +3342,7 @@ interface PreviewFrameProps {
   height?: number;
   content: SiteContent;
   templateMarkup: string;
+  activeProgramIndex?: number;
 }
 
 function PreviewFrame({
@@ -3329,6 +3352,7 @@ function PreviewFrame({
   height,
   content,
   templateMarkup,
+  activeProgramIndex = 0,
 }: PreviewFrameProps) {
   const frameHeight = height;
   const allowedKeys = useMemo(() => getPreviewKeys(section), [section]);
@@ -3348,6 +3372,7 @@ function PreviewFrame({
           content={content}
           allowedKeys={allowedKeys}
           initialHeight={frameHeight}
+          activeProgramIndex={activeProgramIndex}
         />
       </div>
     </div>
@@ -3359,6 +3384,7 @@ interface SectionPreviewCanvasProps {
   content: SiteContent;
   allowedKeys: string[];
   initialHeight?: number;
+  activeProgramIndex?: number;
 }
 
 const PREVIEW_CANVAS_WIDTH = 1440;
@@ -3368,7 +3394,9 @@ function SectionPreviewCanvas({
   content,
   allowedKeys,
   initialHeight = 180,
+  activeProgramIndex = 0,
 }: SectionPreviewCanvasProps) {
+  const publicBase = usePublicBase();
   const uniqueId = useId().replace(/:/g, "");
   const previewRootId = `preview-source-${uniqueId}`;
   const previewFrameRef = useRef<HTMLIFrameElement>(null);
@@ -3416,10 +3444,23 @@ function SectionPreviewCanvas({
       const nodes = Array.from(
         sourceRoot.querySelectorAll<HTMLElement>("[data-preview]"),
       ).filter((node) => allowed.has(node.dataset.preview ?? ""));
+      if (allowed.has("programs")) {
+        const dialog = sourceRoot.querySelector<HTMLElement>("[data-program-dialog]");
+        if (dialog) nodes.push(dialog);
+      }
 
       const previewContainer = document.createElement("div");
-      previewContainer.className = "preview-iframe-root preview-scoped";
-      nodes.forEach((node) => previewContainer.appendChild(node.cloneNode(true)));
+      previewContainer.id = "clevio-template-root";
+      previewContainer.className = "preview-iframe-root";
+      nodes.forEach((node) => {
+        const copy = node.cloneNode(true) as HTMLElement;
+        if (copy.hasAttribute("data-program-dialog")) {
+          copy.hidden = false;
+          copy.removeAttribute("hidden");
+          copy.setAttribute("aria-hidden", "false");
+        }
+        previewContainer.appendChild(copy);
+      });
       fixAssetPaths(previewContainer);
 
       const stylesheetLinks = Array.from(
@@ -3433,7 +3474,7 @@ function SectionPreviewCanvas({
       previewFrame.srcdoc = `<!doctype html>
         <html lang="id">
           <head>
-            <base href="${window.location.origin}/">
+            <base href="${window.location.origin}${publicBase}/">
             <meta name="viewport" content="width=${PREVIEW_CANVAS_WIDTH}">
             ${stylesheetLinks}
             <style>
@@ -3454,6 +3495,25 @@ function SectionPreviewCanvas({
               .preview-iframe-root > * { width: 100% !important; }
               #header-sticky { display: none !important; }
               .wow { visibility: visible !important; animation: none !important; }
+              #clevio-template-root .program-detail-dialog {
+                position: relative !important;
+                display: block !important;
+                height: auto !important;
+                inset: auto !important;
+                padding: 28px 0 0 !important;
+              }
+              #clevio-template-root .program-detail-backdrop { display: none !important; }
+              #clevio-template-root .program-detail-panel {
+                position: relative !important;
+                width: min(880px, 100%) !important;
+                height: auto !important;
+                max-height: none !important;
+                margin: 0 auto;
+              }
+              #clevio-template-root .program-detail-shell {
+                height: auto !important;
+                overflow: visible !important;
+              }
             </style>
           </head>
           <body>${previewContainer.outerHTML}</body>
@@ -3485,7 +3545,7 @@ function SectionPreviewCanvas({
       resizeObserver.disconnect();
       previewFrame.removeEventListener("load", measureFrame);
     };
-  }, [allowedKeys, initialHeight, markup, previewRootId]);
+  }, [activeProgramIndex, allowedKeys, initialHeight, markup, previewRootId, publicBase]);
 
   return (
     <div
@@ -3501,7 +3561,7 @@ function SectionPreviewCanvas({
         suppressHydrationWarning
         aria-hidden
       />
-      <ThemeBinder content={content} rootId={previewRootId} />
+      <ThemeBinder content={content} rootId={previewRootId} activeProgramIndex={activeProgramIndex} />
       <PreviewAssets rootId={previewRootId} />
       <iframe
         ref={previewFrameRef}

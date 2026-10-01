@@ -4,7 +4,9 @@ import Link from "next/link";
 import { PiArrowRightBold, PiClockBold, PiCodeBold } from "react-icons/pi";
 
 import ContentSiteShell from "@/components/content/ContentSiteShell";
+import { withBase } from "@/lib/camp-path";
 import { getSiteContent } from "@/lib/content";
+import { getRequestBasePath } from "@/lib/request-base";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ArticlesPage() {
-  const content = await getSiteContent();
+  const [content, base] = await Promise.all([getSiteContent(), getRequestBasePath()]);
+  const href = (path: string) => withBase(base, path);
   const posts = content.blog.posts.filter((post) => post.status === "published");
   const [featured, ...otherPosts] = posts;
 
@@ -32,15 +35,15 @@ export default async function ArticlesPage() {
         <div className="content-site-container">
           {featured ? (
             <article className="article-featured-card">
-              <Link href={`/articles/${featured.slug}`} className="article-featured-media">
-                <Image src={featured.image} alt={featured.title} fill sizes="(max-width: 900px) 100vw, 52vw" unoptimized />
+              <Link href={href(`/articles/${featured.slug}`)} className="article-featured-media">
+                <Image src={withBase(base, featured.image)} alt={featured.title} fill sizes="(max-width: 900px) 100vw, 52vw" unoptimized />
               </Link>
               <div className="article-featured-content">
                 <span className="content-status-badge">Pilihan Editor</span>
                 <p className="content-meta"><span>{featured.category}</span><span>{featured.date}</span><span><PiClockBold /> {featured.readingTime}</span></p>
-                <h2><Link href={`/articles/${featured.slug}`}>{featured.title}</Link></h2>
+                <h2><Link href={href(`/articles/${featured.slug}`)}>{featured.title}</Link></h2>
                 <p>{featured.excerpt}</p>
-                <Link href={`/articles/${featured.slug}`} className="content-text-link">Baca artikel <PiArrowRightBold /></Link>
+                <Link href={href(`/articles/${featured.slug}`)} className="content-text-link">Baca artikel <PiArrowRightBold /></Link>
               </div>
             </article>
           ) : (
@@ -51,14 +54,14 @@ export default async function ArticlesPage() {
             <div className="article-grid">
               {otherPosts.map((post) => (
                 <article key={post.id} className="article-card">
-                  <Link href={`/articles/${post.slug}`} className="article-card-media">
-                    <Image src={post.image} alt={post.title} fill sizes="(max-width: 760px) 100vw, 33vw" unoptimized />
+                  <Link href={href(`/articles/${post.slug}`)} className="article-card-media">
+                    <Image src={withBase(base, post.image)} alt={post.title} fill sizes="(max-width: 760px) 100vw, 33vw" unoptimized />
                   </Link>
                   <div className="article-card-content">
                     <p className="content-meta"><span>{post.category}</span><span>{post.date}</span></p>
-                    <h2><Link href={`/articles/${post.slug}`}>{post.title}</Link></h2>
+                    <h2><Link href={href(`/articles/${post.slug}`)}>{post.title}</Link></h2>
                     <p>{post.excerpt}</p>
-                    <Link href={`/articles/${post.slug}`} className="content-text-link">Baca selengkapnya <PiArrowRightBold /></Link>
+                    <Link href={href(`/articles/${post.slug}`)} className="content-text-link">Baca selengkapnya <PiArrowRightBold /></Link>
                   </div>
                 </article>
               ))}

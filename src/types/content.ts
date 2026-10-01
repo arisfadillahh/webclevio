@@ -65,6 +65,7 @@ export interface Program {
   projectExamples: string[];
   tools: ProgramTool[];
   projectImage: string;
+  projectImages?: string[];
 }
 
 export interface ProgramSectionContent {
@@ -230,6 +231,7 @@ export interface BlogPost {
   body: string;
   gallery: string[];
   galleryMode: "carousel" | "grid";
+  publishedAt?: string;
 }
 
 export interface BlogSection {
@@ -285,6 +287,7 @@ export interface CtaButton {
 }
 
 export interface SiteContent {
+  sectionVisibility?: Record<string, boolean>;
   branding: Branding;
   navigation: Navigation;
   programsSection: ProgramSectionContent;
