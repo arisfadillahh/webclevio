@@ -573,14 +573,6 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
     }));
   };
 
-  const updateHeroDecoration = (index: number, value: string) => {
-    setContent((prev) => {
-      const decorations = [...prev.hero.decorations];
-      decorations[index] = { ...decorations[index], image: value };
-      return { ...prev, hero: { ...prev.hero, decorations } };
-    });
-  };
-
   const updateProgramScreenshots = (index: number, images: string[]) => {
     setContent((prev) => {
       const programs = [...prev.programs];
@@ -905,16 +897,6 @@ const updateFooterContact = (
       bullets[index] = value;
       return { ...prev, about: { ...prev.about, bullets } };
     });
-  };
-
-  const handleProgramDecorationChange = (
-    field: keyof SiteContent["programDecorations"],
-    value: string,
-  ) => {
-    setContent((prev) => ({
-      ...prev,
-      programDecorations: { ...prev.programDecorations, [field]: value },
-    }));
   };
 
   const handleActivitiesDecorationChange = (
@@ -1657,45 +1639,13 @@ const updateFooterContact = (
 
             <AdminCard
               title="Hero Media"
-              description="Gambar dan dekorasi halaman depan"
+              description="Gambar utama di bagian atas halaman"
             >
               <ImageInput
                 label="Gambar Hero Utama"
                 value={content.hero.media.image}
                 onChange={(value) => handleHeroMediaChange("image", value)}
               />
-              <ImageInput
-                label="Background Shape"
-                value={content.hero.media.shape}
-                onChange={(value) => handleHeroMediaChange("shape", value)}
-              />
-            </AdminCard>
-
-            <AdminCard
-              title="Dekorasi Hero"
-              description="Icon dekorasi di halaman depan"
-            >
-              <div className="admin-list">
-                {content.hero.decorations.map((decor, index) => (
-                  <div key={decor.id} className="list-card">
-                    <div className="list-card-header">
-                      <strong>{decor.label}</strong>
-                    </div>
-                    <div className="image-preview">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={decor.image} alt={decor.label} />
-                    </div>
-                    <ImageInput
-                      label="Icon Dekorasi"
-                      value={decor.image}
-                      onChange={(value) => updateHeroDecoration(index, value)}
-                    />
-                    <p className="image-note">
-                      <strong>Rekomendasi:</strong> 160 × 160 px (PNG transparan)
-                    </p>
-                  </div>
-                ))}
-              </div>
             </AdminCard>
           </>
         );
@@ -2040,19 +1990,6 @@ const updateFooterContact = (
                   </label>
                 </div>
               </AdminCard>
-              <AdminCard
-                title="Hiasan di sekitar section"
-                description="Ikon kecil di sekeliling kartu. Biasanya tidak perlu diubah."
-              >
-                <div className="form-grid">
-                  <ImageInput label="Shape atas" value={content.programDecorations.topShape} onChange={(value) => handleProgramDecorationChange("topShape", value)} />
-                  <ImageInput label="Shape bawah" value={content.programDecorations.bottomShape} onChange={(value) => handleProgramDecorationChange("bottomShape", value)} />
-                  <ImageInput label="Ikon kiri" value={content.programDecorations.mask} onChange={(value) => handleProgramDecorationChange("mask", value)} />
-                  <ImageInput label="Ikon kanan" value={content.programDecorations.mask2} onChange={(value) => handleProgramDecorationChange("mask2", value)} />
-                  <ImageInput label="Ikon pensil" value={content.programDecorations.pencil} onChange={(value) => handleProgramDecorationChange("pencil", value)} />
-                  <ImageInput label="Ikon kompas" value={content.programDecorations.compass} onChange={(value) => handleProgramDecorationChange("compass", value)} />
-                </div>
-              </AdminCard>
             </details>
 
             <PreviewFrame
@@ -2289,29 +2226,15 @@ const updateFooterContact = (
             </div>
 
             <AdminCard
-              title="Dekorasi Aktivitas"
-              description="Atur ikon pendukung di sekitar section aktivitas"
+              title="Ikon di foto aktivitas"
+              description="Badge kecil di pojok gambar kegiatan. Ikon lain di sekitar section tidak ditampilkan."
             >
-              <div className="form-grid">
-                <ImageInput
-                  label="Ikon Code Pencil"
-                  value={content.activitiesDecorations.pencil}
-                  onChange={(value) => handleActivitiesDecorationChange("pencil", value)}
-                  helperText="Default: /assets/img/tech/code-pencil.svg"
-                />
-                <ImageInput
-                  label="Ikon AI Bot"
-                  value={content.activitiesDecorations.giraffe}
-                  onChange={(value) => handleActivitiesDecorationChange("giraffe", value)}
-                  helperText="Default: /assets/img/tech/ai-bot.svg"
-                />
-                <ImageInput
-                  label="Ikon Neural Network"
-                  value={content.activitiesDecorations.radius}
-                  onChange={(value) => handleActivitiesDecorationChange("radius", value)}
-                  helperText="Default: /assets/img/tech/neural-network.svg"
-                />
-              </div>
+              <ImageInput
+                label="Ikon Neural Network"
+                value={content.activitiesDecorations.radius}
+                onChange={(value) => handleActivitiesDecorationChange("radius", value)}
+                helperText="Tampil di pojok kanan atas foto kegiatan."
+              />
             </AdminCard>
 
             <div className="list-header" style={{ marginTop: "1.5rem" }}>
@@ -3201,7 +3124,7 @@ const updateFooterContact = (
                 {section.items.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <button key={item.id} className={activeSection === item.id ? "is-active" : ""} onClick={() => setActiveSection(item.id)}>
+                    <button type="button" key={item.id} className={activeSection === item.id ? "is-active" : ""} onClick={() => setActiveSection(item.id)}>
                       <Icon />
                       <span><strong>{item.label}</strong><small>{item.description}</small></span>
                     </button>

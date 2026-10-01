@@ -2514,6 +2514,24 @@
 }
 
 /* Production admin workspace */
+.production-admin-shell input,
+.production-admin-shell textarea,
+.production-admin-shell select,
+.production-admin-shell input:focus,
+.production-admin-shell textarea:focus,
+.production-admin-shell select:focus {
+  color: #18324a;
+  -webkit-text-fill-color: #18324a;
+  caret-color: #18324a;
+}
+
+.production-admin-shell input::placeholder,
+.production-admin-shell textarea::placeholder {
+  color: #8b9aa6;
+  -webkit-text-fill-color: #8b9aa6;
+  opacity: 1;
+}
+
 .production-admin-shell {
   --admin-ink: #18324a;
   --admin-muted: #64788b;
@@ -2833,9 +2851,11 @@
 .production-content-guidance strong { font-size: 11px; }
 .production-content-guidance small { color: inherit; font-size: 10px; line-height: 1.5; opacity: 0.82; }
 .production-content-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); align-items: start; gap: 18px; }
-.production-content-nav { position: sticky; top: 18px; display: grid; max-height: calc(100dvh - 36px); gap: 18px; overflow-y: auto; padding: 14px; border: 1px solid #dde6e7; border-radius: 15px; background: #fff; }
-.production-content-nav > label { display: flex; align-items: center; gap: 8px; height: 39px; padding: 0 10px; border: 1px solid #d7e1e2; border-radius: 9px; background: #f8faf9; }
-.production-content-nav > label input { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; font: inherit; font-size: 11px; }
+.production-content-nav { position: sticky; top: 18px; z-index: 40; display: grid; max-height: calc(100dvh - 128px); gap: 18px; overflow-y: auto; padding: 14px; border: 1px solid #dde6e7; border-radius: 15px; background: #fff; }
+.production-content-nav > label { display: flex; align-items: center; gap: 8px; height: 39px; padding: 0 10px; border: 1px solid #d7e1e2; border-radius: 9px; background: #f8faf9; color: #18324a; }
+.production-content-nav > label input,
+.production-content-nav > label input:focus { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; color: #18324a; -webkit-text-fill-color: #18324a; caret-color: #18324a; font: inherit; font-size: 11px; }
+.production-content-nav > label input::placeholder { color: #8b9aa6; -webkit-text-fill-color: #8b9aa6; opacity: 1; }
 .production-content-nav > div { display: grid; gap: 4px; }
 .production-content-nav > div > span { padding: 0 7px 4px; color: #8798a4; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
 .production-content-nav button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: 0; border-radius: 9px; color: #506678; background: transparent; text-align: left; cursor: pointer; }
