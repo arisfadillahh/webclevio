@@ -28,9 +28,10 @@ const HERO_DECOR_SELECTORS: Record<string, string> = {
 interface Props {
   content: SiteContent;
   rootId?: string;
+  activeProgramIndex?: number;
 }
 
-export default function ThemeBinder({ content, rootId = DEFAULT_ROOT_ID }: Props) {
+export default function ThemeBinder({ content, rootId = DEFAULT_ROOT_ID, activeProgramIndex = 0 }: Props) {
   useEffect(() => {
     const root = document.getElementById(rootId);
     if (!root) return;
@@ -40,12 +41,13 @@ export default function ThemeBinder({ content, rootId = DEFAULT_ROOT_ID }: Props
       enableSmoothScroll: true,
       rootId,
       documentRef: document,
+      activeProgramIndex,
     });
 
     return () => {
       cleanups.forEach((cleanup) => cleanup());
     };
-  }, [content, rootId]);
+  }, [activeProgramIndex, content, rootId]);
 
   return null;
 }

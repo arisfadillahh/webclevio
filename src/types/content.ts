@@ -65,6 +65,7 @@ export interface Program {
   projectExamples: string[];
   tools: ProgramTool[];
   projectImage: string;
+  projectImages?: string[];
 }
 
 export interface ProgramSectionContent {

@@ -788,6 +788,27 @@
   color: var(--admin-ink);
 }
 
+.level-screenshot-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.level-screenshot-item {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #dfe6ee;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.level-screenshot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .section-visibility-editor .section-context {
   margin-bottom: 8px;
 }
@@ -8173,13 +8194,21 @@ body .admin-shell .admin-action-bar.floating {
   height: 38px;
   align-items: center;
   justify-content: center;
+  padding: 0;
   border: 1px solid rgba(34, 54, 123, 0.08);
   border-radius: 50%;
   background: #ffffff;
   color: #22367b;
   box-shadow: 0 8px 20px rgba(34, 54, 123, 0.16);
   font-size: 12px;
+  cursor: pointer;
   transform: translateY(-50%);
+}
+
+.program-detail-media-nav[hidden],
+.program-detail-projects[hidden],
+.program-detail-media[hidden] {
+  display: none !important;
 }
 
 .program-detail-media-nav.is-prev {
@@ -8204,8 +8233,10 @@ body .admin-shell .admin-action-bar.floating {
   height: 8px;
   min-height: 0;
   padding: 0;
+  border: 0;
   border-radius: 50%;
   background: #dce6f1;
+  cursor: pointer;
 }
 
 .program-detail-projects .program-detail-project-dot.is-active {

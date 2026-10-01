@@ -4,6 +4,7 @@ import { useMemo, useState, ChangeEvent, useId, useEffect, useRef } from "react"
 import type { ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { programScreenshots } from "@/lib/program-screenshots";
 import { defaultToolLogo, normalizeProgramTools } from "@/lib/program-tools";
 import type { NavItem, ProgramTool, SiteContent } from "@/types/content";
 import ThemeBinder from "@/components/home/ThemeBinder";
@@ -577,6 +578,18 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
     });
   };
 
+  const updateProgramScreenshots = (index: number, images: string[]) => {
+    setContent((prev) => {
+      const programs = [...prev.programs];
+      const stored = images.map((image) => image.trim()).filter(Boolean);
+      programs[index] = {
+        ...programs[index],
+        projectImages: images,
+        projectImage: stored[0] || programs[index].image,
+      };
+      return { ...prev, programs };
+    });
+  };
   const updateProgram = (
     index: number,
     field: "title" | "description" | "ageRange" | "image" | "projectImage",
@@ -641,7 +654,8 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
             { name: "Scratch", logo: defaultToolLogo("Scratch") },
             { name: "Canva", logo: defaultToolLogo("Canva") },
           ],
-          projectImage: prev.programs[0]?.projectImage ?? prev.programs[0]?.image ?? "/assets/img/program/01.jpg",
+          projectImage: prev.programs[0]?.projectImage ?? prev.programs[0]?.image ?? "",
+          projectImages: programScreenshots(prev.programs[0] ?? { projectImage: "", projectImages: [], image: "" }),
         },
       ],
     }));
@@ -1914,22 +1928,53 @@ const updateFooterContact = (
 
                 <AdminCard
                   title="Gambar level"
-                  description="Gambar kartu di halaman utama, dan screenshot yang tampil saat popup dibuka."
+                  description="Gambar kartu di halaman utama, dan screenshot yang tampil di popup detail."
                 >
-                  <div className="form-grid">
-                    <ImageInput
-                      label="Gambar kartu"
-                      value={level.image}
-                      onChange={(value) => updateProgram(levelIndex, "image", value)}
-                      helperText="Rekomendasi 560 × 360 px."
-                    />
-                    <ImageInput
-                      label="Screenshot project"
-                      value={level.projectImage ?? level.image}
-                      onChange={(value) => updateProgram(levelIndex, "projectImage", value)}
-                      helperText="Rekomendasi 1200 × 800 px."
-                    />
+                  <ImageInput
+                    label="Gambar kartu"
+                    value={level.image}
+                    onChange={(value) => updateProgram(levelIndex, "image", value)}
+                    helperText="Rekomendasi 560 × 360 px."
+                  />
+                  <div className="level-screenshot-list">
+                    {(level.projectImages?.length ? level.projectImages : [""]).map((image, shotIndex, images) => (
+                      <article key={`${level.id}-shot-${shotIndex}`} className="level-screenshot-item">
+                        <ImageInput
+                          label={`Screenshot ${shotIndex + 1}`}
+                          value={image}
+                          onChange={(value) => {
+                            const next = [...images];
+                            next[shotIndex] = value;
+                            updateProgramScreenshots(levelIndex, next);
+                          }}
+                          helperText="Rekomendasi 1200 × 800 px."
+                        />
+                        <div className="level-screenshot-actions">
+                          <button type="button" className="ghost-btn small" disabled={shotIndex === 0} onClick={() => {
+                            const next = [...images];
+                            [next[shotIndex - 1], next[shotIndex]] = [next[shotIndex], next[shotIndex - 1]];
+                            updateProgramScreenshots(levelIndex, next);
+                          }}>Naik</button>
+                          <button type="button" className="ghost-btn small" disabled={shotIndex === images.length - 1} onClick={() => {
+                            const next = [...images];
+                            [next[shotIndex + 1], next[shotIndex]] = [next[shotIndex], next[shotIndex + 1]];
+                            updateProgramScreenshots(levelIndex, next);
+                          }}>Turun</button>
+                          <button type="button" className="ghost-btn small" onClick={() => updateProgramScreenshots(levelIndex, images.filter((_, index) => index !== shotIndex))}>
+                            <PiTrashBold /> Hapus
+                          </button>
+                        </div>
+                      </article>
+                    ))}
                   </div>
+                  <button
+                    type="button"
+                    className="ghost-btn small"
+                    disabled={(level.projectImages?.filter(Boolean).length ?? 0) >= 6}
+                    onClick={() => updateProgramScreenshots(levelIndex, [...(level.projectImages ?? []), ""])}
+                  >
+                    <PiPlusBold /> Tambah screenshot
+                  </button>
                 </AdminCard>
 
                 <AdminCard
@@ -2010,9 +2055,10 @@ const updateFooterContact = (
             <PreviewFrame
               section="programs"
               title="Pratinjau level"
-              description="Begitu tampil di halaman utama"
+              description="Kartu dan popup detail memakai data level yang sedang dipilih."
               content={content}
               templateMarkup={templateMarkup}
+              activeProgramIndex={levelIndex}
             />
           </>
         );
@@ -3370,6 +3416,7 @@ interface PreviewFrameProps {
   height?: number;
   content: SiteContent;
   templateMarkup: string;
+  activeProgramIndex?: number;
 }
 
 function PreviewFrame({
@@ -3379,6 +3426,7 @@ function PreviewFrame({
   height,
   content,
   templateMarkup,
+  activeProgramIndex = 0,
 }: PreviewFrameProps) {
   const frameHeight = height;
   const allowedKeys = useMemo(() => getPreviewKeys(section), [section]);
@@ -3398,6 +3446,7 @@ function PreviewFrame({
           content={content}
           allowedKeys={allowedKeys}
           initialHeight={frameHeight}
+          activeProgramIndex={activeProgramIndex}
         />
       </div>
     </div>
@@ -3409,6 +3458,7 @@ interface SectionPreviewCanvasProps {
   content: SiteContent;
   allowedKeys: string[];
   initialHeight?: number;
+  activeProgramIndex?: number;
 }
 
 const PREVIEW_CANVAS_WIDTH = 1440;
@@ -3418,6 +3468,7 @@ function SectionPreviewCanvas({
   content,
   allowedKeys,
   initialHeight = 180,
+  activeProgramIndex = 0,
 }: SectionPreviewCanvasProps) {
   const uniqueId = useId().replace(/:/g, "");
   const previewRootId = `preview-source-${uniqueId}`;
@@ -3466,10 +3517,23 @@ function SectionPreviewCanvas({
       const nodes = Array.from(
         sourceRoot.querySelectorAll<HTMLElement>("[data-preview]"),
       ).filter((node) => allowed.has(node.dataset.preview ?? ""));
+      if (allowed.has("programs")) {
+        const dialog = sourceRoot.querySelector<HTMLElement>("[data-program-dialog]");
+        if (dialog) nodes.push(dialog);
+      }
 
       const previewContainer = document.createElement("div");
-      previewContainer.className = "preview-iframe-root preview-scoped";
-      nodes.forEach((node) => previewContainer.appendChild(node.cloneNode(true)));
+      previewContainer.id = "clevio-template-root";
+      previewContainer.className = "preview-iframe-root";
+      nodes.forEach((node) => {
+        const copy = node.cloneNode(true) as HTMLElement;
+        if (copy.hasAttribute("data-program-dialog")) {
+          copy.hidden = false;
+          copy.removeAttribute("hidden");
+          copy.setAttribute("aria-hidden", "false");
+        }
+        previewContainer.appendChild(copy);
+      });
       fixAssetPaths(previewContainer);
 
       const stylesheetLinks = Array.from(
@@ -3504,6 +3568,25 @@ function SectionPreviewCanvas({
               .preview-iframe-root > * { width: 100% !important; }
               #header-sticky { display: none !important; }
               .wow { visibility: visible !important; animation: none !important; }
+              #clevio-template-root .program-detail-dialog {
+                position: relative !important;
+                display: block !important;
+                height: auto !important;
+                inset: auto !important;
+                padding: 28px 0 0 !important;
+              }
+              #clevio-template-root .program-detail-backdrop { display: none !important; }
+              #clevio-template-root .program-detail-panel {
+                position: relative !important;
+                width: min(880px, 100%) !important;
+                height: auto !important;
+                max-height: none !important;
+                margin: 0 auto;
+              }
+              #clevio-template-root .program-detail-shell {
+                height: auto !important;
+                overflow: visible !important;
+              }
             </style>
           </head>
           <body>${previewContainer.outerHTML}</body>
@@ -3535,7 +3618,7 @@ function SectionPreviewCanvas({
       resizeObserver.disconnect();
       previewFrame.removeEventListener("load", measureFrame);
     };
-  }, [allowedKeys, initialHeight, markup, previewRootId]);
+  }, [activeProgramIndex, allowedKeys, initialHeight, markup, previewRootId]);
 
   return (
     <div
@@ -3551,7 +3634,7 @@ function SectionPreviewCanvas({
         suppressHydrationWarning
         aria-hidden
       />
-      <ThemeBinder content={content} rootId={previewRootId} />
+      <ThemeBinder content={content} rootId={previewRootId} activeProgramIndex={activeProgramIndex} />
       <PreviewAssets rootId={previewRootId} />
       <iframe
         ref={previewFrameRef}

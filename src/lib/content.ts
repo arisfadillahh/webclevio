@@ -5,6 +5,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { getDatabasePool, isDatabaseConfigured } from "@/lib/db";
+import { programScreenshots } from "@/lib/program-screenshots";
 import { normalizeProgramTools } from "@/lib/program-tools";
 import type { BlogPost, EventItem, Program, SiteContent } from "@/types/content";
 
@@ -88,6 +89,7 @@ const DEFAULT_PROGRAM_DETAILS: Array<{
 function normalizePrograms(programs: Program[] | undefined): Program[] {
   return (programs ?? []).map((program, index) => {
     const defaults = DEFAULT_PROGRAM_DETAILS[index] ?? DEFAULT_PROGRAM_DETAILS[0];
+    const shots = programScreenshots(program);
     return {
       ...program,
       learningPoints: Array.isArray(program.learningPoints)
@@ -97,7 +99,8 @@ function normalizePrograms(programs: Program[] | undefined): Program[] {
         ? program.projectExamples
         : defaults.projectExamples,
       tools: normalizeProgramTools(Array.isArray(program.tools) ? program.tools : defaults.tools),
-      projectImage: program.projectImage || program.image,
+      projectImages: shots,
+      projectImage: shots[0] || program.image,
     };
   });
 }
