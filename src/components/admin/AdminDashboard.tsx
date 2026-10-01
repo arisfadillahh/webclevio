@@ -10,6 +10,7 @@ import ThemeBinder from "@/components/home/ThemeBinder";
 import PreviewAssets, { fixAssetPaths } from "@/components/admin/PreviewAssets";
 import { getPreviewKeys } from "@/lib/preview";
 import { getContentTextLimit } from "@/lib/content-limits";
+import { HOME_PAGE_SECTIONS, resolveSectionVisibility } from "@/lib/home-sections";
 import {
   PiCheckCircleBold,
   PiCircleNotchBold,
@@ -35,6 +36,7 @@ import {
   PiRocketLaunchBold,
   PiArrowRightBold,
   PiLockKeyBold,
+  PiEyeBold,
 } from "react-icons/pi";
 
 interface Props {
@@ -242,6 +244,7 @@ type ActiveSection =
   | "instagram"
   | "testimonials"
   | "contact"
+  | "sections"
   | "advanced";
 
 const SAFE_CONTENT_SECTIONS = new Set<ActiveSection>([
@@ -258,6 +261,7 @@ const SAFE_CONTENT_SECTIONS = new Set<ActiveSection>([
   "newsletter",
   "instagram",
   "contact",
+  "sections",
 ]);
 
 export default function AdminDashboard({ initialContent, templateMarkup, embedded = false }: Props) {
@@ -351,6 +355,7 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
       title: "Apa Kata Orang Tua Tentang Clevio",
       description: "Cerita nyata tentang anak yang belajar, bertumbuh, dan makin percaya diri bersama Clevio.",
     },
+    sectionVisibility: resolveSectionVisibility(initialContent.sectionVisibility),
     partners: initialContent.partners ?? [
       { id: "pencilbox", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='60' viewBox='0 0 180 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='20' font-family='Arial, sans-serif' text-anchor='middle' dominant-baseline='middle'>PencilBox</text></svg>" },
       { id: "udemy", logo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='60' viewBox='0 0 150 60'><text x='50%' y='50%' fill='%2394a3b8' font-size='22' font-family='Arial, sans-serif' font-weight='600' text-anchor='middle' dominant-baseline='middle'>udemy</text></svg>" },
@@ -444,6 +449,7 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
   );
 
   const navigationItems = useMemo(() => [
+    { id: "sections" as ActiveSection, group: "Tampilan", label: "Tampilan bagian", icon: PiEyeBold, description: "Tampilkan atau sembunyikan bagian" },
     { id: "overview" as ActiveSection, group: "Ringkasan", label: "Dashboard", icon: PiHouseBold, description: "Status dan akses cepat" },
     { id: "hero" as ActiveSection, group: "Halaman depan", label: "Bagian atas", icon: PiImageBold, description: "Judul dan gambar pembuka" },
     { id: "navigation" as ActiveSection, group: "Halaman depan", label: "Menu", icon: PiListBold, description: "Tautan di header" },
@@ -468,7 +474,7 @@ export default function AdminDashboard({ initialContent, templateMarkup, embedde
     const filteredItems = query
       ? navigationItems.filter((item) => `${item.label} ${item.description}`.toLowerCase().includes(query))
       : navigationItems;
-    return ["Ringkasan", "Halaman depan", "Level", "Isi halaman", "Publikasi", "Bawah halaman", "Pengaturan"]
+    return ["Tampilan", "Ringkasan", "Halaman depan", "Level", "Isi halaman", "Publikasi", "Bawah halaman", "Pengaturan"]
       .map((group) => ({ group, items: filteredItems.filter((item) => item.group === group) }))
       .filter((section) => section.items.length > 0);
   }, [navigationItems, navigationSearch]);
@@ -1178,6 +1184,50 @@ const updateFooterContact = (
 
   const renderMainContent = () => {
     switch (activeSection) {
+      case "sections": {
+        const visibility = resolveSectionVisibility(content.sectionVisibility);
+        const hiddenCount = HOME_PAGE_SECTIONS.filter((section) => !visibility[section.id]).length;
+        return (
+          <div className="section-visibility-editor">
+            <div className="section-context">
+              <h2>Tampilan bagian halaman</h2>
+              <p>Setiap bagian bisa ditampilkan atau disembunyikan. Galeri Karya dan Clevio Stories disembunyikan sampai kontennya siap. Menu dan logo tetap tampil.</p>
+            </div>
+            <p className="section-visibility-summary">{hiddenCount === 0 ? "Semua bagian sedang tayang." : `${hiddenCount} bagian disembunyikan.`}</p>
+            <ul className="section-visibility-list">
+              {HOME_PAGE_SECTIONS.map((section) => {
+                const visible = visibility[section.id];
+                return (
+                  <li key={section.id}>
+                    <div>
+                      <strong>{section.label}</strong>
+                      <small>{section.detail}</small>
+                    </div>
+                    <button
+                      type="button"
+                      className={`section-visibility-switch ${visible ? "is-on" : ""}`}
+                      aria-pressed={visible}
+                      onClick={() => {
+                        setContent((prev) => ({
+                          ...prev,
+                          sectionVisibility: {
+                            ...resolveSectionVisibility(prev.sectionVisibility),
+                            [section.id]: !visible,
+                          },
+                        }));
+                      }}
+                    >
+                      <i aria-hidden="true" />
+                      <span>{visible ? "Tayang" : "Disembunyikan"}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      }
+
       case "overview":
         return (
           <div className="admin-overview">

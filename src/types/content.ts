@@ -285,6 +285,7 @@ export interface CtaButton {
 }
 
 export interface SiteContent {
+  sectionVisibility?: Record<string, boolean>;
   branding: Branding;
   navigation: Navigation;
   programsSection: ProgramSectionContent;

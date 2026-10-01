@@ -1,3 +1,4 @@
+import { isHomeSectionVisible, isKnownHomeSection } from "@/lib/home-sections";
 import { normalizeProgramTools } from "@/lib/program-tools";
 import type {
   SiteContent,
@@ -48,6 +49,7 @@ export function bindTemplate(
   bindInstagram(root, content.instagram);
   bindFooter(root, content);
   reorderLandingSections(root, doc);
+  if (rootId === DEFAULT_ROOT_ID) applySectionVisibility(root, content);
 
   const smoothScrollCleanup = enableSmoothScroll ? enableSmoothScrollInternal(root, doc) : undefined;
   if (smoothScrollCleanup) cleanups.push(smoothScrollCleanup);
@@ -93,6 +95,10 @@ function bindHeader(root: HTMLElement, content: SiteContent) {
   const navList = root.querySelector(".main-menu nav ul");
   if (navList) {
     navList.innerHTML = content.navigation.menu
+      .filter((item) => {
+        const target = item.href.match(/^#([\w-]+)$/)?.[1];
+        return !target || isHomeSectionVisible(content, target);
+      })
       .map(
         (item) => `
         <li>
@@ -957,6 +963,17 @@ function enableSmoothScrollInternal(root: HTMLElement, doc?: Document) {
   anchors.forEach((a) => a.addEventListener("click", handler));
 
   return () => anchors.forEach((a) => a.removeEventListener("click", handler));
+}
+
+function applySectionVisibility(root: HTMLElement, content: SiteContent) {
+  root.querySelectorAll<HTMLElement>("[data-preview]").forEach((section) => {
+    const id = section.dataset.preview ?? "";
+    if (!isKnownHomeSection(id)) return;
+    const hidden = !isHomeSectionVisible(content, id);
+    section.classList.toggle("is-section-hidden", hidden);
+    if (hidden) section.setAttribute("hidden", "");
+    else section.removeAttribute("hidden");
+  });
 }
 
 function reorderLandingSections(root: HTMLElement, doc?: Document) {
