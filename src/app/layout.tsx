@@ -7,13 +7,26 @@ import { PublicBaseProvider } from "@/components/PublicBase";
 import { withBase } from "@/lib/camp-path";
 import { getRequestBasePath } from "@/lib/request-base";
 
+const siteDescription =
+  "Clevio Innovator Camp adalah program pendidikan teknologi yang membantu anak usia 6–18 tahun menjadi creator, problem solver, dan innovator melalui pengalaman membuat karya digital untuk memberikan manfaat bagi orang lain.";
+
 export async function generateMetadata(): Promise<Metadata> {
   const base = await getRequestBasePath();
   const icon = withBase(base, "/favicon-clevio.png");
   return {
     title: "Clevio Innovator Camp",
-    description:
-      "Website Clevio Innovator Camp versi Next.js lengkap dengan admin dashboard dan kontrol konten dinamis.",
+    description: siteDescription,
+    openGraph: {
+      title: "Clevio Innovator Camp",
+      description: siteDescription,
+      locale: "id_ID",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: "Clevio Innovator Camp",
+      description: siteDescription,
+    },
     icons: {
       icon: [{ url: icon, type: "image/png" }],
       shortcut: icon,
