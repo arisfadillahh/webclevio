@@ -12649,16 +12649,17 @@ body .admin-shell .admin-action-bar.floating {
 /* Final modal polish: restore readable logo scale and keep the CTA cards fully
    inside the available viewport instead of clipping their lower content. */
 #clevio-template-root .program-detail-tool {
-  grid-template-columns: 42px minmax(0, 1fr);
-  min-height: 58px;
+  grid-template-columns: 52px minmax(0, 1fr);
+  min-height: 66px;
   gap: 8px;
   padding: 6px 8px;
 }
 
 #clevio-template-root .program-detail-tool-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 11px;
+  width: 48px;
+  height: 48px;
+  padding: 5px;
+  border-radius: 12px;
 }
 
 #clevio-template-root .program-detail-tool strong {
@@ -12707,13 +12708,13 @@ body .admin-shell .admin-action-bar.floating {
 
 @media (max-width: 767px) {
   #clevio-template-root .program-detail-tool {
-    grid-template-columns: 36px minmax(0, 1fr);
-    min-height: 52px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    min-height: 60px;
   }
 
   #clevio-template-root .program-detail-tool-icon {
-    width: 34px;
-    height: 34px;
+    width: 42px;
+    height: 42px;
   }
 
   #clevio-template-root .program-detail-tool strong {
@@ -12737,14 +12738,14 @@ body .admin-shell .admin-action-bar.floating {
   }
 
   #clevio-template-root .program-detail-tool {
-    grid-template-columns: 36px minmax(0, 1fr);
-    min-height: 52px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    min-height: 60px;
     padding-inline: 6px;
   }
 
   #clevio-template-root .program-detail-tool-icon {
-    width: 34px;
-    height: 34px;
+    width: 42px;
+    height: 42px;
   }
 
   #clevio-template-root .program-detail-tool strong {
@@ -12806,16 +12807,16 @@ body .admin-shell .admin-action-bar.floating {
   }
 
   #clevio-template-root .program-detail-tool {
-    grid-template-columns: 31px minmax(0, 1fr);
-    min-height: 46px;
-    gap: 5px;
+    grid-template-columns: 40px minmax(0, 1fr);
+    min-height: 54px;
+    gap: 6px;
     padding: 5px;
   }
 
   #clevio-template-root .program-detail-tool-icon {
-    width: 29px;
-    height: 29px;
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
   }
 
   #clevio-template-root .program-detail-tool strong {
@@ -12880,15 +12881,15 @@ body .admin-shell .admin-action-bar.floating {
   }
 
   #clevio-template-root .program-detail-tool {
-    grid-template-columns: 35px minmax(0, 1fr);
-    min-height: 48px;
-    gap: 6px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    min-height: 58px;
+    gap: 7px;
     padding: 4px 6px;
   }
 
   #clevio-template-root .program-detail-tool-icon {
-    width: 33px;
-    height: 33px;
+    width: 42px;
+    height: 42px;
   }
 
   #clevio-template-root .program-detail-tool strong {
