@@ -11766,21 +11766,6 @@ body .admin-shell .admin-action-bar.floating {
   transform: scale(1.05);
 }
 
-#clevio-template-root .showcase-story-media-label {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  padding: 7px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 9px;
-  background: rgba(34, 54, 123, 0.9);
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
 #clevio-template-root .showcase-story-copy {
   display: flex;
   flex: 1;
@@ -11983,11 +11968,7 @@ body .admin-shell .admin-action-bar.floating {
   }
 }
 
-/* Final polish: keep documentation overlays readable on every image. */
-#clevio-template-root .showcase-story-media-label {
-  color: #ffffff !important;
-}
-
+/* Final polish: keep gallery overlays readable on every image. */
 #clevio-template-root .gallery-karya-overlay,
 #clevio-template-root .gallery-karya-overlay strong {
   color: #ffffff !important;
