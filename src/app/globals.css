@@ -11556,37 +11556,76 @@ body .admin-shell .admin-action-bar.floating {
     line-height: 1.12 !important;
     text-wrap: balance;
   }
+}
 
+@media (max-width: 1199px) {
   #clevio-template-root .hero-section.hero-1 {
     min-height: 0 !important;
-    padding: 32px 0 0 !important;
+    padding: 28px 0 34px !important;
   }
 
+  #clevio-template-root .hero-section.hero-1 > .container {
+    padding-inline: 24px !important;
+  }
+
+  #clevio-template-root .hero-section.hero-1 > .container > .row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "eyebrow" "title" "visual" "description" "actions";
+    justify-items: center;
+    margin: 0;
+    --bs-gutter-y: 0;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .row > .col-lg-6,
   #clevio-template-root .hero-section.hero-1 .hero-content {
-    align-items: stretch;
+    display: contents !important;
     padding: 0 !important;
     text-align: center;
   }
 
   #clevio-template-root .hero-section.hero-1 .hero-content h5 {
+    grid-area: eyebrow;
+    align-self: center;
     width: fit-content;
     max-width: 100%;
-    margin-inline: auto;
+    min-height: 0;
+    margin: 0 auto 16px;
+    padding: 0;
+    border: 0 !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none;
+    font-size: 12px !important;
+    line-height: 1.5;
+    text-transform: none;
   }
 
   #clevio-template-root .hero-section.hero-1 .hero-content h1 {
-    margin-top: 22px;
-    font-size: clamp(37px, 10.5vw, 46px) !important;
-    line-height: 1.04 !important;
-    letter-spacing: -0.035em;
+    grid-area: title;
+    width: 100%;
+    max-width: 26rem;
+    margin: 0 auto;
+    font-size: clamp(32px, 8.8vw, 40px) !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.045em;
+    text-align: center;
+    text-transform: none;
     text-wrap: balance;
   }
 
+  #clevio-template-root .hero-section.hero-1 .hero-content h1 span {
+    display: block;
+  }
+
   #clevio-template-root .hero-section.hero-1 .hero-content p {
-    max-width: 35rem;
-    margin: 24px auto 0;
+    grid-area: description;
+    max-width: 22rem;
+    margin: 12px auto 0;
     font-size: 15px !important;
     line-height: 1.65 !important;
+    text-align: center;
+    text-wrap: balance;
   }
 
   #clevio-template-root .hero-section.hero-1 .hero-content p br {
@@ -11594,41 +11633,131 @@ body .admin-shell .admin-action-bar.floating {
   }
 
   #clevio-template-root .hero-section.hero-1 .hero-button {
+    grid-area: actions;
     display: grid !important;
     width: 100%;
-    max-width: 358px;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-    margin: 30px auto 0 !important;
+    max-width: 22rem;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 10px;
+    justify-items: center;
+    align-items: center;
+    margin: 22px auto 0 !important;
   }
 
-  #clevio-template-root .hero-section.hero-1 .hero-button .theme-btn,
-  #clevio-template-root .hero-section.hero-1 .hero-secondary-link {
+  #clevio-template-root .hero-section.hero-1 .hero-button .theme-btn {
     width: 100%;
-    min-height: 56px;
+    min-height: 52px;
     justify-content: center;
     margin: 0 !important;
+    padding: 14px 16px;
+    border-radius: 13px;
+    font-size: 14px;
+    box-shadow: 0 8px 20px rgba(34, 54, 123, 0.12);
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-secondary-link {
+    width: 100%;
+    min-height: 44px;
+    gap: 9px;
+    justify-content: center;
+    margin: 0 !important;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-secondary-link .video-btn {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+    min-height: 0;
+    border: 0;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-secondary-link .video-btn i {
+    font-size: 30px;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-secondary-label {
+    font-size: 14px;
   }
 
   #clevio-template-root .hero-section.hero-1 .hero-image {
-    width: min(100%, 350px);
-    height: 245px;
+    grid-area: visual;
+    display: block !important;
+    width: min(64vw, 260px);
+    height: auto;
+    aspect-ratio: 1;
     min-height: 0 !important;
-    margin: 28px auto 0;
+    margin: 14px auto 0;
+    overflow: hidden;
   }
 
   #clevio-template-root .hero-section.hero-1 .row > .col-lg-6:last-child {
+    display: contents !important;
     min-height: 0 !important;
+    margin-top: 0;
     align-items: flex-start !important;
   }
 
   #clevio-template-root .hero-section.hero-1 .hero-image > img {
     display: block;
+    position: static;
     width: 100%;
-    height: auto;
-    object-fit: contain;
+    max-width: 100%;
+    height: 100%;
+    margin: 0;
+    object-fit: cover;
+    object-position: right center;
+    transform: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  #clevio-template-root .hero-section.hero-1 {
+    padding: 36px 0 40px !important;
   }
 
+  #clevio-template-root .hero-section.hero-1 > .container {
+    max-width: 800px !important;
+    padding-inline: 32px !important;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-content h5 {
+    font-size: 13px !important;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-content h1 {
+    max-width: 40rem;
+    font-size: clamp(40px, 5.2vw, 48px) !important;
+    letter-spacing: -0.035em;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-content h1 span {
+    display: inline;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-image {
+    width: min(36vw, 300px);
+    margin-top: 18px;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-content p {
+    max-width: 36rem;
+    font-size: 16px !important;
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-button {
+    max-width: 24rem;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 767px) {
   #clevio-template-root .partner-section {
     padding-block: 12px !important;
   }
@@ -11847,12 +11976,22 @@ body .admin-shell .admin-action-bar.floating {
   }
 
   #clevio-template-root .hero-section.hero-1 .hero-content h1 {
-    font-size: clamp(35px, 10.2vw, 42px) !important;
+    font-size: clamp(32px, 8.8vw, 40px) !important;
   }
 
   #clevio-template-root .free-trial-copy,
   #clevio-template-root .main-cta-wrapper {
     padding-inline: 18px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  #clevio-template-root .hero-section.hero-1 .hero-button {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #clevio-template-root .hero-section.hero-1 .hero-secondary-link {
+    width: fit-content;
   }
 }
 
@@ -13497,5 +13636,298 @@ body .admin-shell .admin-action-bar.floating {
   #clevio-template-root .clevio-navbar .sidebar__toggle {
     width: 40px;
     height: 40px;
+  }
+}
+
+/* Mobile navigation drawer */
+#clevio-template-root .offcanvas__info {
+  width: min(390px, calc(100vw - 12px));
+  max-width: 100vw;
+  height: 100dvh;
+  overflow-x: hidden;
+  border: 0;
+  border-radius: 24px 0 0 24px;
+  box-shadow: -18px 0 60px rgba(22, 42, 91, 0.18);
+}
+
+#clevio-template-root .offcanvas__wrapper {
+  height: auto;
+  min-height: 100%;
+  padding: 26px 24px calc(30px + env(safe-area-inset-bottom));
+}
+
+#clevio-template-root .offcanvas__top {
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+#clevio-template-root .offcanvas__logo {
+  min-width: 0;
+}
+
+#clevio-template-root .offcanvas__logo a {
+  display: block;
+}
+
+#clevio-template-root .offcanvas__logo img {
+  display: block;
+  width: min(168px, 52vw);
+  max-width: 100%;
+  max-height: 56px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+#clevio-template-root .offcanvas__close {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #e3e9f3;
+  border-radius: 13px;
+  background: #f4f7fb;
+}
+
+#clevio-template-root .offcanvas__close button {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: #22367b;
+  font-size: 17px;
+}
+
+#clevio-template-root .offcanvas__close i {
+  color: inherit;
+}
+
+#clevio-template-root .offcanvas__intro {
+  margin-bottom: 16px;
+}
+
+#clevio-template-root .offcanvas__intro span {
+  display: block;
+  margin-bottom: 7px;
+  color: #668518;
+  font-family: "Quicksand", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+#clevio-template-root .offcanvas__intro h2 {
+  margin: 0;
+  color: #22367b;
+  font-family: "Quicksand", sans-serif;
+  font-size: clamp(22px, 6vw, 27px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+  text-transform: none;
+}
+
+#clevio-template-root .mobile-menu {
+  margin-bottom: 18px;
+}
+
+#clevio-template-root .mobile-menu .mean-bar,
+#clevio-template-root .mobile-menu .mean-nav {
+  float: none;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+}
+
+#clevio-template-root .mobile-menu .mean-nav > ul {
+  display: flex !important;
+  flex-direction: column;
+  gap: 7px;
+}
+
+#clevio-template-root .mobile-menu .mean-nav > ul > li {
+  float: none;
+  width: 100%;
+}
+
+#clevio-template-root .mobile-menu .mean-nav > ul > li > a {
+  display: flex;
+  float: none;
+  width: 100%;
+  box-sizing: border-box !important;
+  min-height: 49px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 11px 15px;
+  border: 1px solid #e7ecf4 !important;
+  border-radius: 13px;
+  background: #f7f9fc;
+  color: #22367b;
+  font-family: "Quicksand", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: none;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+#clevio-template-root .mobile-menu .mean-nav > ul > li > a::after {
+  content: "↗";
+  color: #84ab29;
+  font-family: Arial, sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+}
+
+#clevio-template-root .mobile-menu .mean-nav > ul > li > a:is(:hover, :focus-visible) {
+  border-color: #c8d995 !important;
+  background: #f1f7e6;
+  color: #22367b;
+  transform: translateX(-2px);
+}
+
+#clevio-template-root .offcanvas__trial {
+  display: flex;
+  min-height: 74px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 17px;
+  background: #22367b;
+  box-shadow: 0 12px 25px rgba(34, 54, 123, 0.17);
+  color: #fff !important;
+}
+
+#clevio-template-root .offcanvas__trial:is(:hover, :focus-visible) {
+  background: #304995;
+  color: #fff;
+}
+
+#clevio-template-root .offcanvas__trial small,
+#clevio-template-root .offcanvas__trial strong {
+  display: block;
+  font-family: "Quicksand", sans-serif;
+}
+
+#clevio-template-root .offcanvas__trial small {
+  margin-bottom: 4px;
+  color: #dce7fc !important;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+#clevio-template-root .offcanvas__trial strong {
+  color: #fff !important;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+#clevio-template-root .offcanvas__trial > i {
+  display: grid;
+  flex: 0 0 35px;
+  width: 35px;
+  height: 35px;
+  place-items: center;
+  border-radius: 10px;
+  background: #9dc83b;
+  color: #22367b;
+  font-size: 14px;
+}
+
+#clevio-template-root .offcanvas__contact {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e6ebf3;
+}
+
+#clevio-template-root .offcanvas__contact h4 {
+  margin: 0;
+  color: #22367b;
+  font-family: "Quicksand", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: none;
+}
+
+#clevio-template-root .offcanvas__contact ul {
+  margin-top: 14px;
+}
+
+#clevio-template-root .offcanvas__contact ul li {
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#clevio-template-root .offcanvas__contact ul li:not(:last-child) {
+  margin-bottom: 9px;
+}
+
+#clevio-template-root .offcanvas__contact ul li .offcanvas__contact-icon {
+  display: grid;
+  flex: 0 0 25px;
+  width: 25px;
+  margin: 0;
+  place-items: center;
+}
+
+#clevio-template-root .offcanvas__contact .header-button {
+  margin-top: 18px !important;
+}
+
+#clevio-template-root .offcanvas__contact .header-button .theme-btn {
+  min-height: 43px;
+  padding: 9px 15px;
+  border: 1px solid #dbe3f1;
+  border-radius: 11px;
+  background: #f7f9fc !important;
+  box-shadow: none;
+  color: #22367b !important;
+  font-size: 13px;
+}
+
+#clevio-template-root .offcanvas__contact .header-button .theme-btn::before,
+#clevio-template-root .offcanvas__contact .header-button .theme-btn::after {
+  display: none !important;
+}
+
+#clevio-template-root .offcanvas__contact .header-button .theme-btn :where(span, i) {
+  color: #22367b !important;
+}
+
+#clevio-template-root .offcanvas__contact .social-icon {
+  gap: 8px;
+  margin-top: 20px;
+}
+
+#clevio-template-root .offcanvas__contact .social-icon a {
+  width: 37px;
+  height: 37px;
+  line-height: 36px;
+  border-color: #dbe3f1;
+  font-size: 14px;
+}
+
+#clevio-template-root .offcanvas__overlay.overlay-open {
+  background: #14234b;
+  opacity: 0.58;
+}
+
+body.clevio-menu-open {
+  overflow: hidden;
+}
+
+@media (max-width: 575px) {
+  #clevio-template-root .offcanvas__wrapper {
+    padding-inline: 21px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #clevio-template-root .offcanvas__info,
+  #clevio-template-root .mobile-menu .mean-nav > ul > li > a {
+    transition-duration: 0.01ms;
   }
 }

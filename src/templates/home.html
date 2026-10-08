@@ -28,10 +28,10 @@
 
         <!-- Offcanvas Area Start -->
         <div class="fix-area">
-            <div class="offcanvas__info">
+            <div class="offcanvas__info" id="mobile-navigation" aria-label="Navigasi Clevio" aria-hidden="true">
                 <div class="offcanvas__wrapper">
                     <div class="offcanvas__content">
-                        <div class="offcanvas__top mb-5 d-flex justify-content-between align-items-center">
+                        <div class="offcanvas__top d-flex justify-content-between align-items-center">
                             <div class="offcanvas__logo">
                                 <a href="/" aria-label="Kembali ke beranda Clevio">
                                     <img src="/assets/img/logo/clevio-header.png" alt="Clevio Innovator Camp">
@@ -46,9 +46,20 @@
                         <p class="text d-none d-xl-block">
                             Clevio membantu anak belajar teknologi melalui project, kreativitas, coaching, dan pengalaman menciptakan solusi nyata.
                         </p>
-                        <div class="mobile-menu fix mb-3"></div>
+                        <div class="offcanvas__intro">
+                            <span>JELAJAHI CLEVIO</span>
+                            <h2>Temukan yang kamu cari.</h2>
+                        </div>
+                        <nav class="mobile-menu fix" aria-label="Menu utama mobile"></nav>
+                        <a class="offcanvas__trial" href="https://lms.clev.io/free-trial" target="_blank" rel="noopener noreferrer">
+                            <span>
+                                <small>Mulai belajar bersama kami</small>
+                                <strong>Coba Free Trial</strong>
+                            </span>
+                            <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
+                        </a>
                         <div class="offcanvas__contact">
-                            <h4>Contact Info</h4>
+                            <h4>Butuh bantuan?</h4>
                             <ul>
                                 <li class="d-flex align-items-center">
                                     <div class="offcanvas__contact-icon">
@@ -150,7 +161,7 @@
                                 </a>
                             </div>
                             <div class="header__hamburger d-xl-none my-auto">
-                                <button class="sidebar__toggle" type="button" aria-label="Buka menu navigasi" aria-controls="mobile-menu">
+                                <button class="sidebar__toggle" type="button" aria-label="Buka menu navigasi" aria-controls="mobile-navigation" aria-expanded="false">
                                     <i class="fas fa-bars"></i>
                                 </button>
                             </div>

@@ -12,13 +12,29 @@
         });
 
         //>> Sidebar Toggle Js Start <<//
+        function setMobileNavigationOpen(open) {
+            $(".offcanvas__info").toggleClass("info-open", open).attr("aria-hidden", String(!open));
+            $(".offcanvas__overlay").toggleClass("overlay-open", open);
+            $(".sidebar__toggle").attr("aria-expanded", String(open));
+            $(document.body).toggleClass("clevio-menu-open", open);
+        }
+
         $(".offcanvas__close,.offcanvas__overlay").on("click", function() {
-            $(".offcanvas__info").removeClass("info-open");
-            $(".offcanvas__overlay").removeClass("overlay-open");
+            setMobileNavigationOpen(false);
+            $(".sidebar__toggle").trigger("focus");
         });
         $(".sidebar__toggle").on("click", function() {
-            $(".offcanvas__info").addClass("info-open");
-            $(".offcanvas__overlay").addClass("overlay-open");
+            setMobileNavigationOpen(true);
+            $(".offcanvas__close button").trigger("focus");
+        });
+        $(document).on("click", ".offcanvas__info .mobile-menu a", function() {
+            setMobileNavigationOpen(false);
+        });
+        $(document).on("keydown", function(event) {
+            if (event.key === "Escape" && $(".offcanvas__info").hasClass("info-open")) {
+                setMobileNavigationOpen(false);
+                $(".sidebar__toggle").trigger("focus");
+            }
         });
 
         //>> Body Overlay Js Start <<//
