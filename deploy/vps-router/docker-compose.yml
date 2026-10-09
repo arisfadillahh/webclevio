@@ -1,0 +1,41 @@
+name: clevio-domain-router
+
+services:
+  clevio-domain-router:
+    image: nginx:stable-alpine
+    container_name: clevio-domain-router
+    restart: unless-stopped
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - root_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=root_default"
+      - "traefik.http.routers.clevio-camp.rule=(Host(`clev.io`) || Host(`www.clev.io`)) && (Path(`/camp`) || PathPrefix(`/camp/`))"
+      - "traefik.http.routers.clevio-camp.priority=200"
+      - "traefik.http.routers.clevio-camp.entrypoints=websecure"
+      - "traefik.http.routers.clevio-camp.tls=true"
+      - "traefik.http.routers.clevio-camp.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.clevio-camp.service=clevio-proxy"
+      - "traefik.http.routers.clevio-test.rule=Host(`test.clev.io`)"
+      - "traefik.http.routers.clevio-test.entrypoints=websecure"
+      - "traefik.http.routers.clevio-test.priority=100"
+      - "traefik.http.routers.clevio-test.tls=true"
+      - "traefik.http.routers.clevio-test.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.clevio-test.service=clevio-proxy"
+      - "traefik.http.routers.clevio-agriana.rule=Host(`agriana.clev.io`)"
+      - "traefik.http.routers.clevio-agriana.entrypoints=websecure"
+      - "traefik.http.routers.clevio-agriana.tls=true"
+      - "traefik.http.routers.clevio-agriana.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.clevio-agriana.service=clevio-proxy"
+      - "traefik.http.routers.clevio-staff.rule=Host(`staff.clev.io`)"
+      - "traefik.http.routers.clevio-staff.entrypoints=websecure"
+      - "traefik.http.routers.clevio-staff.tls=true"
+      - "traefik.http.routers.clevio-staff.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.clevio-staff.service=clevio-proxy"
+      - "traefik.http.services.clevio-proxy.loadbalancer.server.port=80"
+
+networks:
+  root_default:
+    external: true
