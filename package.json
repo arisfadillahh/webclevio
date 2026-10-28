@@ -14,13 +14,13 @@
   },
   "dependencies": {
     "linkedom": "^0.16.11",
-    "next": "^16.2.12",
+    "next": "16.4.2",
     "pg": "^8.22.0",
     "postcss": "^8.5.23",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
     "react-icons": "^5.5.0",
-    "sharp": "^0.35.3",
+    "sharp": "0.35.5",
     "swr": "^2.3.6",
     "zod": "^4.4.3"
   },
@@ -30,7 +30,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^16.2.12",
+    "eslint-config-next": "16.4.2",
     "typescript": "^5"
   },
   "overrides": {
